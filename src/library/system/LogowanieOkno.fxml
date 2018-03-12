@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.LogowanieKontroler">
+  <tabs>
+    <Tab text="Logowanie">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+                  <PasswordField fx:id="hasloField" layoutX="251.0" layoutY="191.0" />
+                  <Text layoutX="146.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HASŁO" />
+                  <Text layoutX="144.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" />
+                  <TextField fx:id="loginField" layoutX="245.0" layoutY="134.0" />
+                  <Button fx:id="zalogujBTN" layoutX="416.0" layoutY="276.0" mnemonicParsing="false" onAction="#zaloguj" text="Zaloguj" />
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab text="Rejestracja">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+      </content>
+    </Tab>
+  </tabs>
+</TabPane>
