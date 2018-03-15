@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.CzytelnikOknoController">
    <children>
-      <Text layoutX="241.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
+      <MenuBar layoutX="28.0" layoutY="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Plik">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#zamknijAplikacje" text="Zamknij" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edycja">
+               <items>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#setCaspian" text="Caspian">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="styleGroup" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#setModena" selected="true" text="Modena" toggleGroup="$styleGroup" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Pomoc">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#aboutApplication" text="O aplikacji" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <Text layoutX="251.0" layoutY="200.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
    </children>
-</Pane>
+</AnchorPane>

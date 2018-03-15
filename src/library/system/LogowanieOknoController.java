@@ -1,24 +1,24 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package library.system;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.application.Application;
+import static javafx.application.Application.STYLESHEET_CASPIAN;
+import static javafx.application.Application.STYLESHEET_MODENA;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import library.system.dialogs.DialogsUtils;
 
-/**
- *
- * @author student
- */
-public class LogowanieKontroler implements Initializable {
+
+public class LogowanieOknoController implements Initializable {
     
     LibrarySystem log = new LibrarySystem();
     
@@ -53,6 +53,29 @@ public class LogowanieKontroler implements Initializable {
              log.setNextScene(2);
             
         }
+    }
+
+    @FXML
+    private void zamknijAplikacje(ActionEvent event) {
+         Optional<ButtonType> result = DialogsUtils.confirmationDialog();
+        if (result.get() == ButtonType.OK) {
+            Platform.exit();
+        }
+    }
+
+    @FXML
+    private void setCaspian(ActionEvent event) {
+        Application.setUserAgentStylesheet(STYLESHEET_CASPIAN);
+    }
+
+    @FXML
+    private void setModena(ActionEvent event) {
+        Application.setUserAgentStylesheet(STYLESHEET_MODENA);
+    }
+
+    @FXML
+    private void aboutApplication(ActionEvent event) {
+        DialogsUtils.dialogAboutAplication();
     }
     
 }

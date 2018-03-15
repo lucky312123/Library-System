@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
    <children>
-      <Text layoutX="204.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" />
+      <MenuBar layoutX="18.0" layoutY="12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Plik">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#zamknijAplikacje" text="Zamknij" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edycja">
+               <items>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#setCaspian" text="Caspian">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="styleGroup" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#setModena" selected="true" text="Modena" toggleGroup="$styleGroup" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Pomoc">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#aboutApplication" text="O aplikacji" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <Text layoutX="214.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" />
    </children>
-</Pane>
+</AnchorPane>
