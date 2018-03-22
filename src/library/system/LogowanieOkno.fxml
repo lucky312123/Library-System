@@ -7,7 +7,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="432.0" prefWidth="609.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.LogowanieOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="609.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.LogowanieOknoController">
    <children>
       <MenuBar layoutX="8.0" layoutY="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -33,16 +33,16 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TabPane layoutX="1.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="609.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <TabPane layoutX="1.0" layoutY="14.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="609.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
          <tabs>
             <Tab text="Logowanie">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
+                        <TextField fx:id="loginField" layoutX="251.0" layoutY="134.0" />
                         <PasswordField fx:id="hasloField" layoutX="251.0" layoutY="191.0" />
                         <Text layoutX="146.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HASŁO" />
                         <Text layoutX="144.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" />
-                        <TextField fx:id="loginField" layoutX="245.0" layoutY="134.0" />
                         <Button fx:id="zalogujBTN" layoutX="416.0" layoutY="276.0" mnemonicParsing="false" onAction="#zaloguj" text="Zaloguj" />
                      </children>
                   </AnchorPane>
@@ -50,7 +50,20 @@
             </Tab>
             <Tab text="Rejestracja">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="rejestracjaImie" layoutX="230.0" layoutY="52.0" />
+                        <TextField fx:id="rejestracjaNazwisko" layoutX="230.0" layoutY="102.0" />
+                        <TextField fx:id="rejestracjaEmail" layoutX="229.0" layoutY="158.0" />
+                        <PasswordField fx:id="rejestracjaHaslo" layoutX="230.0" layoutY="205.0" />
+                        <PasswordField fx:id="rejestracjaHaslo1" layoutX="230.0" layoutY="255.0" />
+                        <Text layoutX="124.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj imie" />
+                        <Text layoutX="114.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwisko" />
+                        <Text layoutX="121.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj e-mail" />
+                        <Text layoutX="124.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj hasło" />
+                        <Text layoutX="117.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Powtórz hasło" />
+                        <Button fx:id="zarejestrujBTN" layoutX="421.0" layoutY="335.0" mnemonicParsing="false" onAction="#zarejestruj" text="Zarejestruj" />
+                     </children></AnchorPane>
                </content>
             </Tab>
          </tabs>

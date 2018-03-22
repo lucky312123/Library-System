@@ -1,4 +1,3 @@
-
 package library.system.dialogs;
 
 import java.util.Optional;
@@ -6,9 +5,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
 public class DialogsUtils {
-    
+
     //Okienka informacyjne 
-    
     public static void dialogAboutAplication() {
         Alert informacja = new Alert(Alert.AlertType.INFORMATION);
         informacja.setTitle("O aplikacji");
@@ -17,8 +15,8 @@ public class DialogsUtils {
         informacja.showAndWait();
 
     }
-    
-     public static Optional<ButtonType> confirmationDialog() {
+
+    public static Optional<ButtonType> confirmationDialog() {
         Alert potwierdz = new Alert(Alert.AlertType.CONFIRMATION);
         potwierdz.setTitle("Wyjście");
         potwierdz.setHeaderText("Czy na pewno chcesz wyjść??");
@@ -26,5 +24,14 @@ public class DialogsUtils {
         return result;
 
     }
-    
+
+    public static void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.show();
+
+    }
+
 }

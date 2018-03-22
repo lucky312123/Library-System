@@ -5,9 +5,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="786.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
    <children>
-      <MenuBar layoutX="18.0" layoutY="12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar layoutX="18.0" layoutY="12.0" prefHeight="64.0" prefWidth="786.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
             <Menu mnemonicParsing="false" text="Plik">
                <items>
@@ -31,6 +31,60 @@
             </Menu>
          </menus>
       </MenuBar>
-      <Text layoutX="214.0" layoutY="188.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" />
+      <TabPane layoutY="37.0" prefHeight="581.0" prefWidth="786.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
+        <tabs>
+          <Tab text="Dodawanie książki">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Text layoutX="617.0" layoutY="534.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" />
+                        <TextField fx:id="tytulDodawanieKsiazka" layoutX="146.0" layoutY="80.0" />
+                        <TextField fx:id="isbnDodawanieKsiazka" layoutX="146.0" layoutY="143.0" />
+                        <DatePicker fx:id="data_wydDodawanieKsiazka" layoutX="146.0" layoutY="205.0" />
+                        <TextField fx:id="procent_zniszczeniaDodawanieKsiazka" layoutX="146.0" layoutY="276.0" />
+                        <Text layoutX="50.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tytuł" />
+                        <Text layoutX="52.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
+                        <Text layoutX="41.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data wydania" />
+                        <Text layoutX="25.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Procent zniszczenia" />
+                        <ComboBox fx:id="autor_dodajComboBox" layoutX="570.0" layoutY="80.0" prefWidth="150.0" />
+                        <ComboBox fx:id="gatunek_dodajComboBox" layoutX="570.0" layoutY="143.0" prefWidth="150.0" />
+                        <ComboBox fx:id="status_dodajComboBox" layoutX="570.0" layoutY="205.0" prefWidth="150.0" />
+                        <Text layoutX="463.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Autor" />
+                        <Text layoutX="455.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gatunek" />
+                        <Text layoutX="461.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Status" />
+                        <Button fx:id="dodajKsiazkeBTN" layoutX="619.0" layoutY="301.0" mnemonicParsing="false" text="Dodaj książkę" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Dodawanie gatunku">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="nazwaDodawanieGatunek" layoutX="135.0" layoutY="74.0" />
+                        <TextArea fx:id="opisDodawanieGatunek" layoutX="135.0" layoutY="115.0" prefHeight="87.0" prefWidth="217.0" />
+                        <Text layoutX="55.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa" />
+                        <Text layoutX="62.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opis" />
+                        <Button fx:id="dodajGatunekBTN" layoutX="526.0" layoutY="74.0" mnemonicParsing="false" text="Dodaj gatunek" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Dodawanie autora">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="autorDodawanie" layoutX="136.0" layoutY="63.0" />
+                        <TextField fx:id="autorPseudonim" layoutX="136.0" layoutY="136.0" />
+                        <DatePicker fx:id="data_urDodawanie" layoutX="136.0" layoutY="207.0" />
+                        <Text layoutX="54.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Autor" />
+                        <Text layoutX="37.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudonim" />
+                        <Text layoutX="28.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>
