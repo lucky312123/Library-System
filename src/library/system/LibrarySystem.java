@@ -1,6 +1,7 @@
 
 package library.system;
 
+import Database.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,7 +18,8 @@ public class LibrarySystem extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("LogowanieOkno.fxml"));
         Parent root2 = FXMLLoader.load(getClass().getResource("BibliotekarzOkno.fxml"));
         Parent root3 = FXMLLoader.load(getClass().getResource("CzytelnikOkno.fxml"));
-        
+         Client client = new Client();
+         client.openConnect();
           
         L_window = stage;
 
