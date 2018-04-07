@@ -1,6 +1,11 @@
 package library.system;
 
+import Database.Client;
+import com.mysql.jdbc.Statement;
 import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Application;
@@ -21,7 +26,8 @@ import library.system.dialogs.DialogsUtils;
 public class LogowanieOknoController implements Initializable {
 
     LibrarySystem log = new LibrarySystem();
-
+    ResultSet rs;
+    PreparedStatement st;
     @FXML
     private Button zalogujBTN;
     @FXML
@@ -52,13 +58,44 @@ public class LogowanieOknoController implements Initializable {
 
     @FXML
     private void zaloguj(ActionEvent event) throws Exception {
-        if (loginField.getText().toString().equals("bibliotekarz") && hasloField.getText().toString().equals("haslo")) {
-            log.setNextScene(1);
-
-        } else if (loginField.getText().toString().equals("czytelnik") && hasloField.getText().toString().equals("haslo1")) {
-            log.setNextScene(2);
-
+        try{
+        String login  = loginField.getText().trim();
+        String pass  = hasloField.getText().trim();
+         Client client = new Client();
+         client.openConnect();
+        String sql = "select rodzaj_uzytkownika from uzytkownicy where nr_identyfikacji =? and haslo =?";
+        st = client.connection.prepareStatement(sql);
+        st.setString(1, login);
+        st.setString(2, pass);
+        rs = st.executeQuery();
+        if(rs.next()){
+            
+            if(rs.getString("rodzaj_uzytkownika").equals("czytelnik")){
+                //zalogowano jako czytelnik
+                    //login 123 pass 321
+             System.out.println("done");
+             log.setNextScene(2);}
+            else if(
+             rs.getString("rodzaj_uzytkownika").equals("bibliotekarz")){
+                //zalogowano jako bibliotekarz
+                    //login 997 pass policja
+             System.out.println("done");
+             log.setNextScene(1);  
+            }
+             
         }
+        else{
+            //bład danych
+             System.out.println("bec1  bład");
+             //log.setNextScene(2);
+        }
+       
+        }
+        catch(SQLException sql){
+            //złe sql
+             System.out.println("bec2"+sql);
+        }
+
     }
 
     @FXML

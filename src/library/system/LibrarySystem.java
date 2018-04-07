@@ -18,8 +18,7 @@ public class LibrarySystem extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("LogowanieOkno.fxml"));
         Parent root2 = FXMLLoader.load(getClass().getResource("BibliotekarzOkno.fxml"));
         Parent root3 = FXMLLoader.load(getClass().getResource("CzytelnikOkno.fxml"));
-         Client client = new Client();
-         client.openConnect();
+         
           
         L_window = stage;
 
@@ -56,6 +55,8 @@ public class LibrarySystem extends Application {
     }
 
     public static void main(String[] args) {
+//        Client client = new Client();
+//         client.openConnect();
         launch(args);
     }
     
