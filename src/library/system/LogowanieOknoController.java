@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
 import static javafx.application.Application.STYLESHEET_MODENA;
@@ -18,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
@@ -48,6 +51,8 @@ public class LogowanieOknoController implements Initializable {
     private PasswordField rejestracjaHaslo1;
     @FXML
     private Button zarejestrujBTN;
+    @FXML
+    private CheckBox check;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -63,23 +68,42 @@ public class LogowanieOknoController implements Initializable {
         String pass  = hasloField.getText().trim();
          Client client = new Client();
          client.openConnect();
-        String sql = "select rodzaj_uzytkownika from uzytkownicy where nr_identyfikacji =? and haslo =?";
-        st = client.connection.prepareStatement(sql);
+        String sql = "select profil from klienci where nr_identyfikacji_k =? and haslo_k =?";
+        String sql2 = "select profil from pracownicy where nr_identyfikacji_p =? and haslo_p =?";
+        if(check.isSelected()==false){
+        st = client.connection.prepareStatement(sql);}
+        
+        else{
+        st = client.connection.prepareStatement(sql2);}
         st.setString(1, login);
         st.setString(2, pass);
         rs = st.executeQuery();
         if(rs.next()){
             
-            if(rs.getString("rodzaj_uzytkownika").equals("czytelnik")){
+            if(rs.getInt("profil")==3){
                 //zalogowano jako czytelnik
-                    //login 123 pass 321
-             System.out.println("done");
+                    //login 997 pass qwer1234
+             System.out.println("done student");
              log.setNextScene(2);}
             else if(
-             rs.getString("rodzaj_uzytkownika").equals("bibliotekarz")){
+             rs.getInt("profil")==4){
+                //zalogowano jako czytelnik
+                    //login 997 pass qwer1234
+             System.out.println("done nie uczący się");
+             log.setNextScene(2);  
+            }
+            else if(
+             rs.getInt("profil")==1){
                 //zalogowano jako bibliotekarz
-                    //login 997 pass policja
-             System.out.println("done");
+                    //login 111 pass 1234
+             System.out.println("done admin");
+             log.setNextScene(1);  
+            }
+             else if(
+             rs.getInt("profil")==2){
+                //zalogowano jako bibliotekarz
+                    //login 111 pass 1234
+             System.out.println("done bibliotekarz");
              log.setNextScene(1);  
             }
              
@@ -100,6 +124,7 @@ public class LogowanieOknoController implements Initializable {
 
     @FXML
     private void zarejestruj(ActionEvent event) {
+        
         if (rejestracjaImie.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj swoje imię!");
         }
@@ -120,7 +145,27 @@ public class LogowanieOknoController implements Initializable {
         } else {
             DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Udana rejestracja!", "Witamy " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
         }
-
+        String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,4,?,?,0,0,3)";
+        String imie =rejestracjaImie.getText().trim();
+        String nazwisko =rejestracjaNazwisko.getText().trim();
+        String email =rejestracjaEmail.getText().trim();
+        String haslo =rejestracjaHaslo.getText().trim();
+        
+        try {
+            Client client = new Client();
+         client.openConnect();
+            st = client.connection.prepareStatement(sql);
+            st.setString(1, imie);
+            st.setString(2, nazwisko);
+            st.setString(3, email);
+            st.setString(4, haslo);
+            st.execute();
+            System.out.print("wstawiono");
+            //rs = st.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(LogowanieOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     @FXML

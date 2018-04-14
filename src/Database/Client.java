@@ -26,7 +26,7 @@ public class Client {
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            this.connection =(Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/"+"liblarydatabase","root","");
+            this.connection =(Connection)DriverManager.getConnection("jdbc:mysql://localhost:3306/"+"librarydatabase","root","");
             System.out.println("udaao sie");
         } catch (ClassNotFoundException  | SQLException sqle) {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, sqle);
