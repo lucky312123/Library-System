@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Menu?>
@@ -14,7 +18,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="609.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.LogowanieOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="523.0" prefWidth="609.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.LogowanieOknoController">
    <children>
       <MenuBar layoutX="8.0" layoutY="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
@@ -62,15 +66,19 @@
                      <children>
                         <TextField fx:id="rejestracjaImie" layoutX="230.0" layoutY="52.0" />
                         <TextField fx:id="rejestracjaNazwisko" layoutX="230.0" layoutY="102.0" />
-                        <TextField fx:id="rejestracjaEmail" layoutX="229.0" layoutY="158.0" />
+                        <TextField fx:id="rejestracjaEmail" layoutX="229.0" layoutY="157.0" />
                         <PasswordField fx:id="rejestracjaHaslo" layoutX="230.0" layoutY="205.0" />
                         <PasswordField fx:id="rejestracjaHaslo1" layoutX="230.0" layoutY="255.0" />
+                        <TextField fx:id="rejestracjaNrIdentyfikacyjny" layoutX="230.0" layoutY="296.0" />
                         <Text layoutX="124.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj imie" />
                         <Text layoutX="114.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwisko" />
                         <Text layoutX="121.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj e-mail" />
                         <Text layoutX="124.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj hasło" />
                         <Text layoutX="117.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Powtórz hasło" />
                         <Button fx:id="zarejestrujBTN" layoutX="421.0" layoutY="335.0" mnemonicParsing="false" onAction="#zarejestruj" text="Zarejestruj" />
+                        <Text layoutX="89.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nr identyfikacyjny*" />
+                        <Text layoutX="33.0" layoutY="398.0" strokeType="OUTSIDE" strokeWidth="0.0" text="* Uczeń, Student- numer legitymacji" wrappingWidth="193.162109375" />
+                        <Text layoutX="40.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoba nie ucząca się - pesel" />
                      </children></AnchorPane>
                </content>
             </Tab>

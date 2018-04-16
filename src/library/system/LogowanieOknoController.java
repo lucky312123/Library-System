@@ -53,11 +53,19 @@ public class LogowanieOknoController implements Initializable {
     private Button zarejestrujBTN;
     @FXML
     private CheckBox check;
+    @FXML
+    private TextField rejestracjaNrIdentyfikacyjny;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         zalogujBTN.disableProperty().bind(loginField.textProperty().isEmpty());
         zalogujBTN.disableProperty().bind(hasloField.textProperty().isEmpty());
+        zarejestrujBTN.disableProperty().bind(rejestracjaImie.textProperty().isEmpty());
+        zarejestrujBTN.disableProperty().bind(rejestracjaNazwisko.textProperty().isEmpty());
+        zarejestrujBTN.disableProperty().bind(rejestracjaEmail.textProperty().isEmpty());
+        zarejestrujBTN.disableProperty().bind(rejestracjaHaslo.textProperty().isEmpty());
+        zarejestrujBTN.disableProperty().bind(rejestracjaHaslo1.textProperty().isEmpty());
+        zarejestrujBTN.disableProperty().bind(rejestracjaNrIdentyfikacyjny.textProperty().isEmpty());
 
     }
 
@@ -145,11 +153,12 @@ public class LogowanieOknoController implements Initializable {
         } else {
             DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Udana rejestracja!", "Witamy " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
         }
-        String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,4,?,?,0,0,3)";
+        String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,3)";
         String imie =rejestracjaImie.getText().trim();
         String nazwisko =rejestracjaNazwisko.getText().trim();
         String email =rejestracjaEmail.getText().trim();
         String haslo =rejestracjaHaslo.getText().trim();
+        int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
         
         try {
             Client client = new Client();
@@ -157,8 +166,9 @@ public class LogowanieOknoController implements Initializable {
             st = client.connection.prepareStatement(sql);
             st.setString(1, imie);
             st.setString(2, nazwisko);
-            st.setString(3, email);
-            st.setString(4, haslo);
+            st.setInt(3, nr_identyfikacyjny);
+            st.setString(4, email);
+            st.setString(5, haslo);
             st.execute();
             System.out.print("wstawiono");
             //rs = st.executeQuery();
