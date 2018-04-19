@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import library.system.dialogs.DialogsUtils;
@@ -55,6 +56,13 @@ public class LogowanieOknoController implements Initializable {
     private CheckBox check;
     @FXML
     private TextField rejestracjaNrIdentyfikacyjny;
+    @FXML
+    private ToggleGroup uczenieGroup;
+    @FXML
+    private RadioButton radioTak;
+    @FXML
+    private RadioButton radioNie;
+    boolean poprawne_dane;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -89,21 +97,21 @@ public class LogowanieOknoController implements Initializable {
         if(rs.next()){
             
             if(rs.getInt("profil")==3){
-                //zalogowano jako czytelnik
+                //zalogowano jako uczen
                     //login 997 pass qwer1234
-             System.out.println("done student");
+             System.out.println("done uczen");
              log.setNextScene(2);}
             else if(
              rs.getInt("profil")==4){
-                //zalogowano jako czytelnik
+                //zalogowano jako nie uczen
                     //login 997 pass qwer1234
              System.out.println("done nie uczący się");
              log.setNextScene(2);  
             }
             else if(
              rs.getInt("profil")==1){
-                //zalogowano jako bibliotekarz
-                    //login 111 pass 1234
+                //zalogowano jako admin
+                    //login 123 pass admin
              System.out.println("done admin");
              log.setNextScene(1);  
             }
@@ -135,35 +143,50 @@ public class LogowanieOknoController implements Initializable {
         
         if (rejestracjaImie.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj swoje imię!");
+            poprawne_dane = false;
         }
         if (rejestracjaNazwisko.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj swoje nazwisko!");
+            poprawne_dane = false;
         }
         if (rejestracjaEmail.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj e-mail!");
+            poprawne_dane = false;
         }
         if (rejestracjaHaslo.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj hasło!");
+            poprawne_dane = false;
         }
         if (rejestracjaHaslo1.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Powtórz hasło!");
+            poprawne_dane = false;
         }
         if (!rejestracjaHaslo.getText().equals(rejestracjaHaslo1.getText())) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Złe hasła!", "Hasła muszą być takie same!");
+            poprawne_dane = false;
         } else {
             DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Udana rejestracja!", "Witamy " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
+            poprawne_dane = true;
         }
+        try {
+        Client client = new Client();
+        client.openConnect();
         String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,3)";
+        String sql2 = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,4)";
+        if(radioTak.isSelected() == true && poprawne_dane == true){
+            st = client.connection.prepareStatement(sql);
+        }
+        else
+        if(radioNie.isSelected() == true && poprawne_dane == true){
+            st = client.connection.prepareStatement(sql2);
+        }
         String imie =rejestracjaImie.getText().trim();
         String nazwisko =rejestracjaNazwisko.getText().trim();
         String email =rejestracjaEmail.getText().trim();
         String haslo =rejestracjaHaslo.getText().trim();
         int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
         
-        try {
-            Client client = new Client();
-         client.openConnect();
-            st = client.connection.prepareStatement(sql);
+
             st.setString(1, imie);
             st.setString(2, nazwisko);
             st.setInt(3, nr_identyfikacyjny);
@@ -172,6 +195,12 @@ public class LogowanieOknoController implements Initializable {
             st.execute();
             System.out.print("wstawiono");
             //rs = st.executeQuery();
+            rejestracjaImie.clear();
+            rejestracjaNazwisko.clear();
+            rejestracjaEmail.clear();
+            rejestracjaHaslo.clear();
+            rejestracjaHaslo1.clear();
+            rejestracjaNrIdentyfikacyjny.clear();
         } catch (SQLException ex) {
             Logger.getLogger(LogowanieOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }

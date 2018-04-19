@@ -70,15 +70,22 @@
                         <PasswordField fx:id="rejestracjaHaslo" layoutX="230.0" layoutY="205.0" />
                         <PasswordField fx:id="rejestracjaHaslo1" layoutX="230.0" layoutY="255.0" />
                         <TextField fx:id="rejestracjaNrIdentyfikacyjny" layoutX="230.0" layoutY="296.0" />
+                        <RadioButton fx:id="radioTak" layoutX="250.0" layoutY="352.0" mnemonicParsing="false" text="Tak">
+                           <toggleGroup>
+                              <ToggleGroup fx:id="uczenieGroup" />
+                           </toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="radioNie" layoutX="317.0" layoutY="352.0" mnemonicParsing="false" text="Nie" toggleGroup="$uczenieGroup" />
                         <Text layoutX="124.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj imie" />
                         <Text layoutX="114.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwisko" />
                         <Text layoutX="121.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj e-mail" />
                         <Text layoutX="124.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj hasło" />
                         <Text layoutX="117.0" layoutY="272.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Powtórz hasło" />
-                        <Button fx:id="zarejestrujBTN" layoutX="421.0" layoutY="335.0" mnemonicParsing="false" onAction="#zarejestruj" text="Zarejestruj" />
+                        <Button fx:id="zarejestrujBTN" layoutX="423.0" layoutY="360.0" mnemonicParsing="false" onAction="#zarejestruj" text="Zarejestruj" />
                         <Text layoutX="89.0" layoutY="313.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nr identyfikacyjny*" />
                         <Text layoutX="33.0" layoutY="398.0" strokeType="OUTSIDE" strokeWidth="0.0" text="* Uczeń, Student- numer legitymacji" wrappingWidth="193.162109375" />
                         <Text layoutX="40.0" layoutY="415.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoba nie ucząca się - pesel" />
+                        <Text layoutX="106.0" layoutY="361.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Osoba ucząca się" />
                      </children></AnchorPane>
                </content>
             </Tab>
