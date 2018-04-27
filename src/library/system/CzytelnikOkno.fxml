@@ -39,13 +39,13 @@
                      <children>
                         <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="382.0" prefWidth="861.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="columnTytulWyszukaj" prefWidth="173.0" text="Tytuł" />
-                            <TableColumn fx:id="columnISBNWyszukaj" prefWidth="133.0" text="ISBN" />
-                              <TableColumn fx:id="columnImieWyszukaj" prefWidth="123.0" text="Imię autora" />
-                              <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="120.0" text="Nazwisko autora" />
-                              <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="127.0" text="Data wydania" />
-                              <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="111.0" text="Gatunek" />
-                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="73.0" text="Status" />
+                            <TableColumn fx:id="columnTytulWyszukaj" prefWidth="173.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                            <TableColumn fx:id="columnISBNWyszukaj" prefWidth="133.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnImieWyszukaj" prefWidth="123.0" style="-fx-alignment: CENTER;" text="Imię autora" />
+                              <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="120.0" style="-fx-alignment: CENTER;" text="Nazwisko autora" />
+                              <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="127.0" style="-fx-alignment: CENTER;" text="Data wydania" />
+                              <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="111.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="73.0" style="-fx-alignment: CENTER;" text="Status" />
                           </columns>
                         </TableView>
                         <TextField fx:id="tytulSzukanie" layoutX="135.0" layoutY="10.0" />
@@ -92,11 +92,11 @@
                         <Text layoutX="46.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" />
                         <Text layoutX="46.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" />
                         <Text layoutX="46.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nr identyfikacyjny" />
-                        <TextField layoutX="161.0" layoutY="65.0" />
-                        <TextField layoutX="161.0" layoutY="107.0" />
-                        <TextField layoutX="161.0" layoutY="150.0" />
+                        <TextField fx:id="imieDane" layoutX="161.0" layoutY="65.0" />
+                        <TextField fx:id="nazwiskoDane" layoutX="161.0" layoutY="107.0" />
+                        <TextField fx:id="nr_identyfikacyjnyDane" layoutX="161.0" layoutY="150.0" />
                         <Text layoutX="49.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E - mail" />
-                        <TextField layoutX="161.0" layoutY="189.0" />
+                        <TextField fx:id="emailDane" layoutX="161.0" layoutY="189.0" />
                      </children></AnchorPane>
               </content>
             </Tab>

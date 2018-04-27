@@ -81,6 +81,14 @@ public class CzytelnikOknoController implements Initializable {
     private Button btnWczytajKsiazki;
     ResultSet rs;
     PreparedStatement st;
+    @FXML
+    private TextField imieDane;
+    @FXML
+    private TextField nazwiskoDane;
+    @FXML
+    private TextField nr_identyfikacyjnyDane;
+    @FXML
+    private TextField emailDane;
 
     @FXML
     private void wczytajKsiazki(ActionEvent event) throws Exception {
@@ -116,7 +124,8 @@ public class CzytelnikOknoController implements Initializable {
             String imie_a = imieASzukanie.getText().trim();
             String nazwisko_a = nazwiskoASzukanie.getText().trim();
             String gatunek = gatunekSzukanie.getText().trim();
-            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and k.tytul=? and a.imie_a=? and a.nazwisko_a=? and g.nazwa_g=?";
+
+            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and (k.tytul=? or a.imie_a=? or a.nazwisko_a=? or g.nazwa_g=?)";
 
             st = client.connection.prepareStatement(sql2);
 
@@ -147,10 +156,42 @@ public class CzytelnikOknoController implements Initializable {
         imieASzukanie.clear();
         nazwiskoASzukanie.clear();
         gatunekSzukanie.clear();
+        //ksiazki_list.clear();
+    }
+
+    private void wczytanieDanych() {
+        System.out.println("ID zalogowanego " + LogowanieOknoController.przekazanieloginu);
+        try {
+            Client client = new Client();
+            client.openConnect();
+
+            String sql = "SELECT imie_k,nazwisko_k,nr_identyfikacji_k,email_k from klienci where id_klienta=?";
+
+            st = client.connection.prepareStatement(sql);
+            st.setInt(1, LogowanieOknoController.przekazanieloginu);
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                imieDane.setText(rs.getString("imie_k"));
+                nazwiskoDane.setText(rs.getString("nazwisko_k"));
+                nr_identyfikacyjnyDane.setText(rs.getString("nr_identyfikacji_k"));
+                emailDane.setText(rs.getString("email_k"));
+            }
+            rs.close();
+            client.connection.close();
+
+        } catch (SQLException sql) {
+            //złe sql
+            System.out.println("bec2" + sql);
+        }
+
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        //Wczytanie danych
+        wczytanieDanych();
 
         ///Dodanie do tabel elementów list
         tableWyszukajKsiazki.setItems(null);

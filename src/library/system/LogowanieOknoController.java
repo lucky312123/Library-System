@@ -63,6 +63,7 @@ public class LogowanieOknoController implements Initializable {
     @FXML
     private RadioButton radioNie;
     boolean poprawne_dane;
+    public static int przekazanieloginu;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -77,70 +78,83 @@ public class LogowanieOknoController implements Initializable {
 
     }
 
+    private void pobranieDanych() {
+        try {
+            String login = loginField.getText().trim();
+            Client client = new Client();
+            client.openConnect();
+            String sql = "select id_klienta from klienci where nr_identyfikacji_k = ?";
+            st = client.connection.prepareStatement(sql);
+            st.setString(1, login);
+
+            rs = st.executeQuery();
+            if (rs.next()) {
+                przekazanieloginu = rs.getInt("id_klienta");
+            }
+            rs.close();
+            client.connection.close();
+        } catch (SQLException sql) {
+            System.out.println("bec2" + sql);
+        }
+    }
+
     @FXML
     private void zaloguj(ActionEvent event) throws Exception {
-        try{
-        String login  = loginField.getText().trim();
-        String pass  = hasloField.getText().trim();
-         Client client = new Client();
-         client.openConnect();
-        String sql = "select profil from klienci where nr_identyfikacji_k =? and haslo_k =?";
-        String sql2 = "select profil from pracownicy where nr_identyfikacji_p =? and haslo_p =?";
-        if(check.isSelected()==false){
-        st = client.connection.prepareStatement(sql);}
-        
-        else{
-        st = client.connection.prepareStatement(sql2);}
-        st.setString(1, login);
-        st.setString(2, pass);
-        rs = st.executeQuery();
-        if(rs.next()){
-            
-            if(rs.getInt("profil")==3){
-                //zalogowano jako uczen
-                    //login 997 pass qwer1234
-             System.out.println("done uczen");
-             log.setNextScene(2);}
-            else if(
-             rs.getInt("profil")==4){
-                //zalogowano jako nie uczen
-                    //login 997 pass qwer1234
-             System.out.println("done nie uczący się");
-             log.setNextScene(2);  
+        try {
+            pobranieDanych();
+            String login = loginField.getText().trim();
+            String pass = hasloField.getText().trim();
+            Client client = new Client();
+            client.openConnect();
+            String sql = "select profil from klienci where nr_identyfikacji_k =? and haslo_k =?";
+            String sql2 = "select profil from pracownicy where nr_identyfikacji_p =? and haslo_p =?";
+            if (check.isSelected() == false) {
+                st = client.connection.prepareStatement(sql);
+            } else {
+                st = client.connection.prepareStatement(sql2);
             }
-            else if(
-             rs.getInt("profil")==1){
-                //zalogowano jako admin
+            st.setString(1, login);
+            st.setString(2, pass);
+            rs = st.executeQuery();
+            if (rs.next()) {
+
+                if (rs.getInt("profil") == 3) {
+                    //zalogowano jako uczen
+                    //login 997 pass qwer1234
+                    System.out.println("done uczen");
+                    log.setNextScene(2);
+                } else if (rs.getInt("profil") == 4) {
+                    //zalogowano jako nie uczen
+                    //login 997 pass qwer1234
+                    System.out.println("done nie uczący się");
+                    log.setNextScene(2);
+                } else if (rs.getInt("profil") == 1) {
+                    //zalogowano jako admin
                     //login 123 pass admin
-             System.out.println("done admin");
-             log.setNextScene(1);  
-            }
-             else if(
-             rs.getInt("profil")==2){
-                //zalogowano jako bibliotekarz
+                    System.out.println("done admin");
+                    log.setNextScene(1);
+                } else if (rs.getInt("profil") == 2) {
+                    //zalogowano jako bibliotekarz
                     //login 111 pass 1234
-             System.out.println("done bibliotekarz");
-             log.setNextScene(1);  
+                    System.out.println("done bibliotekarz");
+                    log.setNextScene(1);
+                }
+
+            } else {
+                //bład danych
+                System.out.println("bec1  bład");
+                //log.setNextScene(2);
             }
-             
-        }
-        else{
-            //bład danych
-             System.out.println("bec1  bład");
-             //log.setNextScene(2);
-        }
-       
-        }
-        catch(SQLException sql){
+        } catch (SQLException sql) {
             //złe sql
-             System.out.println("bec2"+sql);
+            System.out.println("bec2" + sql);
         }
 
     }
 
     @FXML
     private void zarejestruj(ActionEvent event) {
-        
+
         if (rejestracjaImie.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj swoje imię!");
             poprawne_dane = false;
@@ -169,23 +183,20 @@ public class LogowanieOknoController implements Initializable {
             poprawne_dane = true;
         }
         try {
-        Client client = new Client();
-        client.openConnect();
-        String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,3)";
-        String sql2 = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,4)";
-        if(radioTak.isSelected() == true && poprawne_dane == true){
-            st = client.connection.prepareStatement(sql);
-        }
-        else
-        if(radioNie.isSelected() == true && poprawne_dane == true){
-            st = client.connection.prepareStatement(sql2);
-        }
-        String imie =rejestracjaImie.getText().trim();
-        String nazwisko =rejestracjaNazwisko.getText().trim();
-        String email =rejestracjaEmail.getText().trim();
-        String haslo =rejestracjaHaslo.getText().trim();
-        int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
-        
+            Client client = new Client();
+            client.openConnect();
+            String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,3)";
+            String sql2 = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, ilosc_wypozyczonych, kara, profil) VALUES (?,?,?,?,?,0,0,4)";
+            if (radioTak.isSelected() == true && poprawne_dane == true) {
+                st = client.connection.prepareStatement(sql);
+            } else if (radioNie.isSelected() == true && poprawne_dane == true) {
+                st = client.connection.prepareStatement(sql2);
+            }
+            String imie = rejestracjaImie.getText().trim();
+            String nazwisko = rejestracjaNazwisko.getText().trim();
+            String email = rejestracjaEmail.getText().trim();
+            String haslo = rejestracjaHaslo.getText().trim();
+            int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
 
             st.setString(1, imie);
             st.setString(2, nazwisko);
@@ -204,7 +215,7 @@ public class LogowanieOknoController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(LogowanieOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
 
     @FXML
