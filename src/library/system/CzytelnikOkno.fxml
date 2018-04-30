@@ -39,13 +39,14 @@
                      <children>
                         <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="382.0" prefWidth="861.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="columnTytulWyszukaj" prefWidth="173.0" style="-fx-alignment: CENTER;" text="Tytuł" />
-                            <TableColumn fx:id="columnISBNWyszukaj" prefWidth="133.0" style="-fx-alignment: CENTER;" text="ISBN" />
-                              <TableColumn fx:id="columnImieWyszukaj" prefWidth="123.0" style="-fx-alignment: CENTER;" text="Imię autora" />
-                              <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="120.0" style="-fx-alignment: CENTER;" text="Nazwisko autora" />
-                              <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="127.0" style="-fx-alignment: CENTER;" text="Data wydania" />
-                              <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="111.0" style="-fx-alignment: CENTER;" text="Gatunek" />
-                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="73.0" style="-fx-alignment: CENTER;" text="Status" />
+                            <TableColumn fx:id="columnTytulWyszukaj" prefWidth="151.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                            <TableColumn fx:id="columnISBNWyszukaj" prefWidth="140.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnImieWyszukaj" prefWidth="117.0" style="-fx-alignment: CENTER;" text="Imię autora" />
+                              <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="123.0" style="-fx-alignment: CENTER;" text="Nazwisko autora" />
+                              <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="128.0" style="-fx-alignment: CENTER;" text="Data wydania" />
+                              <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="104.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="78.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnIloscWyszukaj" prefWidth="84.0" style="-fx-alignment: CENTER;" text="Ilość" />
                           </columns>
                         </TableView>
                         <TextField fx:id="tytulSzukanie" layoutX="135.0" layoutY="10.0" />
@@ -70,12 +71,12 @@
                      <children>
                         <TableView fx:id="tableMojeKsiazki" layoutY="36.0" prefHeight="339.0" prefWidth="861.0" AnchorPane.bottomAnchor="225.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="columnTytulMoje_ks" prefWidth="75.0" text="Tytuł" />
-                            <TableColumn fx:id="columnAutorMoje_ks" prefWidth="75.0" text="Autor" />
-                              <TableColumn fx:id="columnISBNMoje_ks" prefWidth="75.0" text="ISBN" />
-                              <TableColumn fx:id="columnGatunekMoje_ks" prefWidth="75.0" text="Gatunek" />
-                              <TableColumn fx:id="columnData_wypMoje_ks" prefWidth="159.0" text="Data wypożyczenia" />
-                              <TableColumn fx:id="columnData_zwrMoje_ks" prefWidth="118.0" text="Data zwrotu" />
+                            <TableColumn fx:id="columnTytulMoje_ks" prefWidth="141.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                            <TableColumn fx:id="columnAutorMoje_ks" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Autor" />
+                              <TableColumn fx:id="columnISBNMoje_ks" prefWidth="139.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnGatunekMoje_ks" prefWidth="91.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnData_wypMoje_ks" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Data wypożyczenia" />
+                              <TableColumn fx:id="columnData_zwrMoje_ks" prefWidth="144.0" style="-fx-alignment: CENTER;" text="Data zwrotu" />
                           </columns>
                         </TableView>
                         <Text layoutX="31.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kara do zapłacenia:" />

@@ -11,8 +11,9 @@ public class Ksiazki {
     private final SimpleStringProperty data_wyd;
     private final SimpleStringProperty nazwa_g;
     private final SimpleStringProperty nazwa_s;
+    private final SimpleStringProperty ilosc;
 
-    public Ksiazki(String tytul, String ISBN, String imie_a, String nazwisko_a, String data_wyd, String nazwa_g, String nazwa_s) {
+    public Ksiazki(String tytul, String ISBN, String imie_a, String nazwisko_a, String data_wyd, String nazwa_g, String nazwa_s,String ilosc) {
         this.tytul = new SimpleStringProperty(tytul);
         this.ISBN = new SimpleStringProperty(ISBN);
         this.imie_a = new SimpleStringProperty(imie_a);
@@ -20,6 +21,7 @@ public class Ksiazki {
         this.data_wyd = new SimpleStringProperty(data_wyd);
         this.nazwa_g = new SimpleStringProperty(nazwa_g);
         this.nazwa_s = new SimpleStringProperty(nazwa_s);
+        this.ilosc = new SimpleStringProperty(ilosc);
 
     }
 
@@ -77,6 +79,14 @@ public class Ksiazki {
 
     public void setNazwa_s(String value) {
         nazwa_s.set(value);
+    }
+    
+     public String getIlosc() {
+        return ilosc.get();
+    }
+
+    public void setIlosc(String value) {
+        ilosc.set(value);
     }
 
 }
