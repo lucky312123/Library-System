@@ -98,6 +98,7 @@
                         <TextField fx:id="nr_identyfikacyjnyDane" layoutX="161.0" layoutY="150.0" />
                         <Text layoutX="49.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E - mail" />
                         <TextField fx:id="emailDane" layoutX="161.0" layoutY="189.0" />
+                        <Button fx:id="edytujDaneBTN" layoutX="231.0" layoutY="247.0" mnemonicParsing="false" onAction="#edytujDane" text="Edytuj dane" />
                      </children></AnchorPane>
               </content>
             </Tab>

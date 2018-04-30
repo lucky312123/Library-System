@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -92,6 +93,8 @@ public class CzytelnikOknoController implements Initializable {
     private TextField emailDane;
     @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
+    @FXML
+    private Button edytujDaneBTN;
 
     @FXML
     private void wczytajKsiazki(ActionEvent event) throws Exception {
@@ -231,6 +234,37 @@ public class CzytelnikOknoController implements Initializable {
             System.out.println("Problem z iloscKsiazek" + sql);
         }
     }
+    
+    @FXML
+    private void edytujDane(ActionEvent event) {
+        try {
+            Client client = new Client();
+            client.openConnect();
+            String imie = imieDane.getText().trim();
+            String nazwisko = nazwiskoDane.getText().trim();
+            String email = emailDane.getText().trim();
+
+            String sql4 = "update klienci set imie_k =?, nazwisko_k =?, email_k =? where id_klienta =?";
+
+            st = client.connection.prepareStatement(sql4);
+
+            st.setString(1, imie);
+            st.setString(2, nazwisko);
+            st.setString(3, email);
+            st.setInt(4, LogowanieOknoController.przekazanieloginu);
+
+            st.executeUpdate();
+
+            st.close();
+            client.connection.close();
+            wczytanieDanych();
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zaktualizowano dane!", "Twoje nowe dane: " + imieDane.getText() + " " + nazwiskoDane.getText()+ "\n email: "+emailDane.getText());
+
+        } catch (SQLException sql) {
+            System.out.println("Problem z wczytanieDanych" + sql);
+        }
+        
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -245,6 +279,10 @@ public class CzytelnikOknoController implements Initializable {
         tableWyszukajKsiazki.setItems(ksiazki_list);
         tableMojeKsiazki.setItems(null);
         tableMojeKsiazki.setItems(mojeksiazki_list);
+        
+        nr_identyfikacyjnyDane.setEditable(false);
+        nr_identyfikacyjnyDane.setMouseTransparent(true);
+        nr_identyfikacyjnyDane.setFocusTraversable(false);
 
         //Przypisanie komórek z TableView do zmienych
         //Wyszukanie ksiazek
