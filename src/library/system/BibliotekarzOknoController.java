@@ -1,10 +1,14 @@
-
 package library.system;
 
+import Database.Client;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Application;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
 import static javafx.application.Application.STYLESHEET_MODENA;
 import javafx.application.Platform;
@@ -19,7 +23,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import library.system.dialogs.DialogsUtils;
-
 
 public class BibliotekarzOknoController implements Initializable {
 
@@ -54,15 +57,35 @@ public class BibliotekarzOknoController implements Initializable {
     @FXML
     private DatePicker data_urDodawanie;
 
-   
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       
-    }    
+
+    }
+
+    @FXML
+    public void dodajGatunek(ActionEvent event) {
+        try {
+            String nazwaGatunku = nazwaDodawanieGatunek.getText().toString();
+            String opisGatunku = opisDodawanieGatunek.getText().toString();
+            Client client = new Client();
+            client.openConnect();
+            String sql = "insert into gatunki (nazwa_g, opis) values (?, ?)";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, nazwaGatunku);
+            preparedStmt.setString(2, opisGatunku);
+            preparedStmt.execute();
+System.out.println("uda");
+
+            client.connection.close();
+        } catch (SQLException ex) {
+            System.out.println("łydki");
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @FXML
     private void zamknijAplikacje(ActionEvent event) {
-         Optional<ButtonType> result = DialogsUtils.confirmationDialog();
+        Optional<ButtonType> result = DialogsUtils.confirmationDialog();
         if (result.get() == ButtonType.OK) {
             Platform.exit();
         }
@@ -82,5 +105,5 @@ public class BibliotekarzOknoController implements Initializable {
     private void aboutApplication(ActionEvent event) {
         DialogsUtils.dialogAboutAplication();
     }
-    
+
 }
