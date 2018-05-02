@@ -74,6 +74,7 @@
                         <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="348.0" layoutY="86.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść" />
                         <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
                         <Text layoutX="766.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
+                        <Button fx:id="btnZapisz" layoutX="489.0" layoutY="99.0" mnemonicParsing="false" onAction="#edycja" text="zapisz" />
                      </children>
                   </AnchorPane>
             </content>

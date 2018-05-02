@@ -22,12 +22,31 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import library.system.dialogs.DialogsUtils;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellEditEvent;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 
 public class BibliotekarzOknoController extends User implements Initializable {
 
@@ -68,6 +87,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button dodajGatunekBTN;
     @FXML
+    private Button btnZapisz;
+    @FXML
     private TextField autorDodawanie;
     @FXML
     private TextField autorPseudonim;
@@ -75,10 +96,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private DatePicker data_urDodawanie;
     @FXML
     private TableView<Ksiazki> tableWyszukajKsiazki;
+    
+    
+    //do edycji trzeba <?,?> zmienć na <ksiazki, (typ-string int itd)>
     @FXML
-    private TableColumn<?, ?> columnTytulWyszukaj;
+    private TableColumn<Ksiazki, String> columnTytulWyszukaj;
     @FXML
-    private TableColumn<?, ?> columnISBNWyszukaj;
+    private TableColumn<Ksiazki,String> columnISBNWyszukaj;
     @FXML
     private TableColumn<?, ?> columnImieWyszukaj;
     @FXML
@@ -91,6 +115,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private TableColumn<?, ?> columnStatusWyszukaj;
     @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
+    Client client = new Client();
+    String tytul="1";
+    String ISBN="1";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -104,6 +131,45 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnGatunekWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
         columnStatusWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
         columnIloscWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ilosc"));
+
+        edycjaKsiazki();
+    }
+//do edycji
+    public void edycjaKsiazki() {
+        client.openConnect();
+        tableWyszukajKsiazki.setEditable(true);
+        columnTytulWyszukaj.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnTytulWyszukaj.setOnEditCommit(
+                new EventHandler<CellEditEvent<Ksiazki, String>>() {
+            @Override
+            public void handle(CellEditEvent<Ksiazki, String> t) {
+                tytul = t.getOldValue();
+                    ((Ksiazki) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())).setTytul(t.getNewValue());
+                    tytul = t.getNewValue();
+                    
+              
+            }
+        }
+        );
+        
+        
+        columnISBNWyszukaj.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnISBNWyszukaj.setOnEditCommit(
+                new EventHandler<CellEditEvent<Ksiazki, String>>() {
+            @Override
+            public void handle(CellEditEvent<Ksiazki, String> t) {
+                ISBN =t.getOldValue();
+                System.out.println("ISBNold "+ISBN);
+                    ((Ksiazki) t.getTableView().getItems().get(
+                            t.getTablePosition().getRow())).setISNB(t.getNewValue());
+                ISBN = t.getNewValue();
+                System.out.print("ISBNnew "+ISBN);
+                    
+              
+            }
+        }
+        );
     }
 
     @FXML
@@ -136,11 +202,28 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
+    public void edycja() {
+        
+        try {
+            // narazie nic
+            // pobieram
+            String sql = "UPDATE ksiazka SET tytul = ?, ISBN = ? WHERE id_ksiazki = 2";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, tytul);
+            preparedStmt.setString(2, ISBN);
+            preparedStmt.execute();
+            System.out.print(tytul);
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
     public void dodajGatunek(ActionEvent event) {
         try {
             String nazwaGatunku = nazwaDodawanieGatunek.getText().toString();
             String opisGatunku = opisDodawanieGatunek.getText().toString();
-            Client client = new Client();
+
             client.openConnect();
             String sql = "insert into gatunki (nazwa_g, opis) values (?, ?)";
             PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
