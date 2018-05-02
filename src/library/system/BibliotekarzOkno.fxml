@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="618.0" prefWidth="786.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
    <children>
       <MenuBar layoutX="18.0" layoutY="12.0" prefHeight="64.0" prefWidth="786.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
@@ -33,6 +45,39 @@
       </MenuBar>
       <TabPane layoutY="37.0" prefHeight="581.0" prefWidth="786.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
         <tabs>
+            
+           <Tab text="Wyszukaj książki">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="382.0" prefWidth="861.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="columnTytulWyszukaj" prefWidth="151.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                            <TableColumn fx:id="columnISBNWyszukaj" prefWidth="140.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnImieWyszukaj" prefWidth="117.0" style="-fx-alignment: CENTER;" text="Imię autora" />
+                              <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="123.0" style="-fx-alignment: CENTER;" text="Nazwisko autora" />
+                              <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="128.0" style="-fx-alignment: CENTER;" text="Data wydania" />
+                              <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="104.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="78.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnIloscWyszukaj" prefWidth="84.0" style="-fx-alignment: CENTER;" text="Ilość" />
+                          </columns>
+                        </TableView>
+                        <TextField fx:id="tytulSzukanie" layoutX="135.0" layoutY="10.0" />
+                        <TextField fx:id="imieASzukanie" layoutX="135.0" layoutY="53.0" />
+                        <TextField fx:id="nazwiskoASzukanie" layoutX="135.0" layoutY="98.0" />
+                        <TextField fx:id="gatunekSzukanie" layoutX="135.0" layoutY="135.0" />
+                        <Text layoutX="33.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tytuł" />
+                        <Text layoutX="33.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko autora" />
+                        <Text layoutX="33.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gatunek" />
+                      <Button fx:id="wyszukajKsiazkeBTN" layoutX="345.0" layoutY="32.0" mnemonicParsing="false" onAction="#wyszukajKsiazki" text="Wyszukaj" />
+                        <Button fx:id="btnWczytajKsiazki" layoutX="482.0" layoutY="32.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
+                        <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="348.0" layoutY="86.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść" />
+                        <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
+                        <Text layoutX="766.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
           <Tab text="Dodawanie książki">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
@@ -65,7 +110,7 @@
                         <TextArea fx:id="opisDodawanieGatunek" layoutX="135.0" layoutY="115.0" prefHeight="87.0" prefWidth="217.0" />
                         <Text layoutX="55.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa" />
                         <Text layoutX="62.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opis" />
-                        <Button fx:id="dodajGatunekBTN" layoutX="526.0" layoutY="74.0" mnemonicParsing="false" text="Dodaj gatunek" />
+                        <Button fx:id="dodajGatunekBTN" layoutX="526.0" layoutY="74.0" mnemonicParsing="false" onAction="#dodajGatunek" text="Dodaj gatunek" />
                      </children>
                   </AnchorPane>
             </content>

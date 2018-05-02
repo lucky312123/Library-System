@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
 import static javafx.application.Application.STYLESHEET_MODENA;
@@ -27,7 +29,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import library.system.dialogs.DialogsUtils;
 
-public class CzytelnikOknoController implements Initializable {
+public class CzytelnikOknoController extends User implements Initializable {
 
     @FXML
     private ToggleGroup styleGroup;
@@ -77,6 +79,7 @@ public class CzytelnikOknoController implements Initializable {
     private Label karaPole;
     @FXML
     private Label ilosc_wypPole;
+    //ObservableList<Ksiazki>
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     @FXML
@@ -96,61 +99,33 @@ public class CzytelnikOknoController implements Initializable {
     @FXML
     private Button edytujDaneBTN;
 
+    Client client = new Client();
+   // User user = new User();
+    
     @FXML
-    private void wczytajKsiazki(ActionEvent event) throws Exception {
-        try {
-            Client client = new Client();
-            client.openConnect();
-            String sql = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s,count(k.tytul) as ilosc from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status group by k.tytul";
-
-            st = client.connection.prepareStatement(sql);
-            rs = st.executeQuery();
-
-            ksiazki_list.clear();
-            while (rs.next()) {
-                ksiazki_list.add(new Ksiazki(rs.getString("tytul"), rs.getString("ISBN"), rs.getString("imie_a"), rs.getString("nazwisko_a"), rs.getString("data_wyd"), rs.getString("nazwa_g"), rs.getString("nazwa_s"), rs.getString("ilosc")));
-                //System.out.println(rs.getString("tytul") + " " + rs.getString("ISBN")+ " " + rs.getString("nazwisko_a")+ " " + rs.getString("data_wyd")+ " " + rs.getString("nazwa_g")+ " " + rs.getString("nazwa_s"));
-
-            }
-            rs.close();
-            client.connection.close();
-
-        } catch (SQLException sql) {
-            System.out.println("Problem z wczytajKsiazki" + sql);
-        }
+    public void wczytajKsiazki(ActionEvent event) throws Exception {
+         wczytajKsiazki(ksiazki_list);
+         //To change body of generated methods, choose Tools | Templates.
+          
+        tableWyszukajKsiazki.setItems(ksiazki_list);
     }
+
+ 
+   
+    
+    
+    
 
     @FXML
     private void wyszukajKsiazki(ActionEvent event) {
         try {
-            Client client = new Client();
-            client.openConnect();
             String tytul = tytulSzukanie.getText().trim();
             String imie_a = imieASzukanie.getText().trim();
             String nazwisko_a = nazwiskoASzukanie.getText().trim();
             String gatunek = gatunekSzukanie.getText().trim();
-
-            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s,count(k.tytul) as ilosc from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and k.status='1' and (k.tytul=? or a.imie_a=? or a.nazwisko_a=? or g.nazwa_g=?) group by k.tytul";
-
-            st = client.connection.prepareStatement(sql2);
-
-            st.setString(1, tytul);
-            st.setString(2, imie_a);
-            st.setString(3, nazwisko_a);
-            st.setString(4, gatunek);
-
-            rs = st.executeQuery();
-
-            ksiazki_list.clear();
-            while (rs.next()) {
-                ksiazki_list.add(new Ksiazki(rs.getString("tytul"), rs.getString("ISBN"), rs.getString("imie_a"), rs.getString("nazwisko_a"), rs.getString("data_wyd"), rs.getString("nazwa_g"), rs.getString("nazwa_s"), rs.getString("ilosc")));
-
-            }
-            rs.close();
-            client.connection.close();
-
-        } catch (SQLException sql) {
-            System.out.println("Problem z wyszukajKsiazki" + sql);
+            wyszukaj(ksiazki_list, tytul, imie_a, nazwisko_a, gatunek);
+        } catch (Exception ex) {
+            Logger.getLogger(CzytelnikOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -160,7 +135,7 @@ public class CzytelnikOknoController implements Initializable {
         imieASzukanie.clear();
         nazwiskoASzukanie.clear();
         gatunekSzukanie.clear();
-        //ksiazki_list.clear();
+        ksiazki_list.clear();
     }
 
     private void wczytanieDanych() {
@@ -276,7 +251,7 @@ public class CzytelnikOknoController implements Initializable {
 
         ///Dodanie do tabel elementów list
         tableWyszukajKsiazki.setItems(null);
-        tableWyszukajKsiazki.setItems(ksiazki_list);
+       tableWyszukajKsiazki.setItems(ksiazki_list);
         tableMojeKsiazki.setItems(null);
         tableMojeKsiazki.setItems(mojeksiazki_list);
         
