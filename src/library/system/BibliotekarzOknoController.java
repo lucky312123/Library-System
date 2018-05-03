@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -118,6 +119,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private TableColumn<?, ?> columnIloscWyszukaj;
     Client client = new Client();
     String tytul = "1";
+    String tytul1 = "2";
     String ISBN = "1";
 
     @Override
@@ -145,7 +147,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 new EventHandler<CellEditEvent<Ksiazki, String>>() {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
-                tytul = t.getOldValue();
+                //tytul = t.getOldValue();
+                tytul1 = t.getOldValue();
                 ((Ksiazki) t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setTytul(t.getNewValue());
                 tytul = t.getNewValue();
@@ -159,7 +162,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 new EventHandler<CellEditEvent<Ksiazki, String>>() {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
-                ISBN = t.getOldValue();
+                //ISBN = t.getOldValue();
                 System.out.println("ISBNold " + ISBN);
                 ((Ksiazki) t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setISNB(t.getNewValue());
@@ -201,17 +204,49 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
-    public void edycja() {
+    public void edycja() throws SQLException {
+        PreparedStatement preparedStmt;
+        ResultSet rs;
+        Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
+        client.openConnect();
+        String sql1 = "Select id_ksiazki From ksiazka Where tytul =?";
+        preparedStmt = client.connection.prepareStatement(sql1);
+        preparedStmt.setString(1, k.getTytul());
+        int id = -1;
+        rs = preparedStmt.executeQuery();
+        //id = rs.getInt("id_ksiazki");
+        if (rs.next()) {
+            System.out.print("tutaj " + k.getTytul() + " n " + rs.getInt("id_ksiazki"));
+            id = rs.getInt("id_ksiazki");
+        }
 
         try {
-            // narazie nic
-            // pobieram
-            String sql = "UPDATE ksiazka SET tytul = ?, ISBN = ? WHERE id_ksiazki = 2";
-            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
-            preparedStmt.setString(1, tytul);
-            preparedStmt.setString(2, ISBN);
-            preparedStmt.execute();
-            System.out.print(tytul);
+
+            if (!tytul.equals("1") && !ISBN.equals("1")) {
+                String sql = "UPDATE ksiazka SET tytul = ?, ISBN = ? WHERE id_ksiazki =?";
+                preparedStmt = client.connection.prepareStatement(sql);
+                preparedStmt.setString(1, tytul);
+                preparedStmt.setString(2, ISBN);
+                preparedStmt.setInt(3, id);
+                System.out.println("oba");
+            } else if (!tytul.equals("1") && ISBN.equals("1")) {
+                String sql = "UPDATE ksiazka SET tytul = ? WHERE id_ksiazki =?";
+                preparedStmt = client.connection.prepareStatement(sql);
+                preparedStmt.setString(1, tytul);
+                preparedStmt.setInt(2, id);
+                System.out.println("tytul");
+            } else if (tytul.equals("1") && !ISBN.equals("1")) {
+                String sql = "UPDATE ksiazka SET ISBN = ? WHERE id_ksiazki =?";
+                preparedStmt = client.connection.prepareStatement(sql);
+                preparedStmt.setString(1, ISBN);
+                preparedStmt.setInt(2, id);
+                System.out.println("isbn: " + ISBN + " do ksiazki id: " + id);
+                preparedStmt.execute();
+            }
+
+            rs.close();
+            client.connection.close();
+            ///System.out.print(tytul);
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
