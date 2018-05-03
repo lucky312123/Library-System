@@ -10,14 +10,16 @@ public class MojeKsiazki {
     private final SimpleStringProperty nazwa_g;
     private final SimpleStringProperty data_wyp;
     private final SimpleStringProperty data_zwrotu;
+    private final SimpleStringProperty nazwa_s;
 
-    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu) {
+    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s) {
         this.tytul = new SimpleStringProperty(tytul);
         this.autor = new SimpleStringProperty(autor);
         this.ISBN = new SimpleStringProperty(ISBN);
         this.nazwa_g = new SimpleStringProperty(nazwa_g);
         this.data_wyp = new SimpleStringProperty(data_wyp);
         this.data_zwrotu = new SimpleStringProperty(data_zwrotu);
+        this.nazwa_s = new SimpleStringProperty(nazwa_s);
     }
     
     public String getTytul() {
@@ -66,6 +68,14 @@ public class MojeKsiazki {
 
     public void setData_zwrotu(String value) {
         data_zwrotu.set(value);
+    }
+    
+    public void setNazwa_s(String value) {
+        nazwa_s.set(value);
+    }
+    
+     public String getNazwa_s() {
+        return nazwa_s.get();
     }
 
 }

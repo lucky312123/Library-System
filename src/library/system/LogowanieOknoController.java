@@ -1,7 +1,6 @@
 package library.system;
 
 import Database.Client;
-import com.mysql.jdbc.Statement;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,22 +78,26 @@ public class LogowanieOknoController implements Initializable {
     }
 
     private void pobranieDanych() {
-        try {
-            String login = loginField.getText().trim();
-            Client client = new Client();
-            client.openConnect();
-            String sql = "select id_klienta from klienci where nr_identyfikacji_k = ?";
-            st = client.connection.prepareStatement(sql);
-            st.setString(1, login);
+        if (check.isSelected() == false) {
+            try {
+                String login = loginField.getText().trim();
+                Client client = new Client();
+                client.openConnect();
+                String sql = "select id_klienta from klienci where nr_identyfikacji_k = ?";
 
-            rs = st.executeQuery();
-            if (rs.next()) {
-                przekazanieloginu = rs.getInt("id_klienta");
+                st = client.connection.prepareStatement(sql);
+
+                st.setString(1, login);
+
+                rs = st.executeQuery();
+                if (rs.next()) {
+                    przekazanieloginu = rs.getInt("id_klienta");
+                }
+                rs.close();
+                client.connection.close();
+            } catch (SQLException sql) {
+                System.out.println("bec2" + sql);
             }
-            rs.close();
-            client.connection.close();
-        } catch (SQLException sql) {
-            System.out.println("bec2" + sql);
         }
     }
 

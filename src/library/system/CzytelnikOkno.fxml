@@ -77,6 +77,7 @@
                               <TableColumn fx:id="columnGatunekMoje_ks" prefWidth="91.0" style="-fx-alignment: CENTER;" text="Gatunek" />
                               <TableColumn fx:id="columnData_wypMoje_ks" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Data wypożyczenia" />
                               <TableColumn fx:id="columnData_zwrMoje_ks" prefWidth="144.0" style="-fx-alignment: CENTER;" text="Data zwrotu" />
+                              <TableColumn fx:id="columnStatusMoje_ks" prefWidth="107.0" style="-fx-alignment: CENTER;" text="Status" />
                           </columns>
                         </TableView>
                         <Text layoutX="31.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kara do zapłacenia:" />

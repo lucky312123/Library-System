@@ -79,7 +79,6 @@ public class CzytelnikOknoController extends User implements Initializable {
     private Label karaPole;
     @FXML
     private Label ilosc_wypPole;
-    //ObservableList<Ksiazki>
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     @FXML
@@ -99,22 +98,18 @@ public class CzytelnikOknoController extends User implements Initializable {
     @FXML
     private Button edytujDaneBTN;
 
+    @FXML
+    private TableColumn<?, ?> columnStatusMoje_ks;
+
     Client client = new Client();
-   // User user = new User();
-    
+
     @FXML
     public void wczytajKsiazki(ActionEvent event) throws Exception {
-         wczytajKsiazki(ksiazki_list);
-         //To change body of generated methods, choose Tools | Templates.
-          
+        wczytajKsiazki(ksiazki_list);
+        //To change body of generated methods, choose Tools | Templates.
+
         tableWyszukajKsiazki.setItems(ksiazki_list);
     }
-
- 
-   
-    
-    
-    
 
     @FXML
     private void wyszukajKsiazki(ActionEvent event) {
@@ -169,7 +164,7 @@ public class CzytelnikOknoController extends User implements Initializable {
         try {
             Client client = new Client();
             client.openConnect();
-            String sql3 = "SELECT k.tytul,concat(a.imie_a,'  ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and kl.id_klienta=?";
+            String sql3 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.id_klienta=?";
 
             st = client.connection.prepareStatement(sql3);
             st.setInt(1, LogowanieOknoController.przekazanieloginu);
@@ -177,8 +172,7 @@ public class CzytelnikOknoController extends User implements Initializable {
 
             mojeksiazki_list.clear();
             while (rs.next()) {
-                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu")));
-
+                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s")));
             }
             rs.close();
             client.connection.close();
@@ -209,7 +203,7 @@ public class CzytelnikOknoController extends User implements Initializable {
             System.out.println("Problem z iloscKsiazek" + sql);
         }
     }
-    
+
     @FXML
     private void edytujDane(ActionEvent event) {
         try {
@@ -233,12 +227,12 @@ public class CzytelnikOknoController extends User implements Initializable {
             st.close();
             client.connection.close();
             wczytanieDanych();
-            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zaktualizowano dane!", "Twoje nowe dane: " + imieDane.getText() + " " + nazwiskoDane.getText()+ "\n email: "+emailDane.getText());
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zaktualizowano dane!", "Twoje nowe dane: " + imieDane.getText() + " " + nazwiskoDane.getText() + "\n email: " + emailDane.getText());
 
         } catch (SQLException sql) {
             System.out.println("Problem z wczytanieDanych" + sql);
         }
-        
+
     }
 
     @Override
@@ -251,10 +245,10 @@ public class CzytelnikOknoController extends User implements Initializable {
 
         ///Dodanie do tabel elementów list
         tableWyszukajKsiazki.setItems(null);
-       tableWyszukajKsiazki.setItems(ksiazki_list);
+        tableWyszukajKsiazki.setItems(ksiazki_list);
         tableMojeKsiazki.setItems(null);
         tableMojeKsiazki.setItems(mojeksiazki_list);
-        
+
         nr_identyfikacyjnyDane.setEditable(false);
         nr_identyfikacyjnyDane.setMouseTransparent(true);
         nr_identyfikacyjnyDane.setFocusTraversable(false);
@@ -277,6 +271,7 @@ public class CzytelnikOknoController extends User implements Initializable {
         columnGatunekMoje_ks.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
         columnData_wypMoje_ks.setCellValueFactory(new PropertyValueFactory<>("data_wyp"));
         columnData_zwrMoje_ks.setCellValueFactory(new PropertyValueFactory<>("data_zwrotu"));
+        columnStatusMoje_ks.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
     }
 
     @FXML

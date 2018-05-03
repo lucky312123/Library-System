@@ -6,41 +6,27 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Application;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
 import static javafx.application.Application.STYLESHEET_MODENA;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellEditEvent;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import library.system.dialogs.DialogsUtils;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -89,6 +75,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button btnZapisz;
     @FXML
+    private Button usunBtn;
+    @FXML
     private TextField autorDodawanie;
     @FXML
     private TextField autorPseudonim;
@@ -97,7 +85,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableView<Ksiazki> tableWyszukajKsiazki;
 
-    
     //do edycji trzeba <?,?> zmienć na <ksiazki, (typ-string int itd)>
     @FXML
     private TableColumn<Ksiazki, String> columnTytulWyszukaj;
@@ -116,8 +103,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
     Client client = new Client();
-    String tytul="1";
-    String ISBN="1";
+    String tytul = "1";
+    String tytul1 = "2";
+    String ISBN = "1";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -132,6 +120,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnStatusWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
         columnIloscWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ilosc"));
 
+        usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
+
         edycjaKsiazki();
     }
 //do edycji
@@ -144,30 +134,28 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 new EventHandler<CellEditEvent<Ksiazki, String>>() {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
-                tytul = t.getOldValue();
+                //tytul = t.getOldValue();
+                tytul1 = t.getOldValue();
                 ((Ksiazki) t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setTytul(t.getNewValue());
                 tytul = t.getNewValue();
 
-              
             }
         }
         );
 
-        
         columnISBNWyszukaj.setCellFactory(TextFieldTableCell.forTableColumn());
         columnISBNWyszukaj.setOnEditCommit(
                 new EventHandler<CellEditEvent<Ksiazki, String>>() {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
-                ISBN =t.getOldValue();
-                System.out.println("ISBNold "+ISBN);
+                //ISBN = t.getOldValue();
+                System.out.println("ISBNold " + ISBN);
                 ((Ksiazki) t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setISNB(t.getNewValue());
                 ISBN = t.getNewValue();
-                System.out.print("ISBNnew "+ISBN);
+                System.out.print("ISBNnew " + ISBN);
 
-              
             }
         }
         );
@@ -203,17 +191,49 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
-    public void edycja() {
+    public void edycja() throws SQLException {
+        PreparedStatement preparedStmt;
+        ResultSet rs;
+        Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
+        client.openConnect();
+        String sql1 = "Select id_ksiazki From ksiazka Where tytul =?";
+        preparedStmt = client.connection.prepareStatement(sql1);
+        preparedStmt.setString(1, k.getTytul());
+        int id = -1;
+        rs = preparedStmt.executeQuery();
+        //id = rs.getInt("id_ksiazki");
+        if (rs.next()) {
+            System.out.print("tutaj " + k.getTytul() + " n " + rs.getInt("id_ksiazki"));
+            id = rs.getInt("id_ksiazki");
+        }
 
         try {
-            // narazie nic
-            // pobieram
-            String sql = "UPDATE ksiazka SET tytul = ?, ISBN = ? WHERE id_ksiazki = 2";
-            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
-            preparedStmt.setString(1, tytul);
-            preparedStmt.setString(2, ISBN);
-            preparedStmt.execute();
-            System.out.print(tytul);
+
+            if (!tytul.equals("1") && !ISBN.equals("1")) {
+                String sql = "UPDATE ksiazka SET tytul = ?, ISBN = ? WHERE id_ksiazki =?";
+                preparedStmt = client.connection.prepareStatement(sql);
+                preparedStmt.setString(1, tytul);
+                preparedStmt.setString(2, ISBN);
+                preparedStmt.setInt(3, id);
+                System.out.println("oba");
+            } else if (!tytul.equals("1") && ISBN.equals("1")) {
+                String sql = "UPDATE ksiazka SET tytul = ? WHERE id_ksiazki =?";
+                preparedStmt = client.connection.prepareStatement(sql);
+                preparedStmt.setString(1, tytul);
+                preparedStmt.setInt(2, id);
+                System.out.println("tytul");
+            } else if (tytul.equals("1") && !ISBN.equals("1")) {
+                String sql = "UPDATE ksiazka SET ISBN = ? WHERE id_ksiazki =?";
+                preparedStmt = client.connection.prepareStatement(sql);
+                preparedStmt.setString(1, ISBN);
+                preparedStmt.setInt(2, id);
+                System.out.println("isbn: " + ISBN + " do ksiazki id: " + id);
+                preparedStmt.execute();
+            }
+
+            rs.close();
+            client.connection.close();
+            ///System.out.print(tytul);
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -236,6 +256,23 @@ public class BibliotekarzOknoController extends User implements Initializable {
             client.connection.close();
         } catch (SQLException ex) {
             System.out.println("łydki");
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void usunKsiazke() {
+        Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
+        try {
+            // narazie nic
+            // pobieram
+            String sql = "DELETE FROM ksiazka WHERE tytul = ?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, k.getTytul());
+            preparedStmt.execute();
+            tableWyszukajKsiazki.getItems().remove(k);
+            System.out.print("usunieto");
+        } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
