@@ -89,6 +89,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button btnZapisz;
     @FXML
+    private Button usunBtn;
+    @FXML
     private TextField autorDodawanie;
     @FXML
     private TextField autorPseudonim;
@@ -96,13 +98,12 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private DatePicker data_urDodawanie;
     @FXML
     private TableView<Ksiazki> tableWyszukajKsiazki;
-    
-    
+
     //do edycji trzeba <?,?> zmienć na <ksiazki, (typ-string int itd)>
     @FXML
     private TableColumn<Ksiazki, String> columnTytulWyszukaj;
     @FXML
-    private TableColumn<Ksiazki,String> columnISBNWyszukaj;
+    private TableColumn<Ksiazki, String> columnISBNWyszukaj;
     @FXML
     private TableColumn<?, ?> columnImieWyszukaj;
     @FXML
@@ -116,8 +117,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
     Client client = new Client();
-    String tytul="1";
-    String ISBN="1";
+    String tytul = "1";
+    String ISBN = "1";
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -135,6 +136,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         edycjaKsiazki();
     }
 //do edycji
+
     public void edycjaKsiazki() {
         client.openConnect();
         tableWyszukajKsiazki.setEditable(true);
@@ -144,29 +146,26 @@ public class BibliotekarzOknoController extends User implements Initializable {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
                 tytul = t.getOldValue();
-                    ((Ksiazki) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())).setTytul(t.getNewValue());
-                    tytul = t.getNewValue();
-                    
-              
+                ((Ksiazki) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setTytul(t.getNewValue());
+                tytul = t.getNewValue();
+
             }
         }
         );
-        
-        
+
         columnISBNWyszukaj.setCellFactory(TextFieldTableCell.forTableColumn());
         columnISBNWyszukaj.setOnEditCommit(
                 new EventHandler<CellEditEvent<Ksiazki, String>>() {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
-                ISBN =t.getOldValue();
-                System.out.println("ISBNold "+ISBN);
-                    ((Ksiazki) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())).setISNB(t.getNewValue());
+                ISBN = t.getOldValue();
+                System.out.println("ISBNold " + ISBN);
+                ((Ksiazki) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setISNB(t.getNewValue());
                 ISBN = t.getNewValue();
-                System.out.print("ISBNnew "+ISBN);
-                    
-              
+                System.out.print("ISBNnew " + ISBN);
+
             }
         }
         );
@@ -203,7 +202,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
     @FXML
     public void edycja() {
-        
+
         try {
             // narazie nic
             // pobieram
@@ -235,6 +234,23 @@ public class BibliotekarzOknoController extends User implements Initializable {
             client.connection.close();
         } catch (SQLException ex) {
             System.out.println("łydki");
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void usunKsiazke() {
+        Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
+        try {
+            // narazie nic
+            // pobieram
+            String sql = "DELETE FROM ksiazka WHERE tytul = ?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, k.getTytul());
+            preparedStmt.execute();
+            tableWyszukajKsiazki.getItems().remove(k);
+            System.out.print("usunieto");
+        } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
