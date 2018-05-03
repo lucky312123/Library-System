@@ -96,13 +96,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private DatePicker data_urDodawanie;
     @FXML
     private TableView<Ksiazki> tableWyszukajKsiazki;
-    
+
     
     //do edycji trzeba <?,?> zmienć na <ksiazki, (typ-string int itd)>
     @FXML
     private TableColumn<Ksiazki, String> columnTytulWyszukaj;
     @FXML
-    private TableColumn<Ksiazki,String> columnISBNWyszukaj;
+    private TableColumn<Ksiazki, String> columnISBNWyszukaj;
     @FXML
     private TableColumn<?, ?> columnImieWyszukaj;
     @FXML
@@ -135,6 +135,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         edycjaKsiazki();
     }
 //do edycji
+
     public void edycjaKsiazki() {
         client.openConnect();
         tableWyszukajKsiazki.setEditable(true);
@@ -144,15 +145,15 @@ public class BibliotekarzOknoController extends User implements Initializable {
             @Override
             public void handle(CellEditEvent<Ksiazki, String> t) {
                 tytul = t.getOldValue();
-                    ((Ksiazki) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())).setTytul(t.getNewValue());
-                    tytul = t.getNewValue();
-                    
+                ((Ksiazki) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setTytul(t.getNewValue());
+                tytul = t.getNewValue();
+
               
             }
         }
         );
-        
+
         
         columnISBNWyszukaj.setCellFactory(TextFieldTableCell.forTableColumn());
         columnISBNWyszukaj.setOnEditCommit(
@@ -161,11 +162,11 @@ public class BibliotekarzOknoController extends User implements Initializable {
             public void handle(CellEditEvent<Ksiazki, String> t) {
                 ISBN =t.getOldValue();
                 System.out.println("ISBNold "+ISBN);
-                    ((Ksiazki) t.getTableView().getItems().get(
-                            t.getTablePosition().getRow())).setISNB(t.getNewValue());
+                ((Ksiazki) t.getTableView().getItems().get(
+                        t.getTablePosition().getRow())).setISNB(t.getNewValue());
                 ISBN = t.getNewValue();
                 System.out.print("ISBNnew "+ISBN);
-                    
+
               
             }
         }
@@ -203,7 +204,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
     @FXML
     public void edycja() {
-        
+
         try {
             // narazie nic
             // pobieram
