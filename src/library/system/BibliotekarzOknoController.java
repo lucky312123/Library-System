@@ -103,7 +103,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
     Client client = new Client();
-    String tytul = "1";
+    String tytulp = "1";
     String tytul1 = "2";
     String ISBN = "1";
 
@@ -138,7 +138,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 tytul1 = t.getOldValue();
                 ((Ksiazki) t.getTableView().getItems().get(
                         t.getTablePosition().getRow())).setTytul(t.getNewValue());
-                tytul = t.getNewValue();
+                tytulp = t.getNewValue();
 
             }
         }
@@ -189,49 +189,66 @@ public class BibliotekarzOknoController extends User implements Initializable {
         gatunekSzukanie.clear();
         ksiazki_list.clear();
     }
-
+public int getId(String n){
+       int id =-1;
+        try {
+         
+            PreparedStatement preparedStmt;
+            ResultSet rs;
+           client.openConnect();
+            String sql1 = "Select id_ksiazki From ksiazka Where tytul =?";
+            preparedStmt = client.connection.prepareStatement(sql1);
+            preparedStmt.setString(1,n);
+            
+            rs = preparedStmt.executeQuery();
+            //id = rs.getInt("id_ksiazki");
+            if (rs.next()) {
+               // System.out.print("tutaj " + k.getTytul() + " n " + rs.getInt("id_ksiazki"));
+                id = rs.getInt("id_ksiazki");
+            }
+            return id;
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return id;
+}
     @FXML
     public void edycja() throws SQLException {
         PreparedStatement preparedStmt;
         ResultSet rs;
         Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
         client.openConnect();
-        String sql1 = "Select id_ksiazki From ksiazka Where tytul =?";
-        preparedStmt = client.connection.prepareStatement(sql1);
-        preparedStmt.setString(1, k.getTytul());
-        int id = -1;
-        rs = preparedStmt.executeQuery();
-        //id = rs.getInt("id_ksiazki");
-        if (rs.next()) {
-            System.out.print("tutaj " + k.getTytul() + " n " + rs.getInt("id_ksiazki"));
-            id = rs.getInt("id_ksiazki");
-        }
+        //System.out.print(k.getTytul());
+       int id = getId(tytul1);
 
         try {
 
-            if (!tytul.equals("1") && !ISBN.equals("1")) {
+            if (!tytulp.equals("1") && !ISBN.equals("1")) {
                 String sql = "UPDATE ksiazka SET tytul = ?, ISBN = ? WHERE id_ksiazki =?";
                 preparedStmt = client.connection.prepareStatement(sql);
-                preparedStmt.setString(1, tytul);
+                preparedStmt.setString(1, tytulp);
                 preparedStmt.setString(2, ISBN);
-                preparedStmt.setInt(3, id);
-                System.out.println("oba");
-            } else if (!tytul.equals("1") && ISBN.equals("1")) {
+                preparedStmt.setInt(3,id );
+                 preparedStmt.execute();
+                System.out.println("oba"+id);
+            } else if (!tytulp.equals("1") && ISBN.equals("1")) {
                 String sql = "UPDATE ksiazka SET tytul = ? WHERE id_ksiazki =?";
                 preparedStmt = client.connection.prepareStatement(sql);
-                preparedStmt.setString(1, tytul);
+                preparedStmt.setString(1, tytulp);
                 preparedStmt.setInt(2, id);
-                System.out.println("tytul");
-            } else if (tytul.equals("1") && !ISBN.equals("1")) {
+                preparedStmt.execute();
+                System.out.println("tytul:"+id+" po zmianie: " +tytulp);
+            } else if (tytulp.equals("1") && !ISBN.equals("1")) {
                 String sql = "UPDATE ksiazka SET ISBN = ? WHERE id_ksiazki =?";
                 preparedStmt = client.connection.prepareStatement(sql);
                 preparedStmt.setString(1, ISBN);
+                id = getId(k.getTytul());
                 preparedStmt.setInt(2, id);
                 System.out.println("isbn: " + ISBN + " do ksiazki id: " + id);
                 preparedStmt.execute();
             }
 
-            rs.close();
+            //rs.close();
             client.connection.close();
             ///System.out.print(tytul);
         } catch (SQLException ex) {
