@@ -1,10 +1,9 @@
 package library.system;
 
-import Database.Client;
 import java.net.URL;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -83,8 +82,6 @@ public class CzytelnikOknoController extends User implements Initializable {
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     @FXML
     private Button btnWczytajKsiazki;
-    ResultSet rs;
-    PreparedStatement st;
     @FXML
     private TextField imieDane;
     @FXML
@@ -101,7 +98,9 @@ public class CzytelnikOknoController extends User implements Initializable {
     @FXML
     private TableColumn<?, ?> columnStatusMoje_ks;
 
-    Client client = new Client();
+    @FXML
+    private Button zarezerwujBTN;
+    int limitKsiazek;
 
     @FXML
     public void wczytajKsiazki(ActionEvent event) throws Exception {
@@ -112,7 +111,7 @@ public class CzytelnikOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void wyszukajKsiazki(ActionEvent event) {
+    private void wyszukajKsiazki() {
         try {
             String tytul = tytulSzukanie.getText().trim();
             String imie_a = imieASzukanie.getText().trim();
@@ -136,7 +135,6 @@ public class CzytelnikOknoController extends User implements Initializable {
     private void wczytanieDanych() {
         System.out.println("ID zalogowanego " + LogowanieOknoController.przekazanieloginu);
         try {
-            Client client = new Client();
             client.openConnect();
 
             String sql = "SELECT imie_k,nazwisko_k,nr_identyfikacji_k,email_k from klienci where id_klienta=?";
@@ -162,7 +160,6 @@ public class CzytelnikOknoController extends User implements Initializable {
 
     private void mojeKsiazki() {
         try {
-            Client client = new Client();
             client.openConnect();
             String sql3 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.id_klienta=?";
 
@@ -182,9 +179,61 @@ public class CzytelnikOknoController extends User implements Initializable {
         }
     }
 
+    @FXML
+    private void rezerwacjaKsiazki(ActionEvent event) {
+        if(limitKsiazek<=10){
+        Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
+        int idKsiazki = 0;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        String data = dateFormat.format(calendar.getTime());
+        calendar.add(Calendar.MONTH, 2); // narazie data oddania ustawiona na 2 miesiace
+        String dataOddania = dateFormat.format(calendar.getTime());
+        try {
+            client.openConnect();
+            String sql = "select id_ksiazki from ksiazka where tytul=? and status='1'";
+            st = client.connection.prepareStatement(sql);
+            st.setString(1, k.getTytul());
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                idKsiazki = +rs.getInt("id_ksiazki");
+                System.out.println("ID ksiazki " + idKsiazki);
+            }
+
+            System.out.println(k.getTytul());
+            String sql2 = "insert into wypozyczenia (id_ksiazki, id_klienta, data_wyp, data_zwrotu) values (?, ?, ?, ?)";
+            st = client.connection.prepareStatement(sql2);
+            st.setInt(1, idKsiazki);
+            st.setInt(2, LogowanieOknoController.przekazanieloginu);
+            st.setString(3, data);
+            st.setString(4, dataOddania);
+            st.execute();
+
+            String sql3 = "update ksiazka set status =? where id_ksiazki =?";
+            st = client.connection.prepareStatement(sql3);
+            st.setString(1, "3");
+            st.setInt(2, idKsiazki);
+            st.executeUpdate();
+
+            rs.close();
+            client.connection.close();
+            mojeKsiazki();
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zarezerwowano książkę!", "Książka będzie gotowa do odebrania w bibliotece");
+            wyszukajKsiazki();
+            iloscKsiazek();
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+        else
+        {
+          DialogsUtils.showAlert(Alert.AlertType.WARNING, "Przekroczono limit książek!", "Musisz oddać książki, aby wypożyczyć następne!");  
+        }
+    }
+
     private void iloscKsiazek() {
         try {
-            Client client = new Client();
             client.openConnect();
             String sql3 = "select count(w.id_klienta) ilosc_wyp, kl.kara from wypozyczenia w, klienci kl where w.id_klienta=kl.id_klienta and kl.id_klienta=?";
 
@@ -193,7 +242,8 @@ public class CzytelnikOknoController extends User implements Initializable {
             rs = st.executeQuery();
 
             while (rs.next()) {
-                ilosc_wypPole.setText(rs.getString("ilosc_wyp"));
+                limitKsiazek = rs.getInt("ilosc_wyp");
+                ilosc_wypPole.setText(""+limitKsiazek);
                 karaPole.setText(rs.getString("kara"));
             }
             rs.close();
@@ -207,7 +257,6 @@ public class CzytelnikOknoController extends User implements Initializable {
     @FXML
     private void edytujDane(ActionEvent event) {
         try {
-            Client client = new Client();
             client.openConnect();
             String imie = imieDane.getText().trim();
             String nazwisko = nazwiskoDane.getText().trim();
@@ -272,6 +321,8 @@ public class CzytelnikOknoController extends User implements Initializable {
         columnData_wypMoje_ks.setCellValueFactory(new PropertyValueFactory<>("data_wyp"));
         columnData_zwrMoje_ks.setCellValueFactory(new PropertyValueFactory<>("data_zwrotu"));
         columnStatusMoje_ks.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
+
+        zarezerwujBTN.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
     }
 
     @FXML

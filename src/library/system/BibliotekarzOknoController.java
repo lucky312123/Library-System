@@ -77,10 +77,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button usunBtn;
     @FXML
-    private TextField autorDodawanie;
-    @FXML
-    private TextField autorPseudonim;
-    @FXML
     private DatePicker data_urDodawanie;
     @FXML
     private TableView<Ksiazki> tableWyszukajKsiazki;
@@ -106,6 +102,18 @@ public class BibliotekarzOknoController extends User implements Initializable {
     String tytulp = "1";
     String tytul1 = "2";
     String ISBN = "1";
+    @FXML
+    private Button btnWczytajKsiazki;
+    @FXML
+    private Button wyczyscWyszukiwanieBTN;
+    @FXML
+    private TextField autorImieDodawanie;
+    @FXML
+    private TextField autorNazwiskoDodawanie;
+    @FXML
+    private TextField autorPseudonimDodawanie;
+    @FXML
+    private Button dodajAutoraBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -315,6 +323,10 @@ public int getId(String n){
     @FXML
     private void aboutApplication(ActionEvent event) {
         DialogsUtils.dialogAboutAplication();
+    }
+
+    @FXML
+    private void dodajAutora(ActionEvent event) {
     }
 
 }

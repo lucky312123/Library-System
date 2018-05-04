@@ -45,8 +45,8 @@
                               <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="123.0" style="-fx-alignment: CENTER;" text="Nazwisko autora" />
                               <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="128.0" style="-fx-alignment: CENTER;" text="Data wydania" />
                               <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="104.0" style="-fx-alignment: CENTER;" text="Gatunek" />
-                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="78.0" style="-fx-alignment: CENTER;" text="Status" />
-                              <TableColumn fx:id="columnIloscWyszukaj" prefWidth="84.0" style="-fx-alignment: CENTER;" text="Ilość" />
+                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="98.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnIloscWyszukaj" prefWidth="64.0" style="-fx-alignment: CENTER;" text="Ilość" />
                           </columns>
                         </TableView>
                         <TextField fx:id="tytulSzukanie" layoutX="135.0" layoutY="10.0" />
@@ -61,6 +61,7 @@
                         <Button fx:id="btnWczytajKsiazki" layoutX="482.0" layoutY="32.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
                         <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
                         <Text layoutX="766.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
+                        <Button fx:id="zarezerwujBTN" layoutX="482.0" layoutY="107.0" mnemonicParsing="false" onAction="#rezerwacjaKsiazki" text="Zarezerwuj" />
                      </children>
                   </AnchorPane>
             </content>
