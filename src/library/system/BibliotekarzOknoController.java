@@ -284,6 +284,32 @@ public int getId(String n){
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    @FXML
+    public void dodajAutora(ActionEvent event) {
+        try {
+            String imieAutora = autorImieDodawanie.getText().toString();
+            String nazwiskoAutora = autorNazwiskoDodawanie.getText().toString();
+            String pseudonimAutora = autorPseudonimDodawanie.getText().toString();
+            String data_ur = data_urDodawanie.getValue().toString();
+            //String data_ur = data_urDodawanie.getText().toString();
+
+            client.openConnect();
+            String sql = "insert into autorzy (imie_a, nazwisko_a, pseudonim, data_ur) values (?, ?, ?, ?)";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, imieAutora);
+            preparedStmt.setString(2, nazwiskoAutora);
+            preparedStmt.setString(3, pseudonimAutora);
+            preparedStmt.setString(4, data_ur);
+            preparedStmt.execute();
+            System.out.println("dodano");
+
+            client.connection.close();
+        } catch (SQLException ex) {
+            System.out.println("blad");
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     @FXML
     private void usunKsiazke() {
@@ -325,8 +351,6 @@ public int getId(String n){
         DialogsUtils.dialogAboutAplication();
     }
 
-    @FXML
-    private void dodajAutora(ActionEvent event) {
-    }
+    
 
 }
