@@ -121,12 +121,16 @@
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="autorDodawanie" layoutX="136.0" layoutY="63.0" />
-                        <TextField fx:id="autorPseudonim" layoutX="136.0" layoutY="136.0" />
+                        <TextField fx:id="autorImieDodawanie" layoutX="136.0" layoutY="63.0" />
+                        <TextField fx:id="autorNazwiskoDodawanie" layoutX="136.0" layoutY="113.0" />
+                        <TextField fx:id="autorPseudonimDodawanie" layoutX="136.0" layoutY="163.0" />
                         <DatePicker fx:id="data_urDodawanie" layoutX="136.0" layoutY="207.0" />
-                        <Text layoutX="54.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Autor" />
-                        <Text layoutX="37.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudonim" />
-                        <Text layoutX="28.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" />
+                        <Text layoutX="62.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" />
+                        <Text layoutX="37.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudonim" />
+                        <Text layoutX="25.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" />
+                        <Text layoutX="45.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" />
+                        <Button fx:id="dodajAutoraBTN" layoutX="526.0" layoutY="74.0" mnemonicParsing="false" onAction="#dodajAutora" text="Dodaj autora" />
+                        
                      </children>
                   </AnchorPane>
               </content>
