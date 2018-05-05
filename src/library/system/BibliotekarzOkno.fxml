@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -17,7 +21,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
    <children>
       <MenuBar layoutX="18.0" layoutY="12.0" prefHeight="64.0" prefWidth="786.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
@@ -50,7 +54,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="382.0" prefWidth="861.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                        <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="366.0" prefWidth="948.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                           <columns>
                             <TableColumn fx:id="columnTytulWyszukaj" prefWidth="151.0" style="-fx-alignment: CENTER;" text="Tytuł" />
                             <TableColumn fx:id="columnISBNWyszukaj" prefWidth="140.0" style="-fx-alignment: CENTER;" text="ISBN" />
@@ -73,9 +77,9 @@
                         <Button fx:id="btnWczytajKsiazki" layoutX="482.0" layoutY="32.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
                         <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="348.0" layoutY="86.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść" />
                         <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
-                        <Text layoutX="766.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
                         <Button fx:id="btnZapisz" layoutX="505.0" layoutY="74.0" mnemonicParsing="false" onAction="#edycja" text="zapisz" />
                         <Button fx:id="usunBtn" layoutX="504.0" layoutY="127.0" mnemonicParsing="false" onAction="#usunKsiazke" text="usuń" />
+                        <Text layoutX="750.0" layoutY="569.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" wrappingWidth="154.810546875" />
                      </children>
                   </AnchorPane>
             </content>
@@ -84,7 +88,6 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="617.0" layoutY="534.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" />
                         <TextField fx:id="tytulDodawanieKsiazka" layoutX="146.0" layoutY="80.0" />
                         <TextField fx:id="isbnDodawanieKsiazka" layoutX="146.0" layoutY="143.0" />
                         <DatePicker fx:id="data_wydDodawanieKsiazka" layoutX="146.0" layoutY="205.0" />
@@ -134,6 +137,42 @@
                      </children>
                   </AnchorPane>
               </content>
+            </Tab>
+            <Tab text="Wypożyczenia">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Text layoutX="31.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numer indetyfikacji użytkownika" />
+                        <TextField fx:id="nr_identyfikacjiTextField" layoutX="232.0" layoutY="13.0" prefHeight="25.0" prefWidth="143.0" />
+                        <TableView fx:id="tableWypozyczenia" layoutY="36.0" prefHeight="359.0" prefWidth="948.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="columnTytulWpozyczenia" prefWidth="141.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                              <TableColumn fx:id="columnAutorWypozyczenia" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Autor" />
+                              <TableColumn fx:id="columnISBNWypozyczenia" prefWidth="139.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnGatunekWypozyczenia" prefWidth="91.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnData_wypWypozyczenia" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Data wypożyczenia" />
+                              <TableColumn fx:id="columnData_zwrWypozyczenia" prefWidth="144.0" style="-fx-alignment: CENTER;" text="Data zwrotu" />
+                              <TableColumn fx:id="columnStatusWypozyczenia" prefWidth="107.0" style="-fx-alignment: CENTER;" text="Status" />
+                           </columns>
+                        </TableView>
+                        <Text layoutX="505.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kara do zapłacenia:" />
+                        <Label fx:id="karaPole" layoutX="662.0" layoutY="62.0" prefHeight="17.0" prefWidth="103.0" />
+                        <Text layoutX="505.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość wypożyczonych:" />
+                        <Label fx:id="ilosc_wypPole" layoutX="659.0" layoutY="99.0" prefHeight="17.0" prefWidth="109.0" />
+                        <Button fx:id="wyszukajUzytkownikaBTN" layoutX="393.0" layoutY="13.0" mnemonicParsing="false" onAction="#wyszukajUzytkownika" text="OK" />
+                        <Text layoutX="31.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" />
+                        <Text layoutX="28.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" />
+                        <Text layoutX="28.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail" />
+                        <Text layoutX="31.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Profil" />
+                        <Label fx:id="imiePole" layoutX="156.0" layoutY="62.0" prefHeight="17.0" prefWidth="92.0" />
+                        <Label fx:id="nazwiskoPole" layoutX="157.0" layoutY="99.0" prefHeight="17.0" prefWidth="92.0" />
+                        <Label fx:id="emialPole" layoutX="157.0" layoutY="139.0" prefHeight="17.0" prefWidth="153.0" />
+                        <Label fx:id="statusPole" layoutX="157.0" layoutY="178.0" prefHeight="17.0" prefWidth="92.0" />
+                        <Button fx:id="wypozyczKsiazkeBTN" layoutX="505.0" layoutY="156.0" mnemonicParsing="false" onAction="#wypozyczKsiazke" text="Wypożycz książkę" />
+                        <Text layoutX="466.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aby wypożyczyć książkę użytkownikowi, należy ją zaznaczyć i kliknąć &quot;Wypożycz książkę&quot;" />
+                     </children>
+                  </AnchorPane>
+               </content>
             </Tab>
         </tabs>
       </TabPane>

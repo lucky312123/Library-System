@@ -26,7 +26,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -37,6 +39,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 public class BibliotekarzOknoController extends User implements Initializable {
 
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
+    ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     @FXML
     private TextField tytulSzukanie;
     @FXML
@@ -114,11 +117,49 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private TextField autorPseudonimDodawanie;
     @FXML
     private Button dodajAutoraBTN;
+    @FXML
+    private TextField nr_identyfikacjiTextField;
+    @FXML
+    private TableView<MojeKsiazki> tableWypozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnTytulWpozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnAutorWypozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnISBNWypozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnGatunekWypozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnData_wypWypozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnData_zwrWypozyczenia;
+    @FXML
+    private TableColumn<?, ?> columnStatusWypozyczenia;
+    @FXML
+    private Label karaPole;
+    @FXML
+    private Label ilosc_wypPole;
+    @FXML
+    private Button wyszukajUzytkownikaBTN;
+    @FXML
+    private Label imiePole;
+    @FXML
+    private Label nazwiskoPole;
+    @FXML
+    private Label emialPole;
+    @FXML
+    private Label statusPole;
+    @FXML
+    private Button wypozyczKsiazkeBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         tableWyszukajKsiazki.setItems(null);
         tableWyszukajKsiazki.setItems(ksiazki_list);
+        tableWypozyczenia.setItems(null);
+        tableWypozyczenia.setItems(mojeksiazki_list);
+
+        
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
         columnImieWyszukaj.setCellValueFactory(new PropertyValueFactory<>("imie_a"));
@@ -127,6 +168,14 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnGatunekWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
         columnStatusWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
         columnIloscWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ilosc"));
+        
+        columnTytulWpozyczenia.setCellValueFactory(new PropertyValueFactory<>("tytul"));
+        columnAutorWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("autor"));
+        columnISBNWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
+        columnGatunekWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
+        columnData_wypWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("data_wyp"));
+        columnData_zwrWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("data_zwrotu"));
+        columnStatusWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
 
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
 
@@ -173,7 +222,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     public void wczytajKsiazki(ActionEvent event) throws Exception {
         wczytajKsiazki(ksiazki_list);
 
-        tableWyszukajKsiazki.setItems(ksiazki_list);
+        //tableWyszukajKsiazki.setItems(ksiazki_list);
     }
 
     @FXML
@@ -197,21 +246,61 @@ public class BibliotekarzOknoController extends User implements Initializable {
         gatunekSzukanie.clear();
         ksiazki_list.clear();
     }
-public int getId(String n){
-       int id =-1;
+    
+    @FXML
+    private void wyszukajUzytkownika(ActionEvent event) {
         try {
-         
+            client.openConnect();
+            String nr_identyfikacji = nr_identyfikacjiTextField.getText().trim();
+            String sql = "SELECT k.imie_k,k.nazwisko_k,k.email_k,p.nazwa_p,k.kara,count(w.id_klienta) ilosc_wyp from klienci k,profil_uzytkownika p, wypozyczenia w where k.profil=p.profil and w.id_klienta=k.id_klienta and k.nr_identyfikacji_k=?";
+
+            st = client.connection.prepareStatement(sql);
+            st.setString(1, nr_identyfikacji);
+            rs = st.executeQuery();
+
+            while (rs.next()) {
+                imiePole.setText(rs.getString("imie_k"));
+                nazwiskoPole.setText(rs.getString("nazwisko_k"));
+                emialPole.setText(rs.getString("email_k"));
+                statusPole.setText(rs.getString("nazwa_p"));
+                karaPole.setText(rs.getString("kara"));
+                ilosc_wypPole.setText(rs.getString("ilosc_wyp"));
+            }
+            
+            String sql2 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.nr_identyfikacji_k=?";
+
+            st = client.connection.prepareStatement(sql2);
+            st.setString(1, nr_identyfikacji);
+            rs = st.executeQuery();
+
+            mojeksiazki_list.clear();
+            while (rs.next()) {
+                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s")));
+            }
+            rs.close();
+            client.connection.close();
+
+        } catch (SQLException sql) {
+            System.out.println("Problem z wyszukajUzytkownika" + sql);
+        }
+        
+    }
+
+    public int getId(String n) {
+        int id = -1;
+        try {
+
             PreparedStatement preparedStmt;
             ResultSet rs;
-           client.openConnect();
+            client.openConnect();
             String sql1 = "Select id_ksiazki From ksiazka Where tytul =?";
             preparedStmt = client.connection.prepareStatement(sql1);
-            preparedStmt.setString(1,n);
-            
+            preparedStmt.setString(1, n);
+
             rs = preparedStmt.executeQuery();
             //id = rs.getInt("id_ksiazki");
             if (rs.next()) {
-               // System.out.print("tutaj " + k.getTytul() + " n " + rs.getInt("id_ksiazki"));
+                // System.out.print("tutaj " + k.getTytul() + " n " + rs.getInt("id_ksiazki"));
                 id = rs.getInt("id_ksiazki");
             }
             return id;
@@ -219,7 +308,8 @@ public int getId(String n){
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return id;
-}
+    }
+
     @FXML
     public void edycja() throws SQLException {
         PreparedStatement preparedStmt;
@@ -227,7 +317,7 @@ public int getId(String n){
         Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
         client.openConnect();
         //System.out.print(k.getTytul());
-       int id = getId(tytul1);
+        int id = getId(tytul1);
 
         try {
 
@@ -236,16 +326,16 @@ public int getId(String n){
                 preparedStmt = client.connection.prepareStatement(sql);
                 preparedStmt.setString(1, tytulp);
                 preparedStmt.setString(2, ISBN);
-                preparedStmt.setInt(3,id );
-                 preparedStmt.execute();
-                System.out.println("oba"+id);
+                preparedStmt.setInt(3, id);
+                preparedStmt.execute();
+                System.out.println("oba" + id);
             } else if (!tytulp.equals("1") && ISBN.equals("1")) {
                 String sql = "UPDATE ksiazka SET tytul = ? WHERE id_ksiazki =?";
                 preparedStmt = client.connection.prepareStatement(sql);
                 preparedStmt.setString(1, tytulp);
                 preparedStmt.setInt(2, id);
                 preparedStmt.execute();
-                System.out.println("tytul:"+id+" po zmianie: " +tytulp);
+                System.out.println("tytul:" + id + " po zmianie: " + tytulp);
             } else if (tytulp.equals("1") && !ISBN.equals("1")) {
                 String sql = "UPDATE ksiazka SET ISBN = ? WHERE id_ksiazki =?";
                 preparedStmt = client.connection.prepareStatement(sql);
@@ -267,8 +357,8 @@ public int getId(String n){
     @FXML
     public void dodajGatunek(ActionEvent event) {
         try {
-            String nazwaGatunku = nazwaDodawanieGatunek.getText().toString();
-            String opisGatunku = opisDodawanieGatunek.getText().toString();
+            String nazwaGatunku = nazwaDodawanieGatunek.getText().trim();
+            String opisGatunku = opisDodawanieGatunek.getText().trim();
 
             client.openConnect();
             String sql = "insert into gatunki (nazwa_g, opis) values (?, ?)";
@@ -279,20 +369,21 @@ public int getId(String n){
             System.out.println("uda");
 
             client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano nowy gatunek!", "Nowy gatunek: " + nazwaGatunku);
+            nazwaDodawanieGatunek.clear();
+            opisDodawanieGatunek.clear();
         } catch (SQLException ex) {
-            System.out.println("łydki");
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     public void dodajAutora(ActionEvent event) {
         try {
-            String imieAutora = autorImieDodawanie.getText().toString();
-            String nazwiskoAutora = autorNazwiskoDodawanie.getText().toString();
-            String pseudonimAutora = autorPseudonimDodawanie.getText().toString();
+            String imieAutora = autorImieDodawanie.getText().trim();
+            String nazwiskoAutora = autorNazwiskoDodawanie.getText().trim();
+            String pseudonimAutora = autorPseudonimDodawanie.getText().trim();
             String data_ur = data_urDodawanie.getValue().toString();
-            //String data_ur = data_urDodawanie.getText().toString();
 
             client.openConnect();
             String sql = "insert into autorzy (imie_a, nazwisko_a, pseudonim, data_ur) values (?, ?, ?, ?)";
@@ -302,9 +393,13 @@ public int getId(String n){
             preparedStmt.setString(3, pseudonimAutora);
             preparedStmt.setString(4, data_ur);
             preparedStmt.execute();
-            System.out.println("dodano");
 
             client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano nowego autora!", "Nowy autor: \n" + imieAutora + " " + nazwiskoAutora + " ");
+            autorImieDodawanie.clear();
+            autorNazwiskoDodawanie.clear();
+            autorPseudonimDodawanie.clear();
+            data_urDodawanie.getEditor().clear();
         } catch (SQLException ex) {
             System.out.println("blad");
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -349,6 +444,10 @@ public int getId(String n){
     @FXML
     private void aboutApplication(ActionEvent event) {
         DialogsUtils.dialogAboutAplication();
+    }
+
+    @FXML
+    private void wypozyczKsiazke(ActionEvent event) {
     }
 
     
