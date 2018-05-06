@@ -8,6 +8,8 @@ import javafx.application.Application;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
@@ -151,6 +153,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private Label statusPole;
     @FXML
     private Button wypozyczKsiazkeBTN;
+    String nr_identyfikacji;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -159,7 +162,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         tableWypozyczenia.setItems(null);
         tableWypozyczenia.setItems(mojeksiazki_list);
 
-        
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
         columnImieWyszukaj.setCellValueFactory(new PropertyValueFactory<>("imie_a"));
@@ -168,7 +170,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnGatunekWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
         columnStatusWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
         columnIloscWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ilosc"));
-        
+
         columnTytulWpozyczenia.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnAutorWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("autor"));
         columnISBNWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
@@ -178,6 +180,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnStatusWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
 
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
+        wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
 
         edycjaKsiazki();
     }
@@ -246,12 +249,12 @@ public class BibliotekarzOknoController extends User implements Initializable {
         gatunekSzukanie.clear();
         ksiazki_list.clear();
     }
-    
+
     @FXML
-    private void wyszukajUzytkownika(ActionEvent event) {
+    private void wyszukajUzytkownika() {
         try {
             client.openConnect();
-            String nr_identyfikacji = nr_identyfikacjiTextField.getText().trim();
+            nr_identyfikacji = nr_identyfikacjiTextField.getText().trim();
             String sql = "SELECT k.imie_k,k.nazwisko_k,k.email_k,p.nazwa_p,k.kara,count(w.id_klienta) ilosc_wyp from klienci k,profil_uzytkownika p, wypozyczenia w where k.profil=p.profil and w.id_klienta=k.id_klienta and k.nr_identyfikacji_k=?";
 
             st = client.connection.prepareStatement(sql);
@@ -266,7 +269,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 karaPole.setText(rs.getString("kara"));
                 ilosc_wypPole.setText(rs.getString("ilosc_wyp"));
             }
-            
+
             String sql2 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.nr_identyfikacji_k=?";
 
             st = client.connection.prepareStatement(sql2);
@@ -283,7 +286,55 @@ public class BibliotekarzOknoController extends User implements Initializable {
         } catch (SQLException sql) {
             System.out.println("Problem z wyszukajUzytkownika" + sql);
         }
-        
+
+    }
+
+    @FXML
+    private void wypozyczKsiazke(ActionEvent event) {
+        MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
+        int idKsiazki = 0;
+        String status = "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        String data = dateFormat.format(calendar.getTime());
+        calendar.add(Calendar.MONTH, 2); // narazie data oddania ustawiona na 2 miesiace
+        String dataOddania = dateFormat.format(calendar.getTime());
+        try {
+            client.openConnect();
+            String sql = "select k.id_ksiazki,s.nazwa_s from ksiazka k,statusy s where k.status=s.status and k.tytul=? and k.status='3'";
+            st = client.connection.prepareStatement(sql);
+            st.setString(1, k.getTytul());
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                idKsiazki = rs.getInt("id_ksiazki");
+                status = rs.getString("nazwa_s");
+            }
+
+            if (status.contentEquals("zarezerwowana")) {
+                String sql2 = "update wypozyczenia set data_wyp =?, data_zwrotu=? where id_ksiazki=?";
+                st = client.connection.prepareStatement(sql2);
+                st.setString(1, data);
+                st.setString(2, dataOddania);
+                st.setInt(3, idKsiazki);
+                st.executeUpdate();
+
+                String sql3 = "update ksiazka set status =? where id_ksiazki =?";
+                st = client.connection.prepareStatement(sql3);
+                st.setString(1, "2");
+                st.setInt(2, idKsiazki);
+                st.executeUpdate();
+
+                rs.close();
+                client.connection.close();
+                DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Wypożyczono książkę!", "Książka została wypożyczona dla " + imiePole.getText() + " " + nazwiskoPole.getText());
+                wyszukajUzytkownika();
+            } else {
+                DialogsUtils.showAlert(Alert.AlertType.WARNING, "Książka wypożyczona", "Książka została już wypożyczona!");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public int getId(String n) {
@@ -445,11 +496,5 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private void aboutApplication(ActionEvent event) {
         DialogsUtils.dialogAboutAplication();
     }
-
-    @FXML
-    private void wypozyczKsiazke(ActionEvent event) {
-    }
-
-    
 
 }

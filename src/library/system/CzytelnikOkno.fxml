@@ -83,7 +83,7 @@
                         </TableView>
                         <Text layoutX="31.0" layoutY="390.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kara do zapłacenia:" />
                         <Label fx:id="karaPole" layoutX="31.0" layoutY="413.0" prefHeight="17.0" prefWidth="103.0" />
-                        <Text layoutX="31.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość wypożyczonych:" />
+                        <Text layoutX="31.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość książek" />
                         <Label fx:id="ilosc_wypPole" layoutX="31.0" layoutY="501.0" prefHeight="17.0" prefWidth="109.0" />
                      </children></AnchorPane>
             </content>

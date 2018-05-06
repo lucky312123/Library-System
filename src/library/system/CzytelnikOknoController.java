@@ -184,11 +184,6 @@ public class CzytelnikOknoController extends User implements Initializable {
         if(limitKsiazek<=10){
         Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
         int idKsiazki = 0;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar calendar = Calendar.getInstance();
-        String data = dateFormat.format(calendar.getTime());
-        calendar.add(Calendar.MONTH, 2); // narazie data oddania ustawiona na 2 miesiace
-        String dataOddania = dateFormat.format(calendar.getTime());
         try {
             client.openConnect();
             String sql = "select id_ksiazki from ksiazka where tytul=? and status='1'";
@@ -197,17 +192,15 @@ public class CzytelnikOknoController extends User implements Initializable {
             rs = st.executeQuery();
 
             if (rs.next()) {
-                idKsiazki = +rs.getInt("id_ksiazki");
+                idKsiazki = rs.getInt("id_ksiazki");
                 System.out.println("ID ksiazki " + idKsiazki);
             }
 
             System.out.println(k.getTytul());
-            String sql2 = "insert into wypozyczenia (id_ksiazki, id_klienta, data_wyp, data_zwrotu) values (?, ?, ?, ?)";
+            String sql2 = "insert into wypozyczenia (id_ksiazki, id_klienta) values (?, ?)";
             st = client.connection.prepareStatement(sql2);
             st.setInt(1, idKsiazki);
             st.setInt(2, LogowanieOknoController.przekazanieloginu);
-            st.setString(3, data);
-            st.setString(4, dataOddania);
             st.execute();
 
             String sql3 = "update ksiazka set status =? where id_ksiazki =?";
@@ -219,7 +212,7 @@ public class CzytelnikOknoController extends User implements Initializable {
             rs.close();
             client.connection.close();
             mojeKsiazki();
-            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zarezerwowano książkę!", "Książka będzie gotowa do odebrania w bibliotece");
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zarezerwowano książkę!", "Książka będzie gotowa do odebrania w bibliotece.\n Masz na to 7 dni.");
             wyszukajKsiazki();
             iloscKsiazek();
         } catch (SQLException ex) {
