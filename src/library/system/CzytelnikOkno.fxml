@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.CzytelnikOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="683.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.CzytelnikOknoController">
    <children>
       <MenuBar layoutX="28.0" layoutY="22.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
@@ -31,7 +31,7 @@
             </Menu>
          </menus>
       </MenuBar>
-      <TabPane layoutX="7.0" layoutY="25.0" prefHeight="621.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <TabPane layoutX="7.0" layoutY="25.0" prefHeight="619.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="41.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <tabs>
           <Tab text="Wyszukaj książki">
             <content>
@@ -60,8 +60,8 @@
                         <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="348.0" layoutY="86.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść" />
                         <Button fx:id="btnWczytajKsiazki" layoutX="482.0" layoutY="32.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
                         <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
-                        <Text layoutX="766.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
                         <Button fx:id="zarezerwujBTN" layoutX="482.0" layoutY="107.0" mnemonicParsing="false" onAction="#rezerwacjaKsiazki" text="Zarezerwuj" />
+                        <Text layoutX="766.0" layoutY="574.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako czytelnik" />
                      </children>
                   </AnchorPane>
             </content>
@@ -106,5 +106,6 @@
             </Tab>
         </tabs>
       </TabPane>
+      <Button fx:id="wylogujBTN" layoutX="28.0" layoutY="642.0" mnemonicParsing="false" onAction="#wyloguj" text="Wyloguj" />
    </children>
 </AnchorPane>

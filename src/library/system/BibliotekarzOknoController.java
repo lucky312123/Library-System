@@ -47,6 +47,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
+    LibrarySystem log = new LibrarySystem();
     ObservableList<String> gatunki = FXCollections.observableArrayList();
     @FXML
     private TextField tytulSzukanie;
@@ -160,6 +161,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button wypozyczKsiazkeBTN;
     String nr_identyfikacji;
+    @FXML
+    private Button btnWyloguj;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -576,6 +579,11 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private void aboutApplication(ActionEvent event) {
         DialogsUtils.dialogAboutAplication();
+    }
+
+    @FXML
+    private void wyloguj(ActionEvent event) throws Exception {
+        log.setNextScene(0);
     }
 
 }
