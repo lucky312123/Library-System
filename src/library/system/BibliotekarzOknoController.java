@@ -8,8 +8,12 @@ import javafx.application.Application;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
@@ -37,11 +41,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Stage;
 
 public class BibliotekarzOknoController extends User implements Initializable {
 
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
+    ObservableList<String> gatunki = FXCollections.observableArrayList();
     @FXML
     private TextField tytulSzukanie;
     @FXML
@@ -64,11 +70,11 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TextField procent_zniszczeniaDodawanieKsiazka;
     @FXML
-    private ComboBox<?> autor_dodajComboBox;
+    private ComboBox<String> autor_dodajComboBox;
     @FXML
-    private ComboBox<?> gatunek_dodajComboBox;
+    private ComboBox<String> gatunek_dodajComboBox;
     @FXML
-    private ComboBox<?> status_dodajComboBox;
+    private ComboBox<String> status_dodajComboBox;
     @FXML
     private Button dodajKsiazkeBTN;
     @FXML
@@ -182,9 +188,46 @@ public class BibliotekarzOknoController extends User implements Initializable {
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
 
+//                
         edycjaKsiazki();
+        getGatunki();
     }
-//do edycji
+//do edycjipubli 
+
+    public void getGatunki() {
+        client.openConnect();
+        String sql = "SELECT g.nazwa_g FROM gatunki g";
+        String sql2 = "SELECT s.nazwa_s FROM statusy s";
+        String sql3 = "SELECT nazwisko_a FROM autorzy";
+        ResultSet rs;
+        PreparedStatement preparedStmt, preparedStmt1, preparedStmt2;
+        gatunek_dodajComboBox.getItems().clear();
+        gatunki.clear();
+        try {
+            preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt1 = client.connection.prepareStatement(sql2);
+            preparedStmt2 = client.connection.prepareStatement(sql3);
+            rs = preparedStmt.executeQuery();
+            while (rs.next()) {
+                gatunki.add(rs.getString("nazwa_g"));
+
+            }
+            rs = preparedStmt2.executeQuery();
+
+            while (rs.next()) {
+                autor_dodajComboBox.getItems().addAll(rs.getString("nazwisko_a"));
+            }
+            rs = preparedStmt1.executeQuery();
+            while (rs.next()) {
+                status_dodajComboBox.getItems().addAll(rs.getString("nazwa_s"));
+            }
+            client.connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        gatunek_dodajComboBox.getItems().addAll(gatunki);
+
+    }
 
     public void edycjaKsiazki() {
         client.openConnect();
@@ -248,6 +291,44 @@ public class BibliotekarzOknoController extends User implements Initializable {
         nazwiskoASzukanie.clear();
         gatunekSzukanie.clear();
         ksiazki_list.clear();
+    }
+
+    private static java.sql.Date convertUtilToSql(java.util.Date uDate) {
+
+        java.sql.Date sDate = new java.sql.Date(uDate.getTime());
+        return sDate;
+    }
+
+    @FXML
+    private void dodajKsiazke() {
+        String tytul = tytulDodawanieKsiazka.getText().trim();
+        String ISBN = isbnDodawanieKsiazka.getText().trim();
+        int procentZ =Integer.parseInt( procent_zniszczeniaDodawanieKsiazka.getText().trim());
+        LocalDate localDate = data_wydDodawanieKsiazka.getValue();
+        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+        System.out.println();
+        try {
+            Date d = dt.parse(dt.format(date));
+            client.openConnect();
+            String sql = "INSERT INTO ksiazka (tytul, ISBN, data_wyd,aktPzniszczenia,status,id_gatunku) values (?,?,?,?,1,1)";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, tytul);
+            preparedStmt.setString(2, ISBN);
+            java.sql.Date sDate = convertUtilToSql(d);
+            System.out.println(sDate);
+            preparedStmt.setDate(3, sDate);
+            preparedStmt.setInt(4, procentZ);
+           // preparedStmt.setString(5, status_dodajComboBox.getSelectionModel().getSelectedItem().toString());
+            
+            preparedStmt.execute();
+            client.connection.close();
+        } catch (SQLException exception) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
+        } catch (ParseException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
