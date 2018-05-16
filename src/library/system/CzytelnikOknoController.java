@@ -2,8 +2,6 @@ package library.system;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,6 +28,7 @@ import library.system.dialogs.DialogsUtils;
 
 public class CzytelnikOknoController extends User implements Initializable {
 
+    LibrarySystem log = new LibrarySystem();
     @FXML
     private ToggleGroup styleGroup;
     @FXML
@@ -101,6 +100,8 @@ public class CzytelnikOknoController extends User implements Initializable {
     @FXML
     private Button zarezerwujBTN;
     int limitKsiazek;
+    @FXML
+    private Button wylogujBTN;
 
     @FXML
     public void wczytajKsiazki(ActionEvent event) throws Exception {
@@ -181,47 +182,45 @@ public class CzytelnikOknoController extends User implements Initializable {
 
     @FXML
     private void rezerwacjaKsiazki(ActionEvent event) {
-        if(limitKsiazek<=10){
-        Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
-        int idKsiazki = 0;
-        try {
-            client.openConnect();
-            String sql = "select id_ksiazki from ksiazka where tytul=? and status='1'";
-            st = client.connection.prepareStatement(sql);
-            st.setString(1, k.getTytul());
-            rs = st.executeQuery();
+        if (limitKsiazek <= 10) {
+            Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
+            int idKsiazki = 0;
+            try {
+                client.openConnect();
+                String sql = "select id_ksiazki from ksiazka where tytul=? and status='1'";
+                st = client.connection.prepareStatement(sql);
+                st.setString(1, k.getTytul());
+                rs = st.executeQuery();
 
-            if (rs.next()) {
-                idKsiazki = rs.getInt("id_ksiazki");
-                System.out.println("ID ksiazki " + idKsiazki);
+                if (rs.next()) {
+                    idKsiazki = rs.getInt("id_ksiazki");
+                    System.out.println("ID ksiazki " + idKsiazki);
+                }
+
+                System.out.println(k.getTytul());
+                String sql2 = "insert into wypozyczenia (id_ksiazki, id_klienta) values (?, ?)";
+                st = client.connection.prepareStatement(sql2);
+                st.setInt(1, idKsiazki);
+                st.setInt(2, LogowanieOknoController.przekazanieloginu);
+                st.execute();
+
+                String sql3 = "update ksiazka set status =? where id_ksiazki =?";
+                st = client.connection.prepareStatement(sql3);
+                st.setString(1, "3");
+                st.setInt(2, idKsiazki);
+                st.executeUpdate();
+
+                rs.close();
+                client.connection.close();
+                mojeKsiazki();
+                DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zarezerwowano książkę!", "Książka będzie gotowa do odebrania w bibliotece.\n Masz na to 7 dni.");
+                wyszukajKsiazki();
+                iloscKsiazek();
+            } catch (SQLException ex) {
+                Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            System.out.println(k.getTytul());
-            String sql2 = "insert into wypozyczenia (id_ksiazki, id_klienta) values (?, ?)";
-            st = client.connection.prepareStatement(sql2);
-            st.setInt(1, idKsiazki);
-            st.setInt(2, LogowanieOknoController.przekazanieloginu);
-            st.execute();
-
-            String sql3 = "update ksiazka set status =? where id_ksiazki =?";
-            st = client.connection.prepareStatement(sql3);
-            st.setString(1, "3");
-            st.setInt(2, idKsiazki);
-            st.executeUpdate();
-
-            rs.close();
-            client.connection.close();
-            mojeKsiazki();
-            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zarezerwowano książkę!", "Książka będzie gotowa do odebrania w bibliotece.\n Masz na to 7 dni.");
-            wyszukajKsiazki();
-            iloscKsiazek();
-        } catch (SQLException ex) {
-            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }
-        else
-        {
-          DialogsUtils.showAlert(Alert.AlertType.WARNING, "Przekroczono limit książek!", "Musisz oddać książki, aby wypożyczyć następne!");  
+        } else {
+            DialogsUtils.showAlert(Alert.AlertType.WARNING, "Przekroczono limit książek!", "Musisz oddać książki, aby wypożyczyć następne!");
         }
     }
 
@@ -236,7 +235,7 @@ public class CzytelnikOknoController extends User implements Initializable {
 
             while (rs.next()) {
                 limitKsiazek = rs.getInt("ilosc_wyp");
-                ilosc_wypPole.setText(""+limitKsiazek);
+                ilosc_wypPole.setText("" + limitKsiazek);
                 karaPole.setText(rs.getString("kara"));
             }
             rs.close();
@@ -339,6 +338,11 @@ public class CzytelnikOknoController extends User implements Initializable {
     @FXML
     private void aboutApplication(ActionEvent event) {
         DialogsUtils.dialogAboutAplication();
+    }
+
+    @FXML
+    private void wyloguj(ActionEvent event) throws Exception {
+        log.setNextScene(0);
     }
 
 }

@@ -21,9 +21,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="645.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="686.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
    <children>
-      <MenuBar layoutX="18.0" layoutY="12.0" prefHeight="64.0" prefWidth="786.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <MenuBar layoutX="18.0" layoutY="12.0" prefHeight="37.0" prefWidth="948.0" AnchorPane.bottomAnchor="649.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <menus>
             <Menu mnemonicParsing="false" text="Plik">
                <items>
@@ -47,12 +47,12 @@
             </Menu>
          </menus>
       </MenuBar>
-      <TabPane layoutY="37.0" prefHeight="581.0" prefWidth="786.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
+      <TabPane layoutY="37.0" prefHeight="610.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
         <tabs>
             
            <Tab text="Wyszukaj książki">
             <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="531.0" prefWidth="948.0">
                      <children>
                         <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="366.0" prefWidth="948.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                           <columns>
@@ -176,5 +176,6 @@
             </Tab>
         </tabs>
       </TabPane>
+      <Button fx:id="btnWyloguj" layoutX="14.0" layoutY="647.0" mnemonicParsing="false" onAction="#wyloguj" text="Wyloguj" />
    </children>
 </AnchorPane>
