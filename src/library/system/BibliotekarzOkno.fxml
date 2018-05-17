@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -18,8 +22,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="686.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="686.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.BibliotekarzOknoController">
 
 
    <children>
@@ -47,7 +50,7 @@
             </Menu>
          </menus>
       </MenuBar>
-      <TabPane layoutY="37.0" prefHeight="610.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="39.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
+      <TabPane layoutY="37.0" prefHeight="601.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="48.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
         <tabs>
             
            <Tab text="Wyszukaj książki">
@@ -151,8 +154,9 @@
                               <TableColumn fx:id="columnISBNWypozyczenia" prefWidth="139.0" style="-fx-alignment: CENTER;" text="ISBN" />
                               <TableColumn fx:id="columnGatunekWypozyczenia" prefWidth="91.0" style="-fx-alignment: CENTER;" text="Gatunek" />
                               <TableColumn fx:id="columnData_wypWypozyczenia" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Data wypożyczenia" />
-                              <TableColumn fx:id="columnData_zwrWypozyczenia" prefWidth="144.0" style="-fx-alignment: CENTER;" text="Data zwrotu" />
-                              <TableColumn fx:id="columnStatusWypozyczenia" prefWidth="107.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnData_zwrWypozyczenia" prefWidth="127.0" style="-fx-alignment: CENTER;" text="Data zwrotu" />
+                              <TableColumn fx:id="columnStatusWypozyczenia" prefWidth="95.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnZniszczenieWypozyczenia" prefWidth="86.0" text="Zniszczenie" />
                            </columns>
                         </TableView>
                         <Text layoutX="505.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kara do zapłacenia:" />
@@ -169,13 +173,13 @@
                         <Label fx:id="emialPole" layoutX="157.0" layoutY="139.0" prefHeight="17.0" prefWidth="153.0" />
                         <Label fx:id="statusPole" layoutX="157.0" layoutY="178.0" prefHeight="17.0" prefWidth="92.0" />
                         <Button fx:id="wypozyczKsiazkeBTN" layoutX="505.0" layoutY="156.0" mnemonicParsing="false" onAction="#wypozyczKsiazke" text="Wypożycz książkę" />
-                        <Text layoutX="466.0" layoutY="208.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aby wypożyczyć książkę użytkownikowi, należy ją zaznaczyć i kliknąć &quot;Wypożycz książkę&quot;" />
+                        <Text layoutX="466.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aby wypożyczyć książkę użytkownikowi, należy ją zaznaczyć i kliknąć &quot;Wypożycz książkę&quot;" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
         </tabs>
       </TabPane>
-      <Button fx:id="btnWyloguj" layoutX="14.0" layoutY="647.0" mnemonicParsing="false" onAction="#wyloguj" text="Wyloguj" />
+      <Button fx:id="btnWyloguj" layoutX="14.0" layoutY="650.0" mnemonicParsing="false" onAction="#wyloguj" text="Wyloguj" />
    </children>
 </AnchorPane>

@@ -11,6 +11,7 @@ public class MojeKsiazki {
     private final SimpleStringProperty data_wyp;
     private final SimpleStringProperty data_zwrotu;
     private final SimpleStringProperty nazwa_s;
+    private SimpleStringProperty aktPzniszczenia;
 
     public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s) {
         this.tytul = new SimpleStringProperty(tytul);
@@ -20,6 +21,17 @@ public class MojeKsiazki {
         this.data_wyp = new SimpleStringProperty(data_wyp);
         this.data_zwrotu = new SimpleStringProperty(data_zwrotu);
         this.nazwa_s = new SimpleStringProperty(nazwa_s);
+    }
+    
+    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s, String aktPzniszczenia) {
+        this.tytul = new SimpleStringProperty(tytul);
+        this.autor = new SimpleStringProperty(autor);
+        this.ISBN = new SimpleStringProperty(ISBN);
+        this.nazwa_g = new SimpleStringProperty(nazwa_g);
+        this.data_wyp = new SimpleStringProperty(data_wyp);
+        this.data_zwrotu = new SimpleStringProperty(data_zwrotu);
+        this.nazwa_s = new SimpleStringProperty(nazwa_s);
+        this.aktPzniszczenia = new SimpleStringProperty(aktPzniszczenia);
     }
     
     public String getTytul() {
@@ -76,6 +88,14 @@ public class MojeKsiazki {
     
      public String getNazwa_s() {
         return nazwa_s.get();
+    }
+     
+     public void setAktPzniszczenia(String value) {
+        aktPzniszczenia.set(value);
+    }
+    
+     public String getAktPZzniszczenia() {
+        return aktPzniszczenia.get();
     }
 
 }

@@ -27,7 +27,6 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.ToggleGroup;
 import library.system.dialogs.DialogsUtils;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -41,7 +40,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.stage.Stage;
 
 public class BibliotekarzOknoController extends User implements Initializable {
 
@@ -163,6 +161,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
     String nr_identyfikacji;
     @FXML
     private Button btnWyloguj;
+    @FXML
+    private TableColumn<?, ?> columnZniszczenieWypozyczenia;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -187,6 +188,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnData_wypWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("data_wyp"));
         columnData_zwrWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("data_zwrotu"));
         columnStatusWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
+        columnZniszczenieWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("aktPzniszczenia"));
 
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
@@ -327,8 +329,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
             
             preparedStmt.execute();
             client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
         } catch (SQLException exception) {
-            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
+           Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
         } catch (ParseException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -354,15 +357,15 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 ilosc_wypPole.setText(rs.getString("ilosc_wyp"));
             }
 
-            String sql2 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.nr_identyfikacji_k=?";
-
+            String sql2 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s,k.aktPzniszczenia from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.nr_identyfikacji_k=?";           
             st = client.connection.prepareStatement(sql2);
             st.setString(1, nr_identyfikacji);
             rs = st.executeQuery();
 
             mojeksiazki_list.clear();
             while (rs.next()) {
-                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s")));
+                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s"),rs.getString("aktPzniszczenia")));
+                System.out.println(rs.getString("aktPzniszczenia")+" "+rs.getString("autor"));
             }
             rs.close();
             client.connection.close();
@@ -507,6 +510,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano nowy gatunek!", "Nowy gatunek: " + nazwaGatunku);
             nazwaDodawanieGatunek.clear();
             opisDodawanieGatunek.clear();
+            client.connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -535,6 +539,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             autorNazwiskoDodawanie.clear();
             autorPseudonimDodawanie.clear();
             data_urDodawanie.getEditor().clear();
+            client.connection.close();
         } catch (SQLException ex) {
             System.out.println("blad");
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -547,12 +552,14 @@ public class BibliotekarzOknoController extends User implements Initializable {
         try {
             // narazie nic
             // pobieram
+            client.openConnect();
             String sql = "DELETE FROM ksiazka WHERE tytul = ?";
             PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
             preparedStmt.setString(1, k.getTytul());
             preparedStmt.execute();
             tableWyszukajKsiazki.getItems().remove(k);
             System.out.print("usunieto");
+            client.connection.close();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
