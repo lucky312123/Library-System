@@ -163,7 +163,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private Button btnWyloguj;
     @FXML
     private TableColumn<?, ?> columnZniszczenieWypozyczenia;
-
+    @FXML
+    private Button zwrocKsiazkeBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -192,6 +193,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
+        zwrocKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
 
 //                
         edycjaKsiazki();
@@ -325,15 +327,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
             System.out.println(sDate);
             preparedStmt.setDate(3, sDate);
             preparedStmt.setInt(4, procentZ);
-           // preparedStmt.setString(5, status_dodajComboBox.getSelectionModel().getSelectedItem().toString());
-            
+            // preparedStmt.setString(5, status_dodajComboBox.getSelectionModel().getSelectedItem().toString());
+
             preparedStmt.execute();
             client.connection.close();
             DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
-        } catch (SQLException exception) {
-           Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
-        } catch (ParseException ex) {
-            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException | ParseException exception) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
         }
     }
 
@@ -357,7 +357,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 ilosc_wypPole.setText(rs.getString("ilosc_wyp"));
             }
 
-            String sql2 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s,k.aktPzniszczenia from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.nr_identyfikacji_k=?";           
+            String sql2 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s,k.aktPzniszczenia from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.nr_identyfikacji_k=?";
             st = client.connection.prepareStatement(sql2);
             st.setString(1, nr_identyfikacji);
             rs = st.executeQuery();
@@ -365,7 +365,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
             mojeksiazki_list.clear();
             while (rs.next()) {
                 mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s"), rs.getInt("aktPzniszczenia")));
-                System.out.println(rs.getString("aktPzniszczenia")+" "+rs.getString("autor"));
             }
             rs.close();
             client.connection.close();
@@ -422,6 +421,91 @@ public class BibliotekarzOknoController extends User implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @FXML
+    private void zwrocKsiazke(ActionEvent event) throws ParseException {
+        MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
+        int idKsiazki = 0;
+        String status = "";
+        String dataZwrotu = "";
+        double kara;
+        Date d1;
+        Date d2;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendar = Calendar.getInstance();
+        String dzisiejszaData = dateFormat.format(calendar.getTime());
+
+        try {
+            client.openConnect();
+            String sql = "select k.id_ksiazki,s.nazwa_s from ksiazka k,statusy s where k.status=s.status and k.tytul=? and k.status='2'";
+            st = client.connection.prepareStatement(sql);
+            st.setString(1, k.getTytul());
+            rs = st.executeQuery();
+
+            if (rs.next()) {
+                idKsiazki = rs.getInt("id_ksiazki");
+                status = rs.getString("nazwa_s");
+            }
+
+            if (status.contentEquals("wypozyczona")) {
+                String sql2 = "delete from wypozyczenia where id_ksiazki=?";
+                st = client.connection.prepareStatement(sql2);
+                st.setInt(1, idKsiazki);
+                st.execute();
+                tableWypozyczenia.getItems().remove(k);
+
+                String sql3 = "update ksiazka set status =? where id_ksiazki =?";
+                st = client.connection.prepareStatement(sql3);
+                st.setString(1, "1");
+                st.setInt(2, idKsiazki);
+                st.executeUpdate();
+
+                String sql1 = "select data_zwrotu from wypozyczenia where id_ksiazki=?";
+                st = client.connection.prepareStatement(sql1);
+                st.setInt(1, idKsiazki);
+                rs = st.executeQuery();
+                System.out.println("Pobrano date zwrotu ");
+
+                if (rs.next()) {
+                    dataZwrotu = rs.getString("data_zwrotu");
+                }
+                System.out.println("Data zwrotu " + dataZwrotu);
+                System.out.println("Dzisiejsza data " + dzisiejszaData);
+                d1 = dateFormat.parse(dataZwrotu);
+                d2 = dateFormat.parse(dzisiejszaData);
+                long dd1 = d1.getTime();
+                long dd2 = d2.getTime();
+                double roznica = (dd1 - dd2) / 86400000;
+                java.text.DecimalFormat decimal = new java.text.DecimalFormat();
+                decimal.setMaximumFractionDigits(2);
+                decimal.setMinimumFractionDigits(2);
+
+                System.out.println("po odjeciu dni " + roznica);
+                if (roznica < 0) {
+                    kara = 0.2 * Math.abs(roznica);
+                    String karaFormat = decimal.format(kara);
+                    System.out.println("Kara " + karaFormat);
+                    String sql4 = "update klienci set kara =? where nr_identyfikacji_k =?";
+                    st = client.connection.prepareStatement(sql4);
+                    st.setString(1, karaFormat);
+                    st.setString(2, nr_identyfikacji);
+                    st.executeUpdate();
+                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zwrócono książkę!", "Książka została zwrocona przez " + imiePole.getText() + " " + nazwiskoPole.getText());
+                    wyszukajUzytkownika();
+                } else if (roznica > 0) {
+                    rs.close();
+                    client.connection.close();
+                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zwrócono książkę!", "Książka została zwrocona przez " + imiePole.getText() + " " + nazwiskoPole.getText());
+                    wyszukajUzytkownika();
+                }
+            } else {
+                DialogsUtils.showAlert(Alert.AlertType.WARNING, "Książka zarezerwowana", "Książka jest zarezerwowana! Nie można zwrócić");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public int getId(String n) {
