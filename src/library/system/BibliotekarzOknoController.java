@@ -123,6 +123,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TextField autorPseudonimDodawanie;
     @FXML
+    private TextField l_egzemplarzy;
+    @FXML
     private Button dodajAutoraBTN;
     @FXML
     private TextField nr_identyfikacjiTextField;
@@ -308,33 +310,82 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
     @FXML
     private void dodajKsiazke() {
-        String tytul = tytulDodawanieKsiazka.getText().trim();
-        String ISBN = isbnDodawanieKsiazka.getText().trim();
-        int procentZ =Integer.parseInt( procent_zniszczeniaDodawanieKsiazka.getText().trim());
-        LocalDate localDate = data_wydDodawanieKsiazka.getValue();
-        Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
 
-        System.out.println();
+        /// bałagan tu jak skurwesny jeszcze statusy dodać ale to lajt prz okazji pozdrawiam krzyszto kononowicz
         try {
-            Date d = dt.parse(dt.format(date));
             client.openConnect();
-            String sql = "INSERT INTO ksiazka (tytul, ISBN, data_wyd,aktPzniszczenia,status,id_gatunku) values (?,?,?,?,1,1)";
-            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
-            preparedStmt.setString(1, tytul);
-            preparedStmt.setString(2, ISBN);
-            java.sql.Date sDate = convertUtilToSql(d);
-            System.out.println(sDate);
-            preparedStmt.setDate(3, sDate);
-            preparedStmt.setInt(4, procentZ);
-            // preparedStmt.setString(5, status_dodajComboBox.getSelectionModel().getSelectedItem().toString());
+            String tytul = tytulDodawanieKsiazka.getText().trim();
+            String ISBN = isbnDodawanieKsiazka.getText().trim();
+            int procentZ = Integer.parseInt(procent_zniszczeniaDodawanieKsiazka.getText().trim());
+            LocalDate localDate = data_wydDodawanieKsiazka.getValue();
+            Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+            int i = Integer.parseInt(l_egzemplarzy.getText().trim());
+            String sql5 = "SELECT id_gatunku FROM gatunki WHERE nazwa_g = ?";
+            PreparedStatement preparedStmt5 = client.connection.prepareStatement(sql5);
+            preparedStmt5.setString(1, gatunek_dodajComboBox.getSelectionModel().getSelectedItem().toString());
+            rs = preparedStmt5.executeQuery();
+            int id_g = -1;
+            while (rs.next()) {
+                System.out.print("id gatunku " + rs.getInt("id_gatunku"));
+                id_g = rs.getInt("id_gatunku");
+            }
+            System.out.println(i);
+            for (int x = 0; x < i; x++) {
+                try {
+                    Date d = dt.parse(dt.format(date));
+                    client.openConnect();
+                    String sql = "INSERT INTO ksiazka (tytul, ISBN, data_wyd,aktPzniszczenia,status,id_gatunku) values (?,?,?,?,1,?)";
+                    PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+                    preparedStmt.setString(1, tytul);
+                    preparedStmt.setString(2, ISBN);
+                    java.sql.Date sDate = convertUtilToSql(d);
+                    System.out.println(sDate);
+                    preparedStmt.setDate(3, sDate);
+                    preparedStmt.setInt(4, procentZ);
+                    preparedStmt.setInt(5, id_g);
 
-            preparedStmt.execute();
-            client.connection.close();
-            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
-        } catch (SQLException | ParseException exception) {
-            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
+                    preparedStmt.execute();
+                    client.connection.close();
+                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
+                } catch (SQLException exception) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
+                } catch (ParseException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+            String sql2 = "SELECT id_autora FROM autorzy WHERE nazwisko_a =?";
+            client.openConnect();
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql2);
+            preparedStmt.setString(1, autor_dodajComboBox.getSelectionModel().getSelectedItem());
+            rs = preparedStmt.executeQuery();
+            int id_a = -1;
+            while (rs.next()) {
+                System.out.print(rs.getInt("id_autora"));
+                id_a = rs.getInt("id_autora");
+            }
+
+            String sql3 = "SELECT id_ksiazki FROM ksiazka WHERE tytul =?";
+            String sql4 = "INSERT INTO autorzy_ksiazki (id_ksiazki, id_autora) values (?,?) ";
+            client.openConnect();
+            PreparedStatement preparedStmt2 = client.connection.prepareStatement(sql3);
+
+            preparedStmt2.setString(1, tytul);
+            rs = preparedStmt2.executeQuery();
+            while (rs.next()) {
+                System.out.print(rs.getInt("id_ksiazki"));
+                PreparedStatement preparedStmt3 = client.connection.prepareStatement(sql4);
+                preparedStmt3.setInt(1, rs.getInt("id_ksiazki"));
+                preparedStmt3.setInt(2, id_a);
+                preparedStmt3.execute();
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     @FXML
@@ -423,6 +474,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
     }
 
+    // tutaj jeszcze wiekszy bałagan XDDDDDDDDDDDDD
     @FXML
     private void zwrocKsiazke(ActionEvent event) throws ParseException {
         MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
