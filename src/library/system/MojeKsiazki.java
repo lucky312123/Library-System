@@ -11,7 +11,7 @@ public class MojeKsiazki {
     private final SimpleStringProperty data_wyp;
     private final SimpleStringProperty data_zwrotu;
     private final SimpleStringProperty nazwa_s;
-    private SimpleStringProperty aktPzniszczenia;
+    private  int aktPzniszczenia;
 
     public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s) {
         this.tytul = new SimpleStringProperty(tytul);
@@ -21,9 +21,10 @@ public class MojeKsiazki {
         this.data_wyp = new SimpleStringProperty(data_wyp);
         this.data_zwrotu = new SimpleStringProperty(data_zwrotu);
         this.nazwa_s = new SimpleStringProperty(nazwa_s);
+        
     }
-    
-    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s, String aktPzniszczenia) {
+
+    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s, int aktPzniszczenia) {
         this.tytul = new SimpleStringProperty(tytul);
         this.autor = new SimpleStringProperty(autor);
         this.ISBN = new SimpleStringProperty(ISBN);
@@ -31,8 +32,10 @@ public class MojeKsiazki {
         this.data_wyp = new SimpleStringProperty(data_wyp);
         this.data_zwrotu = new SimpleStringProperty(data_zwrotu);
         this.nazwa_s = new SimpleStringProperty(nazwa_s);
-        this.aktPzniszczenia = new SimpleStringProperty(aktPzniszczenia);
+        this.aktPzniszczenia = aktPzniszczenia;
     }
+    
+  
     
     public String getTytul() {
         return tytul.get();
@@ -89,13 +92,15 @@ public class MojeKsiazki {
      public String getNazwa_s() {
         return nazwa_s.get();
     }
+
+    public int getAktPzniszczenia() {
+        return aktPzniszczenia;
+    }
+
+    public void setAktPzniszczenia(int aktPzniszczenia) {
+        this.aktPzniszczenia = aktPzniszczenia;
+    }
      
-     public void setAktPzniszczenia(String value) {
-        aktPzniszczenia.set(value);
-    }
     
-     public String getAktPZzniszczenia() {
-        return aktPzniszczenia.get();
-    }
 
 }

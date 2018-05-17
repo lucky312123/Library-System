@@ -364,7 +364,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
             mojeksiazki_list.clear();
             while (rs.next()) {
-                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s"),rs.getString("aktPzniszczenia")));
+                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s"), rs.getInt("aktPzniszczenia")));
                 System.out.println(rs.getString("aktPzniszczenia")+" "+rs.getString("autor"));
             }
             rs.close();
