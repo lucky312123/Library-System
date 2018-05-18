@@ -393,7 +393,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         try {
             client.openConnect();
             nr_identyfikacji = nr_identyfikacjiTextField.getText().trim();
-            String sql = "SELECT k.imie_k,k.nazwisko_k,k.email_k,p.nazwa_p,k.kara,count(w.id_klienta) ilosc_wyp from klienci k,profil_uzytkownika p, wypozyczenia w where k.profil=p.profil and w.id_klienta=k.id_klienta and k.nr_identyfikacji_k=?";
+            String sql = "SELECT k.imie_k,k.nazwisko_k,k.email_k,p.nazwa_p,round(k.kara,2) as kara,count(w.id_klienta) ilosc_wyp from klienci k,profil_uzytkownika p, wypozyczenia w where k.profil=p.profil and w.id_klienta=k.id_klienta and k.nr_identyfikacji_k=?";
 
             st = client.connection.prepareStatement(sql);
             st.setString(1, nr_identyfikacji);
@@ -481,7 +481,10 @@ public class BibliotekarzOknoController extends User implements Initializable {
         int idKsiazki = 0;
         String status = "";
         String dataZwrotu = "";
+        double pobranaKara = 0;
         double kara;
+        double kara1;
+        String formatKara = "0";
         Date d1;
         Date d2;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -501,54 +504,57 @@ public class BibliotekarzOknoController extends User implements Initializable {
             }
 
             if (status.contentEquals("wypozyczona")) {
-                String sql2 = "delete from wypozyczenia where id_ksiazki=?";
-                st = client.connection.prepareStatement(sql2);
-                st.setInt(1, idKsiazki);
-                st.execute();
-                tableWypozyczenia.getItems().remove(k);
-
                 String sql3 = "update ksiazka set status =? where id_ksiazki =?";
                 st = client.connection.prepareStatement(sql3);
                 st.setString(1, "1");
                 st.setInt(2, idKsiazki);
                 st.executeUpdate();
 
-                String sql1 = "select data_zwrotu from wypozyczenia where id_ksiazki=?";
+                String sql1 = "select w.data_zwrotu, k.kara from klienci k, wypozyczenia w where w.id_ksiazki=? or k.id_klienta=?";
                 st = client.connection.prepareStatement(sql1);
                 st.setInt(1, idKsiazki);
+                st.setString(2, nr_identyfikacji);
                 rs = st.executeQuery();
-                System.out.println("Pobrano date zwrotu ");
 
                 if (rs.next()) {
                     dataZwrotu = rs.getString("data_zwrotu");
+                    pobranaKara = rs.getDouble("kara");
                 }
+
+                String sql2 = "delete from wypozyczenia where id_ksiazki=?";
+                st = client.connection.prepareStatement(sql2);
+                st.setInt(1, idKsiazki);
+                st.execute();
+                tableWypozyczenia.getItems().remove(k);
+
+                java.text.DecimalFormat df = new java.text.DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                df.setMinimumFractionDigits(2);
+
                 System.out.println("Data zwrotu " + dataZwrotu);
                 System.out.println("Dzisiejsza data " + dzisiejszaData);
+                System.out.println("Pobrana kara " + pobranaKara);
                 d1 = dateFormat.parse(dataZwrotu);
                 d2 = dateFormat.parse(dzisiejszaData);
                 long dd1 = d1.getTime();
                 long dd2 = d2.getTime();
                 double roznica = (dd1 - dd2) / 86400000;
-                java.text.DecimalFormat decimal = new java.text.DecimalFormat();
-                decimal.setMaximumFractionDigits(2);
-                decimal.setMinimumFractionDigits(2);
-
                 System.out.println("po odjeciu dni " + roznica);
                 if (roznica < 0) {
-                    kara = 0.2 * Math.abs(roznica);
-                    String karaFormat = decimal.format(kara);
-                    System.out.println("Kara " + karaFormat);
+                    kara1 = 0.2 * Math.abs(roznica);
+                    formatKara = df.format(kara1);
+                    kara = pobranaKara + 0.2 * Math.abs(roznica);
                     String sql4 = "update klienci set kara =? where nr_identyfikacji_k =?";
                     st = client.connection.prepareStatement(sql4);
-                    st.setString(1, karaFormat);
+                    st.setDouble(1, kara);
                     st.setString(2, nr_identyfikacji);
                     st.executeUpdate();
-                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zwrócono książkę!", "Książka została zwrocona przez " + imiePole.getText() + " " + nazwiskoPole.getText());
+                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zwrócono książkę!", "Książka została zwrocona przez " + imiePole.getText() + " " + nazwiskoPole.getText() + "\nKara wynosi " + formatKara+"zł");
                     wyszukajUzytkownika();
                 } else if (roznica > 0) {
                     rs.close();
                     client.connection.close();
-                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zwrócono książkę!", "Książka została zwrocona przez " + imiePole.getText() + " " + nazwiskoPole.getText());
+                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zwrócono książkę!", "Książka została zwrocona przez " + imiePole.getText() + " " + nazwiskoPole.getText() + "\nKara wynosi " + formatKara+"zł");
                     wyszukajUzytkownika();
                 }
             } else {

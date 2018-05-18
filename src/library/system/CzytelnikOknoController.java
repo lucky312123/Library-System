@@ -227,7 +227,7 @@ public class CzytelnikOknoController extends User implements Initializable {
     private void iloscKsiazek() {
         try {
             client.openConnect();
-            String sql3 = "select count(w.id_klienta) ilosc_wyp, kl.kara from wypozyczenia w, klienci kl where w.id_klienta=kl.id_klienta and kl.id_klienta=?";
+            String sql3 = "select count(w.id_klienta) ilosc_wyp, round(kl.kara,2) as kara from wypozyczenia w, klienci kl where w.id_klienta=kl.id_klienta and kl.id_klienta=?";
 
             st = client.connection.prepareStatement(sql3);
             st.setInt(1, LogowanieOknoController.przekazanieloginu);
