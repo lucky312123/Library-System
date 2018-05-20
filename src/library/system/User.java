@@ -47,6 +47,50 @@ public class User {
             System.out.println("Problem z wczytajKsiazki" + sql);
         }
     }
+    public void wczytajGatunki(ObservableList<Gatunki> gatunki_list) throws Exception {
+
+        try {
+
+            client.openConnect();
+            String sql = "SELECT nazwa_g,opis from gatunki";
+
+            st = client.connection.prepareStatement(sql);
+            rs = st.executeQuery();
+
+            gatunki_list.clear();
+            while (rs.next()) {
+                gatunki_list.add(new Gatunki(rs.getString("nazwa_g"), rs.getString("opis")));
+            }
+            rs.close();
+            client.connection.close();
+
+        } catch (SQLException sql) {
+            System.out.println("Problem z wczytajGatunki" + sql);
+        }
+    }
+
+    public void wczytajAutora(ObservableList<Autorzy> autorzy_list) throws Exception {
+
+        try {
+
+            client.openConnect();
+            String sql = "SELECT imie_a,nazwisko_a,pseudonim, data_ur from autorzy";
+
+            st = client.connection.prepareStatement(sql);
+            rs = st.executeQuery();
+
+            autorzy_list.clear();
+            while (rs.next()) {
+                autorzy_list.add(new Autorzy(rs.getString("imie_a"), rs.getString("nazwisko_a"), rs.getString("pseudonim"), rs.getString("data_ur")));
+            }
+            rs.close();
+            client.connection.close();
+
+        } catch (SQLException sql) {
+            System.out.println("Problem z wczytajAutora" + sql);
+        }
+    }
+
 
     public void wyszukaj(ObservableList<Ksiazki> ksiazki_list, String tytul, String imie_a, String nazwisko_a, String gatunek) throws Exception {
         try {

@@ -121,6 +121,15 @@
                         <Text layoutX="55.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa" />
                         <Text layoutX="62.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opis" />
                         <Button fx:id="dodajGatunekBTN" layoutX="526.0" layoutY="74.0" mnemonicParsing="false" onAction="#dodajGatunek" text="Dodaj gatunek" />
+                     <TableView fx:id="tableWyszukajGatunek" layoutX="14.0" layoutY="235.0" prefHeight="268.0" prefWidth="753.0">
+                          <columns>
+                            <TableColumn fx:id="columnNazwaWyszukaj" prefWidth="143.0" text="Nazwa" />
+                            <TableColumn fx:id="columnOpisWyszukaj" prefWidth="605.0" text="Opis" />
+                          </columns>
+                        </TableView>
+                        <Button fx:id="btnWczytajGatunki" layoutX="526.0" layoutY="138.0" mnemonicParsing="false" onAction="#wczytajGatunki" prefHeight="25.0" prefWidth="98.0" text="Wczytaj" />
+                        
+                        <Button fx:id="wyczyscWyszukiwanieBTN1" layoutX="432.0" layoutY="138.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanieGatunku" text="Wyczyść" />
                      </children>
                   </AnchorPane>
             </content>
@@ -138,6 +147,16 @@
                         <Text layoutX="25.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" />
                         <Text layoutX="45.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" />
                         <Button fx:id="dodajAutoraBTN" layoutX="526.0" layoutY="74.0" mnemonicParsing="false" onAction="#dodajAutora" text="Dodaj autora" />
+                        <TableView fx:id="tableWyszukajAutora" layoutY="256.0" prefHeight="268.0" prefWidth="753.0">
+                           <columns>
+                              <TableColumn fx:id="columnImieWyszukaj1" prefWidth="179.0" text="Imie" />
+                              <TableColumn fx:id="columnNazwiskoWyszukaj1" prefWidth="185.0" text="Nazwisko" />
+                              <TableColumn fx:id="columnPseudonimWyszukaj1" prefWidth="156.0" text="Pseudonim" />
+                              <TableColumn fx:id="columnData_uWyszukaj1" prefWidth="226.0" text="Data urodzenia" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="btnWczytajAutora" layoutX="520.0" layoutY="135.0" mnemonicParsing="false" onAction="#wczytajAutora" prefHeight="25.0" prefWidth="98.0" text="Wczytaj" />
+                        <Button fx:id="wyczyscWyszukiwanieBTN11" layoutX="413.0" layoutY="101.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanieAutora" text="Wyczyść" />
                         
                      </children>
                   </AnchorPane>

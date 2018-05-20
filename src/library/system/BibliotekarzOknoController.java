@@ -44,6 +44,8 @@ import javafx.scene.control.cell.TextFieldTableCell;
 public class BibliotekarzOknoController extends User implements Initializable {
 
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
+    ObservableList<Gatunki> gatunki_list = FXCollections.observableArrayList();
+    ObservableList<Autorzy> autorzy_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     LibrarySystem log = new LibrarySystem();
     ObservableList<String> gatunki = FXCollections.observableArrayList();
@@ -89,6 +91,10 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private DatePicker data_urDodawanie;
     @FXML
+    private TableView<Gatunki> tableWyszukajGatunek;
+    @FXML
+    private TableView<Autorzy> tableWyszukajAutora;
+    @FXML
     private TableView<Ksiazki> tableWyszukajKsiazki;
 
     //do edycji trzeba <?,?> zmienć na <ksiazki, (typ-string int itd)>
@@ -107,6 +113,10 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableColumn<?, ?> columnStatusWyszukaj;
     @FXML
+    private TableColumn<?, ?> columnNazwaWyszukaj;
+    @FXML
+    private TableColumn<?, ?> columnOpisWyszukaj;
+    @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
     Client client = new Client();
     String tytulp = "1";
@@ -114,6 +124,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     String ISBN = "1";
     @FXML
     private Button btnWczytajKsiazki;
+    @FXML
+    private Button btnWczytajGatunki;
     @FXML
     private Button wyczyscWyszukiwanieBTN;
     @FXML
@@ -163,6 +175,22 @@ public class BibliotekarzOknoController extends User implements Initializable {
     String nr_identyfikacji;
     @FXML
     private Button btnWyloguj;
+     @FXML
+    private TableColumn<?, ?> columnImieWyszukaj1;
+    @FXML
+    private TableColumn<?, ?> columnNazwiskoWyszukaj1;
+    @FXML
+    private TableColumn<?, ?> columnPseudonimWyszukaj1;
+    @FXML
+    private TableColumn<?, ?> columnData_uWyszukaj1;
+    @FXML
+    private Button btnWczytajAutora;
+    @FXML
+    private Button usunBtn1;
+    @FXML
+    private Button wyczyscWyszukiwanieBTN1;
+    @FXML
+    private Button wyczyscWyszukiwanieBTN11;
     @FXML
     private TableColumn<?, ?> columnZniszczenieWypozyczenia;
     @FXML
@@ -174,6 +202,10 @@ public class BibliotekarzOknoController extends User implements Initializable {
         tableWyszukajKsiazki.setItems(ksiazki_list);
         tableWypozyczenia.setItems(null);
         tableWypozyczenia.setItems(mojeksiazki_list);
+        tableWyszukajGatunek.setItems(null);
+        tableWyszukajGatunek.setItems(gatunki_list);
+        tableWyszukajAutora.setItems(null);
+        tableWyszukajAutora.setItems(autorzy_list);
 
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
@@ -183,6 +215,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnGatunekWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
         columnStatusWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
         columnIloscWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ilosc"));
+        
+        columnNazwaWyszukaj.setCellValueFactory(new PropertyValueFactory<>("nazwa_g"));
+        columnOpisWyszukaj.setCellValueFactory(new PropertyValueFactory<>("opis"));
+        columnImieWyszukaj1.setCellValueFactory(new PropertyValueFactory<>("imie_a"));
+        columnNazwiskoWyszukaj1.setCellValueFactory(new PropertyValueFactory<>("nazwisko_a"));
+        columnPseudonimWyszukaj1.setCellValueFactory(new PropertyValueFactory<>("pseudonim"));
+        columnData_uWyszukaj1.setCellValueFactory(new PropertyValueFactory<>("data_ur"));
 
         columnTytulWpozyczenia.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnAutorWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("autor"));
@@ -279,6 +318,15 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
         //tableWyszukajKsiazki.setItems(ksiazki_list);
     }
+    @FXML
+    public void wczytajGatunki(ActionEvent event) throws Exception {
+        wczytajGatunki(gatunki_list);
+    }
+
+    @FXML
+    public void wczytajAutora(ActionEvent event) throws Exception {
+        wczytajAutora(autorzy_list);
+    }
 
     @FXML
     private void wyszukajKsiazki(ActionEvent event) {
@@ -300,6 +348,16 @@ public class BibliotekarzOknoController extends User implements Initializable {
         nazwiskoASzukanie.clear();
         gatunekSzukanie.clear();
         ksiazki_list.clear();
+    }
+    @FXML
+    private void wyczyscWyszukiwanieGatunku(ActionEvent event) {
+       
+        gatunki_list.clear();
+    }
+    @FXML
+    private void wyczyscWyszukiwanieAutora(ActionEvent event) {
+       
+        autorzy_list.clear();
     }
 
     private static java.sql.Date convertUtilToSql(java.util.Date uDate) {
