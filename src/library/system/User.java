@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package library.system;
 
 import Database.Client;
@@ -11,10 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javafx.collections.ObservableList;
 
-/**
- *
- * @author Karol
- */
 public class User {
 
     ResultSet rs;
@@ -47,9 +38,10 @@ public class User {
             System.out.println("Problem z wczytajKsiazki" + sql);
         }
     }
-    public void wczytajGatunki(ObservableList<Gatunki> gatunki_list) throws Exception {
 
-        try {
+     public void wczytajGatunki(ObservableList<Gatunki> gatunki_list) throws Exception {
+
+       try {
 
             client.openConnect();
             String sql = "SELECT nazwa_g,opis from gatunki";
@@ -68,8 +60,8 @@ public class User {
             System.out.println("Problem z wczytajGatunki" + sql);
         }
     }
-
-    public void wczytajAutora(ObservableList<Autorzy> autorzy_list) throws Exception {
+     
+     public void wczytajAutora(ObservableList<Autorzy> autorzy_list) throws Exception {
 
         try {
 
@@ -90,8 +82,7 @@ public class User {
             System.out.println("Problem z wczytajAutora" + sql);
         }
     }
-
-
+    
     public void wyszukaj(ObservableList<Ksiazki> ksiazki_list, String tytul, String imie_a, String nazwisko_a, String gatunek) throws Exception {
         try {
 
