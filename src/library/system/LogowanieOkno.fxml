@@ -54,8 +54,8 @@
                         <PasswordField fx:id="hasloField" layoutX="251.0" layoutY="191.0" />
                         <Text layoutX="146.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HASŁO" />
                         <Text layoutX="144.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" />
-                        <Button fx:id="zalogujBTN" layoutX="416.0" layoutY="276.0" mnemonicParsing="false" onAction="#zaloguj" text="Zaloguj" />
-                        <CheckBox fx:id="check" layoutX="165.0" layoutY="301.0" mnemonicParsing="false" text="pracownik" />
+                        <Button fx:id="zalogujBTN" layoutX="372.0" layoutY="276.0" mnemonicParsing="false" onAction="#zaloguj" text="Zaloguj" />
+                        <CheckBox fx:id="check" layoutX="251.0" layoutY="280.0" mnemonicParsing="false" text="pracownik" />
                      </children>
                   </AnchorPane>
                </content>

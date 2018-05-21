@@ -76,13 +76,12 @@
                         <Text layoutX="33.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tytuł" />
                         <Text layoutX="33.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko autora" />
                         <Text layoutX="33.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gatunek" />
-                      <Button fx:id="wyszukajKsiazkeBTN" layoutX="345.0" layoutY="32.0" mnemonicParsing="false" onAction="#wyszukajKsiazki" text="Wyszukaj" />
-                        <Button fx:id="btnWczytajKsiazki" layoutX="482.0" layoutY="32.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
-                        <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="348.0" layoutY="86.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść" />
+                      <Button fx:id="wyszukajKsiazkeBTN" layoutX="346.0" layoutY="10.0" mnemonicParsing="false" onAction="#wyszukajKsiazki" text="Wyszukaj" />
+                        <Button fx:id="btnWczytajKsiazki" layoutX="549.0" layoutY="10.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
+                        <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="346.0" layoutY="53.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść dane" />
                         <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
-                        <Button fx:id="btnZapisz" layoutX="505.0" layoutY="74.0" mnemonicParsing="false" onAction="#edycja" text="zapisz" />
-                        <Button fx:id="usunBtn" layoutX="504.0" layoutY="127.0" mnemonicParsing="false" onAction="#usunKsiazke" text="usuń" />
-                        <Text layoutX="746.0" layoutY="570.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Zalogowany jako bibliotekarz" wrappingWidth="154.810546875" />
+                        <Button fx:id="btnZapisz" layoutX="346.0" layoutY="98.0" mnemonicParsing="false" onAction="#edycja" text="Edytuj książkę" />
+                        <Button fx:id="usunBtn" layoutX="346.0" layoutY="135.0" mnemonicParsing="false" onAction="#usunKsiazke" text="Usuń książkę" />
                      </children>
                   </AnchorPane>
             </content>
@@ -200,6 +199,7 @@
                         <Button fx:id="zwrocKsiazkeBTN" layoutX="662.0" layoutY="156.0" mnemonicParsing="false" onAction="#zwrocKsiazke" text="Zwróć" />
                         <Text layoutX="714.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="zł" />
                         <Button fx:id="karaZaplaconaBTN" layoutX="765.0" layoutY="58.0" mnemonicParsing="false" onAction="#zaplacKare" text="Kara zapłacona" />
+                        <Button layoutX="448.0" layoutY="13.0" mnemonicParsing="false" onAction="#wyczyscWypozyczeniaZwroty" text="Wyczyść" />
                      </children>
                   </AnchorPane>
                </content>

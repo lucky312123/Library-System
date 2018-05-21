@@ -113,14 +113,14 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private TableColumn<?, ?> columnGatunekWyszukaj;
     @FXML
     private TableColumn<?, ?> columnStatusWyszukaj;
-    private TableColumn<?, ?> columnNazwaWyszukaj;
-    private TableColumn<?, ?> columnOpisWyszukaj;
     @FXML
     private TableColumn<?, ?> columnIloscWyszukaj;
     Client client = new Client();
     String tytulp = "1";
     String tytul1 = "2";
     String ISBN = "1";
+    String pZniszczeniaNowe;
+    String pZniszczeniaStare;
     @FXML
     private Button btnWczytajKsiazki;
     @FXML
@@ -189,7 +189,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button wyczyscWyszukiwanieBTN11;
     @FXML
-    private TableColumn<?, ?> columnZniszczenieWypozyczenia;
+    private TableColumn<MojeKsiazki, String> columnZniszczenieWypozyczenia;
     @FXML
     private Button zwrocKsiazkeBTN;
     @FXML
@@ -198,7 +198,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private TableColumn<?, ?> columnNazwaDodawanieGatunku;
     @FXML
     private TableColumn<?, ?> columnOpisDodawanieGatunku;
-    
+
     @FXML
     private Button usun_aBtn;
     @FXML
@@ -214,8 +214,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         tableDodajGatunek.setItems(gatunki_list);
         tableWyszukajAutora.setItems(null);
         tableWyszukajAutora.setItems(autorzy_list);
-        //tableWyszukajGatunek.setItems(null);
-        //tableWyszukajGatunek.setItems(gatunki_list);
 
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
@@ -246,7 +244,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
         zwrocKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
-        
+
         usun_gBtn.disableProperty().bind(tableDodajGatunek.getSelectionModel().selectedItemProperty().isNull());
         usun_aBtn.disableProperty().bind(tableWyszukajAutora.getSelectionModel().selectedItemProperty().isNull());
 
@@ -258,6 +256,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajAutoraBTN.disableProperty().bind(data_urDodawanie.valueProperty().isNull());
         edycjaKsiazki();
         getGatunki();
+        edycjaZniszczenia();
     }
 
 //do edycjipubli 
@@ -331,6 +330,20 @@ public class BibliotekarzOknoController extends User implements Initializable {
         );
     }
 
+    public void edycjaZniszczenia() {
+        MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
+        tableWypozyczenia.setEditable(true);
+        columnZniszczenieWypozyczenia.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnZniszczenieWypozyczenia.setOnEditCommit((CellEditEvent<MojeKsiazki, String> t) -> {
+            pZniszczeniaStare = t.getOldValue();
+            System.out.println(pZniszczeniaStare);
+            ((MojeKsiazki) t.getTableView().getItems().get(
+                    t.getTablePosition().getRow())).setAktPzniszczenia(t.getNewValue());
+            pZniszczeniaNowe = t.getNewValue();
+            System.out.println(pZniszczeniaNowe);
+        });
+    }
+
     @FXML
     public void wczytajKsiazki(ActionEvent event) throws Exception {
         wczytajKsiazki(ksiazki_list);
@@ -367,6 +380,18 @@ public class BibliotekarzOknoController extends User implements Initializable {
         nazwiskoASzukanie.clear();
         gatunekSzukanie.clear();
         ksiazki_list.clear();
+    }
+
+    @FXML
+    private void wyczyscWypozyczeniaZwroty(ActionEvent event) {
+        nr_identyfikacjiTextField.clear();
+        karaPole.setText("");
+        ilosc_wypPole.setText("");
+        imiePole.setText("");
+        nazwiskoPole.setText("");
+        emialPole.setText("");
+        statusPole.setText("");
+        mojeksiazki_list.clear();
     }
 
     @FXML
@@ -431,7 +456,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
                     preparedStmt.setInt(5, id_g);
 
                     preparedStmt.execute();
-                    client.connection.close();   
+                    client.connection.close();
                 } catch (SQLException exception) {
                     Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
                 } catch (ParseException ex) {
@@ -507,7 +532,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
             mojeksiazki_list.clear();
             while (rs.next()) {
-                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s"), rs.getInt("aktPzniszczenia")));
+                mojeksiazki_list.add(new MojeKsiazki(rs.getString("tytul"), rs.getString("autor"), rs.getString("ISBN"), rs.getString("nazwa_g"), rs.getString("data_wyp"), rs.getString("data_zwrotu"), rs.getString("nazwa_s"), rs.getString("aktPzniszczenia")));
             }
             rs.close();
             client.connection.close();
@@ -612,12 +637,19 @@ public class BibliotekarzOknoController extends User implements Initializable {
                     pobranaKara = rs.getDouble("kara");
                 }
 
+                edycjaZniszczenia();
+                String sql9 = "UPDATE ksiazka SET aktPzniszczenia = ? WHERE id_ksiazki =?";
+                st = client.connection.prepareStatement(sql9);
+                st.setString(1, pZniszczeniaNowe);
+                st.setInt(2, idKsiazki);
+                st.executeUpdate();
+                System.out.println("Update rokordu ! ID= " + idKsiazki);
+
                 String sql2 = "delete from wypozyczenia where id_ksiazki=?";
                 st = client.connection.prepareStatement(sql2);
                 st.setInt(1, idKsiazki);
                 st.execute();
                 tableWypozyczenia.getItems().remove(k);
-
                 java.text.DecimalFormat df = new java.text.DecimalFormat();
                 df.setMaximumFractionDigits(2);
                 df.setMinimumFractionDigits(2);
@@ -719,7 +751,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
             //rs.close();
             client.connection.close();
-            ///System.out.print(tytul);
+            DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Edycja książki", "Edycja wykonana pomyślnie!");
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -785,8 +817,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private void usunKsiazke() {
         Ksiazki k = tableWyszukajKsiazki.getSelectionModel().getSelectedItem();
         try {
-            // narazie nic
-            // pobieram
             client.openConnect();
             String sql = "DELETE FROM ksiazka WHERE tytul = ?";
             PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
@@ -795,10 +825,12 @@ public class BibliotekarzOknoController extends User implements Initializable {
             tableWyszukajKsiazki.getItems().remove(k);
             System.out.print("usunieto");
             client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie książki", "Książka została usunięta!");
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     @FXML
     private void usunGatunek() {
         Gatunki g = tableDodajGatunek.getSelectionModel().getSelectedItem();
@@ -811,32 +843,30 @@ public class BibliotekarzOknoController extends User implements Initializable {
             preparedStmt.setString(1, g.getNazwa_g());
             preparedStmt.execute();
             tableDodajGatunek.getItems().remove(g);
-            System.out.print("usunieto");
             client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie gatunku", "Gatunek został usunięty!");
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     @FXML
     private void usunAutora() {
         Autorzy a = tableWyszukajAutora.getSelectionModel().getSelectedItem();
         try {
-            // narazie nic
-            // pobieram
             client.openConnect();
             String sql = "DELETE FROM autorzy WHERE imie_a = ?";
             PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
             preparedStmt.setString(1, a.getImie_a());
             preparedStmt.execute();
-            tableWyszukajAutora.getItems().remove(a);
-            System.out.print("usunieto");
             client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie autora", "Autor został usunięty");
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-        @FXML
+
+    @FXML
     private void zaplacKare(ActionEvent event) {
         try {
             client.openConnect();
