@@ -11,7 +11,7 @@ public class MojeKsiazki {
     private final SimpleStringProperty data_wyp;
     private final SimpleStringProperty data_zwrotu;
     private final SimpleStringProperty nazwa_s;
-    private  int aktPzniszczenia;
+    private String aktPzniszczenia;
 
     public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s) {
         this.tytul = new SimpleStringProperty(tytul);
@@ -21,10 +21,10 @@ public class MojeKsiazki {
         this.data_wyp = new SimpleStringProperty(data_wyp);
         this.data_zwrotu = new SimpleStringProperty(data_zwrotu);
         this.nazwa_s = new SimpleStringProperty(nazwa_s);
-        
+
     }
 
-    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s, int aktPzniszczenia) {
+    public MojeKsiazki(String tytul, String autor, String ISBN, String nazwa_g, String data_wyp, String data_zwrotu, String nazwa_s, String aktPzniszczenia) {
         this.tytul = new SimpleStringProperty(tytul);
         this.autor = new SimpleStringProperty(autor);
         this.ISBN = new SimpleStringProperty(ISBN);
@@ -34,9 +34,7 @@ public class MojeKsiazki {
         this.nazwa_s = new SimpleStringProperty(nazwa_s);
         this.aktPzniszczenia = aktPzniszczenia;
     }
-    
-  
-    
+
     public String getTytul() {
         return tytul.get();
     }
@@ -44,7 +42,7 @@ public class MojeKsiazki {
     public void setTytul(String value) {
         tytul.set(value);
     }
-    
+
     public String getAutor() {
         return autor.get();
     }
@@ -52,7 +50,7 @@ public class MojeKsiazki {
     public void setautor(String value) {
         autor.set(value);
     }
-    
+
     public String getISBN() {
         return ISBN.get();
     }
@@ -60,15 +58,15 @@ public class MojeKsiazki {
     public void setISNB(String value) {
         ISBN.set(value);
     }
-    
-     public String getNazwa_g() {
+
+    public String getNazwa_g() {
         return nazwa_g.get();
     }
 
     public void setNazwa_g(String value) {
         nazwa_g.set(value);
     }
-    
+
     public String getData_wyp() {
         return data_wyp.get();
     }
@@ -76,7 +74,7 @@ public class MojeKsiazki {
     public void setData_wyp(String value) {
         data_wyp.set(value);
     }
-    
+
     public String getData_zwrotu() {
         return data_zwrotu.get();
     }
@@ -84,23 +82,21 @@ public class MojeKsiazki {
     public void setData_zwrotu(String value) {
         data_zwrotu.set(value);
     }
-    
+
     public void setNazwa_s(String value) {
         nazwa_s.set(value);
     }
-    
-     public String getNazwa_s() {
+
+    public String getNazwa_s() {
         return nazwa_s.get();
     }
 
-    public int getAktPzniszczenia() {
+    public String getAktPzniszczenia() {
         return aktPzniszczenia;
     }
 
-    public void setAktPzniszczenia(int aktPzniszczenia) {
+    public void setAktPzniszczenia(String aktPzniszczenia) {
         this.aktPzniszczenia = aktPzniszczenia;
     }
-     
-    
 
 }
