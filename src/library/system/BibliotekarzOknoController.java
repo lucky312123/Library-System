@@ -201,6 +201,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     
     @FXML
     private Button usun_aBtn;
+    @FXML
+    private Button karaZaplaconaBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -336,12 +338,12 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void wczytajGatunki(ActionEvent event) throws Exception {
+    private void wczytajGatunki() throws Exception {
         wczytajGatunki(gatunki_list);
     }
 
     @FXML
-    private void wczytajAutora(ActionEvent event) throws Exception {
+    private void wczytajAutora() throws Exception {
         wczytajAutora(autorzy_list);
     }
 
@@ -394,8 +396,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private void dodajKsiazke() {
 
-        /// bałagan tu jak skurwesny jeszcze statusy dodać ale to lajt prz okazji pozdrawiam krzyszto kononowicz
         try {
+            int i = 1;
             client.openConnect();
             String tytul = tytulDodawanieKsiazka.getText().trim();
             String ISBN = isbnDodawanieKsiazka.getText().trim();
@@ -403,7 +405,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             LocalDate localDate = data_wydDodawanieKsiazka.getValue();
             Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-            int i = Integer.parseInt(l_egzemplarzy.getText().trim());
+            i = Integer.parseInt(l_egzemplarzy.getText().trim());
             String sql5 = "SELECT id_gatunku FROM gatunki WHERE nazwa_g = ?";
             PreparedStatement preparedStmt5 = client.connection.prepareStatement(sql5);
             preparedStmt5.setString(1, gatunek_dodajComboBox.getSelectionModel().getSelectedItem().toString());
@@ -429,8 +431,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
                     preparedStmt.setInt(5, id_g);
 
                     preparedStmt.execute();
-                    client.connection.close();
-                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
+                    client.connection.close();   
                 } catch (SQLException exception) {
                     Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, exception);
                 } catch (ParseException ex) {
@@ -464,7 +465,15 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 preparedStmt3.execute();
 
             }
-
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
+            tytulDodawanieKsiazka.clear();
+            isbnDodawanieKsiazka.clear();
+            data_wydDodawanieKsiazka.getEditor().clear();
+            procent_zniszczeniaDodawanieKsiazka.clear();
+            l_egzemplarzy.clear();
+            autor_dodajComboBox.getSelectionModel().clearSelection();
+            gatunek_dodajComboBox.getSelectionModel().clearSelection();
+            status_dodajComboBox.getSelectionModel().clearSelection();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -557,7 +566,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
     }
 
-    // tutaj jeszcze wiekszy bałagan XDDDDDDDDDDDDD
     @FXML
     private void zwrocKsiazke(ActionEvent event) throws ParseException {
         MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
@@ -718,7 +726,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
-    public void dodajGatunek(ActionEvent event) {
+    public void dodajGatunek(ActionEvent event) throws Exception {
         try {
             String nazwaGatunku = nazwaDodawanieGatunek.getText().trim();
             String opisGatunku = opisDodawanieGatunek.getText().trim();
@@ -736,13 +744,14 @@ public class BibliotekarzOknoController extends User implements Initializable {
             nazwaDodawanieGatunek.clear();
             opisDodawanieGatunek.clear();
             client.connection.close();
+            wczytajGatunki();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @FXML
-    public void dodajAutora(ActionEvent event) {
+    public void dodajAutora(ActionEvent event) throws Exception {
         try {
             String imieAutora = autorImieDodawanie.getText().trim();
             String nazwiskoAutora = autorNazwiskoDodawanie.getText().trim();
@@ -765,6 +774,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             autorPseudonimDodawanie.clear();
             data_urDodawanie.getEditor().clear();
             client.connection.close();
+            wczytajAutora();
         } catch (SQLException ex) {
             System.out.println("blad");
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -821,6 +831,24 @@ public class BibliotekarzOknoController extends User implements Initializable {
             tableWyszukajAutora.getItems().remove(a);
             System.out.print("usunieto");
             client.connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+        @FXML
+    private void zaplacKare(ActionEvent event) {
+        try {
+            client.openConnect();
+            String sql = "UPDATE klienci SET kara=? WHERE nr_identyfikacji_k =?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setDouble(1, 0);
+            preparedStmt.setString(2, nr_identyfikacji);
+            preparedStmt.executeUpdate();
+
+            client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Kara!", "Kara została wyzerowana");
+            wyszukajUzytkownika();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }

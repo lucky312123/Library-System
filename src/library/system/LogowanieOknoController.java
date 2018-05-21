@@ -146,6 +146,7 @@ public class LogowanieOknoController implements Initializable {
             } else {
                 //bład danych
                 System.out.println("bec1  bład");
+                DialogsUtils.showAlert(Alert.AlertType.WARNING, "Złe dane", "Sprawdz poprawność wpisanych danych bądź uprawnienia!");
                 //log.setNextScene(2);
             }
         } catch (SQLException sql) {
