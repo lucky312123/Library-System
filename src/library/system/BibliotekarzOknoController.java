@@ -195,9 +195,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableView<Gatunki> tableDodajGatunek;
     @FXML
-    private TableColumn<?, ?> columnNazwaDodawanieGatunku;
+    private TableColumn<Gatunki,String> columnNazwaDodawanieGatunku;
     @FXML
-    private TableColumn<?, ?> columnOpisDodawanieGatunku;
+    private TableColumn<Gatunki, String> columnOpisDodawanieGatunku;
     
     @FXML
     private Button usun_aBtn;
@@ -257,6 +257,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajAutoraBTN.disableProperty().bind(autorPseudonimDodawanie.textProperty().isEmpty());
         dodajAutoraBTN.disableProperty().bind(data_urDodawanie.valueProperty().isNull());
         edycjaKsiazki();
+        edycjaGatunki();
         getGatunki();
     }
 
@@ -329,6 +330,56 @@ public class BibliotekarzOknoController extends User implements Initializable {
             }
         }
         );
+    }
+    
+      public void edycjaGatunki() {
+          
+              String sql2 = "update gatunki set nazwa_g=? where nazwa_g=?";
+      
+        tableDodajGatunek.setEditable(true);
+        columnOpisDodawanieGatunku.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnNazwaDodawanieGatunku.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnNazwaDodawanieGatunku.setOnEditCommit(
+                new EventHandler<CellEditEvent<Gatunki, String>>() {
+            @Override
+            public void handle(CellEditEvent<Gatunki, String> t) {
+                try {
+                      client.openConnect();
+                    //tytul = t.getOldValue();
+                   PreparedStatement state = client.connection.prepareStatement(sql2);
+                    state.setString(1, t.getNewValue());
+                    state.setString(2, t.getOldValue());
+                    System.out.print(t.getNewValue());
+                    state.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+        );
+         String sql3 = "update gatunki set opis=? where opis=?";
+        columnOpisDodawanieGatunku.setOnEditCommit(
+                new EventHandler<CellEditEvent<Gatunki, String>>() {
+            @Override
+            public void handle(CellEditEvent<Gatunki, String> t) {
+                try {
+                      client.openConnect();
+                    //tytul = t.getOldValue();
+                   PreparedStatement state = client.connection.prepareStatement(sql3);
+                    state.setString(1, t.getNewValue());
+                    state.setString(2, t.getOldValue());
+                    System.out.print(t.getNewValue());
+                    state.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+        );
+
+      
     }
 
     @FXML
