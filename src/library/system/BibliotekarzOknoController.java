@@ -89,6 +89,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button usunBtn;
     @FXML
+    private Button usun_gBtn;
+    @FXML
     private DatePicker data_urDodawanie;
     private TableView<Gatunki> tableWyszukajGatunek;
     @FXML
@@ -196,6 +198,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private TableColumn<?, ?> columnNazwaDodawanieGatunku;
     @FXML
     private TableColumn<?, ?> columnOpisDodawanieGatunku;
+    
+    @FXML
+    private Button usun_aBtn;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -207,6 +212,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
         tableDodajGatunek.setItems(gatunki_list);
         tableWyszukajAutora.setItems(null);
         tableWyszukajAutora.setItems(autorzy_list);
+        //tableWyszukajGatunek.setItems(null);
+        //tableWyszukajGatunek.setItems(gatunki_list);
 
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
@@ -237,6 +244,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
         zwrocKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
+        
+        usun_gBtn.disableProperty().bind(tableDodajGatunek.getSelectionModel().selectedItemProperty().isNull());
+        usun_aBtn.disableProperty().bind(tableWyszukajAutora.getSelectionModel().selectedItemProperty().isNull());
 
         dodajGatunekBTN.disableProperty().bind(nazwaDodawanieGatunek.textProperty().isEmpty());
         dodajGatunekBTN.disableProperty().bind(opisDodawanieGatunek.textProperty().isEmpty());
@@ -244,7 +254,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajAutoraBTN.disableProperty().bind(autorNazwiskoDodawanie.textProperty().isEmpty());
         dodajAutoraBTN.disableProperty().bind(autorPseudonimDodawanie.textProperty().isEmpty());
         dodajAutoraBTN.disableProperty().bind(data_urDodawanie.valueProperty().isNull());
-
         edycjaKsiazki();
         getGatunki();
     }
@@ -774,6 +783,42 @@ public class BibliotekarzOknoController extends User implements Initializable {
             preparedStmt.setString(1, k.getTytul());
             preparedStmt.execute();
             tableWyszukajKsiazki.getItems().remove(k);
+            System.out.print("usunieto");
+            client.connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @FXML
+    private void usunGatunek() {
+        Gatunki g = tableDodajGatunek.getSelectionModel().getSelectedItem();
+        try {
+            // narazie nic
+            // pobieram
+            client.openConnect();
+            String sql = "DELETE FROM gatunki WHERE nazwa_g = ?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, g.getNazwa_g());
+            preparedStmt.execute();
+            tableDodajGatunek.getItems().remove(g);
+            System.out.print("usunieto");
+            client.connection.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    @FXML
+    private void usunAutora() {
+        Autorzy a = tableWyszukajAutora.getSelectionModel().getSelectedItem();
+        try {
+            // narazie nic
+            // pobieram
+            client.openConnect();
+            String sql = "DELETE FROM autorzy WHERE imie_a = ?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, a.getImie_a());
+            preparedStmt.execute();
+            tableWyszukajAutora.getItems().remove(a);
             System.out.print("usunieto");
             client.connection.close();
         } catch (SQLException ex) {
