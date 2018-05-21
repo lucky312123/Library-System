@@ -175,13 +175,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button btnWyloguj;
     @FXML
-    private TableColumn<?, ?> columnImieWyszukaj1;
+    private TableColumn<Autorzy,String> columnImieWyszukaj1;
     @FXML
-    private TableColumn<?, ?> columnNazwiskoWyszukaj1;
+    private TableColumn<Autorzy,String> columnNazwiskoWyszukaj1;
     @FXML
-    private TableColumn<?, ?> columnPseudonimWyszukaj1;
+    private TableColumn<Autorzy,String> columnPseudonimWyszukaj1;
     @FXML
-    private TableColumn<?, ?> columnData_uWyszukaj1;
+    private TableColumn<Autorzy,String> columnData_uWyszukaj1;
     @FXML
     private Button btnWczytajAutora;
     @FXML
@@ -256,6 +256,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajAutoraBTN.disableProperty().bind(data_urDodawanie.valueProperty().isNull());
         edycjaKsiazki();
         edycjaGatunki();
+        edycjaAutora();
         getGatunki();
         edycjaZniszczenia();
     }
@@ -380,7 +381,97 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
       
     }
+      public void edycjaAutora() {
+          
+              String sql6 = "update autorzy set imie_a=? where imie_a=?";
+      
+        tableWyszukajAutora.setEditable(true);
+        columnImieWyszukaj1.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnNazwiskoWyszukaj1.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnPseudonimWyszukaj1.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnData_uWyszukaj1.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnImieWyszukaj1.setOnEditCommit(
+                new EventHandler<CellEditEvent<Autorzy, String>>() {
+            @Override
+            public void handle(CellEditEvent<Autorzy, String> t) {
+                try {
+                      client.openConnect();
+                    //tytul = t.getOldValue();
+                   PreparedStatement state = client.connection.prepareStatement(sql6);
+                    state.setString(1, t.getNewValue());
+                    state.setString(2, t.getOldValue());
+                    System.out.print(t.getNewValue());
+                    state.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
 
+            }
+        }
+        );
+         String sql3 = "update autorzy set nazwisko_a=? where nazwisko_a=?";
+        columnNazwiskoWyszukaj1.setOnEditCommit(
+                new EventHandler<CellEditEvent<Autorzy, String>>() {
+            @Override
+            public void handle(CellEditEvent<Autorzy, String> t) {
+                try {
+                      client.openConnect();
+                    //tytul = t.getOldValue();
+                   PreparedStatement state = client.connection.prepareStatement(sql3);
+                    state.setString(1, t.getNewValue());
+                    state.setString(2, t.getOldValue());
+                    System.out.print(t.getNewValue());
+                    state.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+        );
+        String sql4 = "update autorzy set pseudonim=? where pseudonim=?";
+        columnPseudonimWyszukaj1.setOnEditCommit(
+                new EventHandler<CellEditEvent<Autorzy, String>>() {
+            @Override
+            public void handle(CellEditEvent<Autorzy, String> t) {
+                try {
+                      client.openConnect();
+                    //tytul = t.getOldValue();
+                   PreparedStatement state = client.connection.prepareStatement(sql4);
+                    state.setString(1, t.getNewValue());
+                    state.setString(2, t.getOldValue());
+                    System.out.print(t.getNewValue());
+                    state.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+        );
+        String sql5 = "update autorzy set data_ur=? where data_ur=?";
+        columnData_uWyszukaj1.setOnEditCommit(
+                new EventHandler<CellEditEvent<Autorzy, String>>() {
+            @Override
+            public void handle(CellEditEvent<Autorzy, String> t) {
+                try {
+                      client.openConnect();
+                    //tytul = t.getOldValue();
+                   PreparedStatement state = client.connection.prepareStatement(sql5);
+                    state.setString(1, t.getNewValue());
+                    state.setString(2, t.getOldValue());
+                    System.out.print(t.getNewValue());
+                    state.executeUpdate();
+                } catch (SQLException ex) {
+                    Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+        );
+
+      
+    }
     public void edycjaZniszczenia() {
         MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
         tableWypozyczenia.setEditable(true);
