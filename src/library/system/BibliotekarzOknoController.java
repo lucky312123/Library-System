@@ -175,13 +175,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private Button btnWyloguj;
     @FXML
-    private TableColumn<Autorzy,String> columnImieWyszukaj1;
+    private TableColumn<Autorzy, String> columnImieWyszukaj1;
     @FXML
-    private TableColumn<Autorzy,String> columnNazwiskoWyszukaj1;
+    private TableColumn<Autorzy, String> columnNazwiskoWyszukaj1;
     @FXML
-    private TableColumn<Autorzy,String> columnPseudonimWyszukaj1;
+    private TableColumn<Autorzy, String> columnPseudonimWyszukaj1;
     @FXML
-    private TableColumn<Autorzy,String> columnData_uWyszukaj1;
+    private TableColumn<Autorzy, String> columnData_uWyszukaj1;
     @FXML
     private Button btnWczytajAutora;
     @FXML
@@ -195,14 +195,16 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private TableView<Gatunki> tableDodajGatunek;
     @FXML
-    private TableColumn<Gatunki,String> columnNazwaDodawanieGatunku;
+    private TableColumn<Gatunki, String> columnNazwaDodawanieGatunku;
     @FXML
     private TableColumn<Gatunki, String> columnOpisDodawanieGatunku;
-    
+
     @FXML
     private Button usun_aBtn;
     @FXML
     private Button karaZaplaconaBTN;
+    @FXML
+    private Button wyczyscDodawanieKsiazkiBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -242,6 +244,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         columnZniszczenieWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("aktPzniszczenia"));
 
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
+        btnZapisz.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
         zwrocKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
 
@@ -254,6 +257,18 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajAutoraBTN.disableProperty().bind(autorNazwiskoDodawanie.textProperty().isEmpty());
         dodajAutoraBTN.disableProperty().bind(autorPseudonimDodawanie.textProperty().isEmpty());
         dodajAutoraBTN.disableProperty().bind(data_urDodawanie.valueProperty().isNull());
+
+        dodajKsiazkeBTN.disableProperty().bind(tytulDodawanieKsiazka.textProperty().isEmpty());
+        dodajKsiazkeBTN.disableProperty().bind(isbnDodawanieKsiazka.textProperty().isEmpty());
+        dodajKsiazkeBTN.disableProperty().bind(data_wydDodawanieKsiazka.valueProperty().isNull());
+        dodajKsiazkeBTN.disableProperty().bind(procent_zniszczeniaDodawanieKsiazka.textProperty().isEmpty());
+        dodajKsiazkeBTN.disableProperty().bind(autor_dodajComboBox.valueProperty().isNull());
+        dodajKsiazkeBTN.disableProperty().bind(gatunek_dodajComboBox.valueProperty().isNull());
+        dodajKsiazkeBTN.disableProperty().bind(status_dodajComboBox.valueProperty().isNull());
+        dodajKsiazkeBTN.disableProperty().bind(l_egzemplarzy.textProperty().isEmpty());
+        
+        karaZaplaconaBTN.disableProperty().bind(nr_identyfikacjiTextField.textProperty().isEmpty());
+
         edycjaKsiazki();
         edycjaGatunki();
         edycjaAutora();
@@ -331,11 +346,11 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
         );
     }
-    
-      public void edycjaGatunki() {
-          
-              String sql2 = "update gatunki set nazwa_g=? where nazwa_g=?";
-      
+
+    public void edycjaGatunki() {
+
+        String sql2 = "update gatunki set nazwa_g=? where nazwa_g=?";
+
         tableDodajGatunek.setEditable(true);
         columnOpisDodawanieGatunku.setCellFactory(TextFieldTableCell.forTableColumn());
         columnNazwaDodawanieGatunku.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -344,9 +359,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
             @Override
             public void handle(CellEditEvent<Gatunki, String> t) {
                 try {
-                      client.openConnect();
+                    client.openConnect();
                     //tytul = t.getOldValue();
-                   PreparedStatement state = client.connection.prepareStatement(sql2);
+                    PreparedStatement state = client.connection.prepareStatement(sql2);
                     state.setString(1, t.getNewValue());
                     state.setString(2, t.getOldValue());
                     System.out.print(t.getNewValue());
@@ -358,15 +373,15 @@ public class BibliotekarzOknoController extends User implements Initializable {
             }
         }
         );
-         String sql3 = "update gatunki set opis=? where opis=?";
+        String sql3 = "update gatunki set opis=? where opis=?";
         columnOpisDodawanieGatunku.setOnEditCommit(
                 new EventHandler<CellEditEvent<Gatunki, String>>() {
             @Override
             public void handle(CellEditEvent<Gatunki, String> t) {
                 try {
-                      client.openConnect();
+                    client.openConnect();
                     //tytul = t.getOldValue();
-                   PreparedStatement state = client.connection.prepareStatement(sql3);
+                    PreparedStatement state = client.connection.prepareStatement(sql3);
                     state.setString(1, t.getNewValue());
                     state.setString(2, t.getOldValue());
                     System.out.print(t.getNewValue());
@@ -379,12 +394,12 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
         );
 
-      
     }
-      public void edycjaAutora() {
-          
-              String sql6 = "update autorzy set imie_a=? where imie_a=?";
-      
+
+    public void edycjaAutora() {
+
+        String sql6 = "update autorzy set imie_a=? where imie_a=?";
+
         tableWyszukajAutora.setEditable(true);
         columnImieWyszukaj1.setCellFactory(TextFieldTableCell.forTableColumn());
         columnNazwiskoWyszukaj1.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -395,9 +410,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
             @Override
             public void handle(CellEditEvent<Autorzy, String> t) {
                 try {
-                      client.openConnect();
+                    client.openConnect();
                     //tytul = t.getOldValue();
-                   PreparedStatement state = client.connection.prepareStatement(sql6);
+                    PreparedStatement state = client.connection.prepareStatement(sql6);
                     state.setString(1, t.getNewValue());
                     state.setString(2, t.getOldValue());
                     System.out.print(t.getNewValue());
@@ -409,15 +424,15 @@ public class BibliotekarzOknoController extends User implements Initializable {
             }
         }
         );
-         String sql3 = "update autorzy set nazwisko_a=? where nazwisko_a=?";
+        String sql3 = "update autorzy set nazwisko_a=? where nazwisko_a=?";
         columnNazwiskoWyszukaj1.setOnEditCommit(
                 new EventHandler<CellEditEvent<Autorzy, String>>() {
             @Override
             public void handle(CellEditEvent<Autorzy, String> t) {
                 try {
-                      client.openConnect();
+                    client.openConnect();
                     //tytul = t.getOldValue();
-                   PreparedStatement state = client.connection.prepareStatement(sql3);
+                    PreparedStatement state = client.connection.prepareStatement(sql3);
                     state.setString(1, t.getNewValue());
                     state.setString(2, t.getOldValue());
                     System.out.print(t.getNewValue());
@@ -435,9 +450,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
             @Override
             public void handle(CellEditEvent<Autorzy, String> t) {
                 try {
-                      client.openConnect();
+                    client.openConnect();
                     //tytul = t.getOldValue();
-                   PreparedStatement state = client.connection.prepareStatement(sql4);
+                    PreparedStatement state = client.connection.prepareStatement(sql4);
                     state.setString(1, t.getNewValue());
                     state.setString(2, t.getOldValue());
                     System.out.print(t.getNewValue());
@@ -455,9 +470,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
             @Override
             public void handle(CellEditEvent<Autorzy, String> t) {
                 try {
-                      client.openConnect();
+                    client.openConnect();
                     //tytul = t.getOldValue();
-                   PreparedStatement state = client.connection.prepareStatement(sql5);
+                    PreparedStatement state = client.connection.prepareStatement(sql5);
                     state.setString(1, t.getNewValue());
                     state.setString(2, t.getOldValue());
                     System.out.print(t.getNewValue());
@@ -470,8 +485,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
         );
 
-      
     }
+
     public void edycjaZniszczenia() {
         MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
         tableWypozyczenia.setEditable(true);
@@ -554,6 +569,18 @@ public class BibliotekarzOknoController extends User implements Initializable {
         data_urDodawanie.getEditor().clear();
     }
 
+    @FXML
+    private void wyczyscDodawanieKsiazki() {
+        tytulDodawanieKsiazka.clear();
+        isbnDodawanieKsiazka.clear();
+        data_wydDodawanieKsiazka.getEditor().clear();
+        procent_zniszczeniaDodawanieKsiazka.clear();
+        l_egzemplarzy.clear();
+        autor_dodajComboBox.getSelectionModel().clearSelection();
+        gatunek_dodajComboBox.getSelectionModel().clearSelection();
+        status_dodajComboBox.getSelectionModel().clearSelection();
+    }
+
     private static java.sql.Date convertUtilToSql(java.util.Date uDate) {
 
         java.sql.Date sDate = new java.sql.Date(uDate.getTime());
@@ -633,14 +660,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
             }
             DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano książkę!", "Dodana książka to  " + tytulDodawanieKsiazka.getText());
-            tytulDodawanieKsiazka.clear();
-            isbnDodawanieKsiazka.clear();
-            data_wydDodawanieKsiazka.getEditor().clear();
-            procent_zniszczeniaDodawanieKsiazka.clear();
-            l_egzemplarzy.clear();
-            autor_dodajComboBox.getSelectionModel().clearSelection();
-            gatunek_dodajComboBox.getSelectionModel().clearSelection();
-            status_dodajComboBox.getSelectionModel().clearSelection();
+            wyczyscDodawanieKsiazki();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }

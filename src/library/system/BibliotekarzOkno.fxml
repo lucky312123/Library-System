@@ -107,6 +107,7 @@
                         <Button fx:id="dodajKsiazkeBTN" layoutX="615.0" layoutY="356.0" mnemonicParsing="false" onAction="#dodajKsiazke" text="Dodaj książkę" />
                         <Text layoutX="426.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liczba egzemplarzy" />
                         <TextField fx:id="l_egzemplarzy" layoutX="571.0" layoutY="273.0" />
+                        <Button fx:id="wyczyscDodawanieKsiazkiBTN" layoutX="749.0" layoutY="356.0" mnemonicParsing="false" onAction="#wyczyscDodawanieKsiazki" text="Wyczyść dane" />
                      </children>
                   </AnchorPane>
             </content>
