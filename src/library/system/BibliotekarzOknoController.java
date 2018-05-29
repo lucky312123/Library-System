@@ -295,11 +295,13 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 gatunki.add(rs.getString("nazwa_g"));
 
             }
+            autor_dodajComboBox.getItems().clear();
             rs = preparedStmt2.executeQuery();
-
+            
             while (rs.next()) {
                 autor_dodajComboBox.getItems().addAll(rs.getString("nazwisko_a"));
             }
+            status_dodajComboBox.getItems().clear();
             rs = preparedStmt1.executeQuery();
             while (rs.next()) {
                 status_dodajComboBox.getItems().addAll(rs.getString("nazwa_s"));
@@ -939,6 +941,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             opisDodawanieGatunek.clear();
             client.connection.close();
             wczytajGatunki();
+            getGatunki();
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -969,6 +972,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             data_urDodawanie.getEditor().clear();
             client.connection.close();
             wczytajAutora();
+            getGatunki();
         } catch (SQLException ex) {
             System.out.println("blad");
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
@@ -1021,6 +1025,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
             preparedStmt.setString(1, a.getImie_a());
             preparedStmt.execute();
+            tableWyszukajAutora.getItems().remove(a);
             client.connection.close();
             DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie autora", "Autor został usunięty");
         } catch (SQLException ex) {
