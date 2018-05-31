@@ -75,8 +75,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private ComboBox<String> gatunek_dodajComboBox;
     @FXML
-    private ComboBox<String> status_dodajComboBox;
-    @FXML
     private Button dodajKsiazkeBTN;
     @FXML
     private TextField nazwaDodawanieGatunek;
@@ -264,7 +262,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajKsiazkeBTN.disableProperty().bind(procent_zniszczeniaDodawanieKsiazka.textProperty().isEmpty());
         dodajKsiazkeBTN.disableProperty().bind(autor_dodajComboBox.valueProperty().isNull());
         dodajKsiazkeBTN.disableProperty().bind(gatunek_dodajComboBox.valueProperty().isNull());
-        dodajKsiazkeBTN.disableProperty().bind(status_dodajComboBox.valueProperty().isNull());
         dodajKsiazkeBTN.disableProperty().bind(l_egzemplarzy.textProperty().isEmpty());
         
         karaZaplaconaBTN.disableProperty().bind(nr_identyfikacjiTextField.textProperty().isEmpty());
@@ -280,7 +277,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
     public void getGatunki() {
         client.openConnect();
         String sql = "SELECT g.nazwa_g FROM gatunki g";
-        String sql2 = "SELECT s.nazwa_s FROM statusy s";
         String sql3 = "SELECT nazwisko_a FROM autorzy";
         ResultSet rs;
         PreparedStatement preparedStmt, preparedStmt1, preparedStmt2;
@@ -288,7 +284,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         gatunki.clear();
         try {
             preparedStmt = client.connection.prepareStatement(sql);
-            preparedStmt1 = client.connection.prepareStatement(sql2);
             preparedStmt2 = client.connection.prepareStatement(sql3);
             rs = preparedStmt.executeQuery();
             while (rs.next()) {
@@ -300,11 +295,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
             
             while (rs.next()) {
                 autor_dodajComboBox.getItems().addAll(rs.getString("nazwisko_a"));
-            }
-            status_dodajComboBox.getItems().clear();
-            rs = preparedStmt1.executeQuery();
-            while (rs.next()) {
-                status_dodajComboBox.getItems().addAll(rs.getString("nazwa_s"));
             }
             client.connection.close();
         } catch (SQLException ex) {
@@ -580,7 +570,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
         l_egzemplarzy.clear();
         autor_dodajComboBox.getSelectionModel().clearSelection();
         gatunek_dodajComboBox.getSelectionModel().clearSelection();
-        status_dodajComboBox.getSelectionModel().clearSelection();
     }
 
     private static java.sql.Date convertUtilToSql(java.util.Date uDate) {
