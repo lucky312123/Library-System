@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -50,12 +51,22 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TextField fx:id="loginField" layoutX="251.0" layoutY="134.0" />
-                        <PasswordField fx:id="hasloField" layoutX="251.0" layoutY="191.0" />
-                        <Text layoutX="146.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HASŁO" />
-                        <Text layoutX="144.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" />
-                        <Button fx:id="zalogujBTN" layoutX="372.0" layoutY="276.0" mnemonicParsing="false" onAction="#zaloguj" text="Zaloguj" />
-                        <CheckBox fx:id="check" layoutX="251.0" layoutY="280.0" mnemonicParsing="false" text="pracownik" />
+                        <TextField fx:id="loginField" layoutX="241.0" layoutY="241.0" />
+                        <PasswordField fx:id="hasloField" layoutX="241.0" layoutY="298.0" />
+                        <Text layoutX="136.0" layoutY="317.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HASŁO" />
+                        <Text layoutX="134.0" layoutY="258.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LOGIN" />
+                        <Button fx:id="zalogujBTN" layoutX="362.0" layoutY="383.0" mnemonicParsing="false" onAction="#zaloguj" text="Zaloguj" />
+                        <CheckBox fx:id="check" layoutX="241.0" layoutY="387.0" mnemonicParsing="false" text="pracownik" />
+                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="216.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@pictures/ksiazka.png" />
+                           </image>
+                        </ImageView>
+                        <Label layoutX="204.0" layoutY="14.0" text="BIBLIOTEKA">
+                           <font>
+                              <Font name="Batang" size="44.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                </content>
