@@ -117,7 +117,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     String tytulp = "1";
     String tytul1 = "2";
     String ISBN = "1";
-    String pZniszczeniaNowe;
+    String pZniszczeniaNowe = "0";
     String pZniszczeniaStare;
     @FXML
     private Button btnWczytajKsiazki;
@@ -263,7 +263,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         dodajKsiazkeBTN.disableProperty().bind(autor_dodajComboBox.valueProperty().isNull());
         dodajKsiazkeBTN.disableProperty().bind(gatunek_dodajComboBox.valueProperty().isNull());
         dodajKsiazkeBTN.disableProperty().bind(l_egzemplarzy.textProperty().isEmpty());
-        
+
         karaZaplaconaBTN.disableProperty().bind(nr_identyfikacjiTextField.textProperty().isEmpty());
 
         edycjaKsiazki();
@@ -292,7 +292,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             }
             autor_dodajComboBox.getItems().clear();
             rs = preparedStmt2.executeQuery();
-            
+
             while (rs.next()) {
                 autor_dodajComboBox.getItems().addAll(rs.getString("nazwisko_a"));
             }
@@ -749,6 +749,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
         MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
         int idKsiazki = 0;
         String status = "";
+        String aktPzniszczenia = "";
         String dataZwrotu = "";
         double pobranaKara = 0;
         double kara;
@@ -762,7 +763,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
         try {
             client.openConnect();
-            String sql = "select k.id_ksiazki,s.nazwa_s from ksiazka k,statusy s where k.status=s.status and k.tytul=? and k.status='2'";
+            String sql = "select k.id_ksiazki,s.nazwa_s,k.aktPzniszczenia from ksiazka k,statusy s where k.status=s.status and k.tytul=? and k.status='2'";
             st = client.connection.prepareStatement(sql);
             st.setString(1, k.getTytul());
             rs = st.executeQuery();
@@ -770,6 +771,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
             if (rs.next()) {
                 idKsiazki = rs.getInt("id_ksiazki");
                 status = rs.getString("nazwa_s");
+                aktPzniszczenia = rs.getString("aktPzniszczenia");
             }
 
             if (status.contentEquals("wypozyczona")) {
@@ -791,12 +793,21 @@ public class BibliotekarzOknoController extends User implements Initializable {
                 }
 
                 edycjaZniszczenia();
-                String sql9 = "UPDATE ksiazka SET aktPzniszczenia = ? WHERE id_ksiazki =?";
-                st = client.connection.prepareStatement(sql9);
-                st.setString(1, pZniszczeniaNowe);
-                st.setInt(2, idKsiazki);
-                st.executeUpdate();
-                System.out.println("Update rokordu ! ID= " + idKsiazki);
+                if (pZniszczeniaNowe.equals("0")) {
+                    String sql9 = "UPDATE ksiazka SET aktPzniszczenia = ? WHERE id_ksiazki =?";
+                    st = client.connection.prepareStatement(sql9);
+                    st.setString(1, aktPzniszczenia);
+                    st.setInt(2, idKsiazki);
+                    st.executeUpdate();
+                    System.out.println("Update rokordu starego ! ID= " + idKsiazki);
+                } else {
+                    String sql8 = "UPDATE ksiazka SET aktPzniszczenia = ? WHERE id_ksiazki =?";
+                    st = client.connection.prepareStatement(sql8);
+                    st.setString(1, pZniszczeniaNowe);
+                    st.setInt(2, idKsiazki);
+                    st.executeUpdate();
+                    System.out.println("Update rokordu nowego ! ID= " + idKsiazki);
+                }
 
                 String sql2 = "delete from wypozyczenia where id_ksiazki=?";
                 st = client.connection.prepareStatement(sql2);

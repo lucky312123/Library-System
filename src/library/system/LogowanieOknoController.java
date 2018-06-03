@@ -113,7 +113,7 @@ public class LogowanieOknoController implements Initializable {
             client.openConnect();
             String sql5 = "select nr_identyfikacji_k from klienci";
             int zmienna;
-
+            lista.clear();
             st = client.connection.prepareStatement(sql5);
             rs = st.executeQuery();
             while (rs.next()) {
