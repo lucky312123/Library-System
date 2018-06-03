@@ -124,8 +124,12 @@ public class CzytelnikOknoController extends User implements Initializable {
         }
     }
 
+    /**
+     * czyszczenie pól do wszyukiwania
+     */
     @FXML
     private void wyczyscWyszukiwanie() {
+
         tytulSzukanie.clear();
         imieASzukanie.clear();
         nazwiskoASzukanie.clear();
@@ -133,6 +137,9 @@ public class CzytelnikOknoController extends User implements Initializable {
         ksiazki_list.clear();
     }
 
+    /**
+     * wczytanie danych zalogowanego klienta
+     */
     private void wczytanieDanych() {
         System.out.println("ID zalogowanego " + LogowanieOknoController.przekazanieloginu);
         try {
@@ -158,8 +165,11 @@ public class CzytelnikOknoController extends User implements Initializable {
         }
 
     }
-
+ /**
+         * książki użytkownika
+         */
     private void mojeKsiazki() {
+       
         try {
             client.openConnect();
             String sql3 = "SELECT k.tytul,concat(a.imie_a,' ',a.nazwisko_a) as autor,k.ISBN,g.nazwa_g,w.data_wyp,w.data_zwrotu,s.nazwa_s from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, wypozyczenia w, klienci kl, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and w.id_ksiazki=k.id_ksiazki and w.id_klienta=kl.id_klienta and s.status = k.status and kl.id_klienta=?";
@@ -179,7 +189,10 @@ public class CzytelnikOknoController extends User implements Initializable {
             System.out.println("Problem z mojeKsiazki" + sql);
         }
     }
-
+/**
+ * metoda obsługująca rezerwację książki przez klienta
+ * @param event 
+ */
     @FXML
     private void rezerwacjaKsiazki(ActionEvent event) {
         if (limitKsiazek <= 10) {
@@ -224,7 +237,11 @@ public class CzytelnikOknoController extends User implements Initializable {
         }
     }
 
+    /**
+     * ilosc ksiazke wypozyczonych przez danego klienta
+     */
     private void iloscKsiazek() {
+
         try {
             client.openConnect();
             String sql3 = "select count(w.id_klienta) ilosc_wyp, round(kl.kara,2) as kara from wypozyczenia w, klienci kl where w.id_klienta=kl.id_klienta and kl.id_klienta=?";
@@ -246,8 +263,12 @@ public class CzytelnikOknoController extends User implements Initializable {
         }
     }
 
+    /**
+     * edycja danych konta
+     */
     @FXML
     private void edytujDane(ActionEvent event) {
+
         try {
             client.openConnect();
             String imie = imieDane.getText().trim();
