@@ -28,6 +28,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import library.system.dialogs.DialogsUtils;
 
+/**
+ *
+ * @author Karol
+ */
 public class LogowanieOknoController implements Initializable {
 
     LibrarySystem log = new LibrarySystem();
@@ -65,7 +69,15 @@ public class LogowanieOknoController implements Initializable {
     private RadioButton radioNie;
     boolean poprawne_dane;
     boolean poprawne_dane1;
+
+    /**
+     *
+     */
     public static int przekazanieloginu;
+
+    /**
+     *
+     */
     public static List<Integer> lista = new ArrayList();
 
     @Override
@@ -81,7 +93,10 @@ public class LogowanieOknoController implements Initializable {
         pobranieNrIdentyfikacji();
 
     }
-
+/**
+ * 
+ * pobranie danych do osoby logującej się
+ */
     private void pobranieDanych() {
         if (check.isSelected() == false) {
             try {
@@ -105,7 +120,9 @@ public class LogowanieOknoController implements Initializable {
             }
         }
     }
-
+/**
+ * metoda do rozróżniania klientów 
+ */
     private void pobranieNrIdentyfikacji() {
 
         try {
@@ -128,7 +145,12 @@ public class LogowanieOknoController implements Initializable {
         }
 
     }
-
+/**
+ * logowanie klienta lub pracownika
+     * @param event
+     * @return 
+     * @throws java.lang.Exception
+ */
     @FXML
     public int zaloguj(ActionEvent event) throws Exception {
         int n =0;

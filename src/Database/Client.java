@@ -8,12 +8,25 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
-
+/**
+ *
+ * @author Karol
+ */
 public class Client {
+
+    /**
+     *
+     */
     public Connection connection;
     private Statement statement;
     
+    /**
+     *
+     * @return
+     */
+    /**
+         * metoda łaczonca aplikajcę z bazą danych mysql
+         */
     public Connection openConnect(){
         
         try {
