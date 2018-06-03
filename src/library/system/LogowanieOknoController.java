@@ -130,7 +130,8 @@ public class LogowanieOknoController implements Initializable {
     }
 
     @FXML
-    private void zaloguj(ActionEvent event) throws Exception {
+    public int zaloguj(ActionEvent event) throws Exception {
+        int n =0;
         try {
             pobranieDanych();
             String login = loginField.getText().trim();
@@ -152,23 +153,27 @@ public class LogowanieOknoController implements Initializable {
                 if (rs.getInt("profil") == 3) {
                     //zalogowano jako uczen
                     //login 997 pass qwer1234
+                    n = 2;
                     System.out.println("done uczen");
-                    log.setNextScene(2);
+                    log.setNextScene(n);
                 } else if (rs.getInt("profil") == 4) {
                     //zalogowano jako nie uczen
                     //login 997 pass qwer1234
+                    n=2;
                     System.out.println("done nie uczący się");
-                    log.setNextScene(2);
+                    log.setNextScene(n);
                 } else if (rs.getInt("profil") == 1) {
                     //zalogowano jako admin
                     //login 123 pass admin
+                    n=1;
                     System.out.println("done admin");
-                    log.setNextScene(1);
+                    log.setNextScene(n);
                 } else if (rs.getInt("profil") == 2) {
                     //zalogowano jako bibliotekarz
                     //login 111 pass 1234
+                    n=1;
                     System.out.println("done bibliotekarz");
-                    log.setNextScene(1);
+                    log.setNextScene(n);
                 }
 
             } else {
@@ -181,7 +186,7 @@ public class LogowanieOknoController implements Initializable {
             //złe sql
             System.out.println("bec2" + sql);
         }
-
+return n;
     }
 
     @FXML
