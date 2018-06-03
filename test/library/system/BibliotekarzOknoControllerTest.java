@@ -1,18 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package library.system;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.TextFieldTableCell;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,10 +12,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Ignore;
 
-/**
- *
- * @author Karol
- */
 public class BibliotekarzOknoControllerTest {
      ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
      ObservableList<Gatunki> gatunki_list = FXCollections.observableArrayList();

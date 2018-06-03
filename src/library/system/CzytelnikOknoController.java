@@ -80,8 +80,6 @@ public class CzytelnikOknoController extends User implements Initializable {
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     @FXML
-    private Button btnWczytajKsiazki;
-    @FXML
     private TextField imieDane;
     @FXML
     private TextField nazwiskoDane;
@@ -102,14 +100,6 @@ public class CzytelnikOknoController extends User implements Initializable {
     int limitKsiazek;
     @FXML
     private Button wylogujBTN;
-
-    @FXML
-    public void wczytajKsiazki(ActionEvent event) throws Exception {
-        wczytajKsiazki(ksiazki_list);
-        //To change body of generated methods, choose Tools | Templates.
-
-        tableWyszukajKsiazki.setItems(ksiazki_list);
-    }
 
     @FXML
     private void wyszukajKsiazki() {

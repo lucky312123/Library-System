@@ -273,7 +273,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
         edycjaZniszczenia();
     }
 
-//do edycjipubli 
+    /**
+     * edycja gatunków
+     */
     public void getGatunki() {
         client.openConnect();
         String sql = "SELECT g.nazwa_g FROM gatunki g";
@@ -493,17 +495,26 @@ public class BibliotekarzOknoController extends User implements Initializable {
         });
     }
 
+    /**
+     * wczytywanie wszystkich ksiażek do tabeli
+     */
     @FXML
     public void wczytajKsiazki(ActionEvent event) throws Exception {
         wczytajKsiazki(ksiazki_list);
 
     }
 
+    /**
+     * wczytywanie wszystkich gatunków do tabeli
+     */
     @FXML
     private void wczytajGatunki() throws Exception {
         wczytajGatunki(gatunki_list);
     }
 
+    /**
+     * wczytywanie wszystkich autorów do tabeli
+     */
     @FXML
     private void wczytajAutora() throws Exception {
         wczytajAutora(autorzy_list);
@@ -657,6 +668,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
 
     }
+    /**
+     * metoda wyszukująca konkretnego użytkownika
+     */
 
     @FXML
     private void wyszukajUzytkownika() {
@@ -853,6 +867,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
 
     }
 
+    /**
+     * Pobieranie ID książki
+     */
     public int getId(String n) {
         int id = -1;
         try {
@@ -876,7 +893,10 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
         return id;
     }
-
+    
+    /**
+     * Edytowanie książki po naciśnięciu przycisku
+     */
     @FXML
     public void edycja() throws SQLException {
         PreparedStatement preparedStmt;
@@ -1033,6 +1053,9 @@ public class BibliotekarzOknoController extends User implements Initializable {
         }
     }
 
+    /**
+     * Metoda zerująca kare konkretnego użytkownika
+     */
     @FXML
     private void zaplacKare(ActionEvent event) {
         try {

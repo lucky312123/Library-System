@@ -58,7 +58,6 @@
                         <Text layoutX="33.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gatunek" />
                         <Button fx:id="wyszukajKsiazkeBTN" layoutX="349.0" layoutY="10.0" mnemonicParsing="false" onAction="#wyszukajKsiazki" text="Wyszukaj" />
                         <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="349.0" layoutY="53.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść dane" />
-                        <Button fx:id="btnWczytajKsiazki" layoutX="518.0" layoutY="10.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
                         <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
                         <Button fx:id="zarezerwujBTN" layoutX="349.0" layoutY="98.0" mnemonicParsing="false" onAction="#rezerwacjaKsiazki" text="Zarezerwuj" />
                      </children>
