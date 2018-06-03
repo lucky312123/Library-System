@@ -20,6 +20,7 @@ public class CzytelnikOknoControllerTest {
     
     public CzytelnikOknoControllerTest() {
     }
+   
     
     @BeforeClass
     public static void setUpClass() {
@@ -50,6 +51,7 @@ public class CzytelnikOknoControllerTest {
         //fail("The test case is a prototype.");
         
     }
+    
 
     /**
      * Test of initialize method, of class CzytelnikOknoController.
