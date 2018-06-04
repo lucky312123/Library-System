@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="686.0" prefWidth="948.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="library.system.AdminOknoController">
+
+
+   <children>
+      <MenuBar layoutX="18.0" layoutY="12.0" prefHeight="37.0" prefWidth="948.0" AnchorPane.bottomAnchor="649.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <menus>
+            <Menu mnemonicParsing="false" text="Plik">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#zamknijAplikacje" text="Zamknij" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edycja">
+               <items>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#setCaspian" text="Caspian">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="styleGroup" />
+                     </toggleGroup>
+                  </RadioMenuItem>
+                  <RadioMenuItem mnemonicParsing="false" onAction="#setModena" selected="true" text="Modena" toggleGroup="$styleGroup" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Pomoc">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#aboutApplication" text="O aplikacji" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+      <TabPane layoutY="37.0" prefHeight="603.0" prefWidth="948.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0">
+        <tabs>
+            
+           <Tab text="Wyszukaj /Edytuj książki">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="570.0" prefWidth="948.0">
+                     <children>
+                        <TableView fx:id="tableWyszukajKsiazki" layoutY="145.0" prefHeight="366.0" prefWidth="948.0" AnchorPane.bottomAnchor="37.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="columnTytulWyszukaj" prefWidth="151.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                            <TableColumn fx:id="columnISBNWyszukaj" prefWidth="140.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnImieWyszukaj" prefWidth="117.0" style="-fx-alignment: CENTER;" text="Imię autora" />
+                              <TableColumn fx:id="columnNazwiskoWyszukaj" prefWidth="123.0" style="-fx-alignment: CENTER;" text="Nazwisko autora" />
+                              <TableColumn fx:id="columnData_wydWyszukaj" prefWidth="128.0" style="-fx-alignment: CENTER;" text="Data wydania" />
+                              <TableColumn fx:id="columnGatunekWyszukaj" prefWidth="104.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnStatusWyszukaj" prefWidth="105.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnIloscWyszukaj" prefWidth="79.0" style="-fx-alignment: CENTER;" text="Ilość" />
+                          </columns>
+                        </TableView>
+                        <TextField fx:id="tytulSzukanie" layoutX="135.0" layoutY="10.0" />
+                        <TextField fx:id="imieASzukanie" layoutX="135.0" layoutY="53.0" />
+                        <TextField fx:id="nazwiskoASzukanie" layoutX="135.0" layoutY="98.0" />
+                        <TextField fx:id="gatunekSzukanie" layoutX="135.0" layoutY="135.0" />
+                        <Text layoutX="33.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tytuł" />
+                        <Text layoutX="33.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko autora" />
+                        <Text layoutX="33.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gatunek" />
+                      <Button fx:id="wyszukajKsiazkeBTN" layoutX="346.0" layoutY="10.0" mnemonicParsing="false" onAction="#wyszukajKsiazki" text="Wyszukaj" />
+                        <Button fx:id="btnWczytajKsiazki" layoutX="549.0" layoutY="10.0" mnemonicParsing="false" onAction="#wczytajKsiazki" text="Wczytaj ksiazki" />
+                        <Button fx:id="wyczyscWyszukiwanieBTN" layoutX="346.0" layoutY="53.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanie" text="Wyczyść dane" />
+                        <Text layoutX="35.0" layoutY="70.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię autora" />
+                        <Button fx:id="btnZapisz" layoutX="346.0" layoutY="98.0" mnemonicParsing="false" onAction="#edycja" text="Edytuj książkę" />
+                        <Button fx:id="usunBtn" layoutX="346.0" layoutY="135.0" mnemonicParsing="false" onAction="#usunKsiazke" text="Usuń książkę" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Dodawanie książki">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="tytulDodawanieKsiazka" layoutX="146.0" layoutY="80.0" />
+                        <TextField fx:id="isbnDodawanieKsiazka" layoutX="146.0" layoutY="143.0" />
+                        <DatePicker fx:id="data_wydDodawanieKsiazka" layoutX="146.0" layoutY="205.0" />
+                        <TextField fx:id="procent_zniszczeniaDodawanieKsiazka" layoutX="146.0" layoutY="276.0" />
+                        <Text layoutX="50.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Tytuł" />
+                        <Text layoutX="52.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ISBN" />
+                        <Text layoutX="41.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data wydania" />
+                        <Text layoutX="25.0" layoutY="293.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Procent zniszczenia" />
+                        <ComboBox fx:id="autor_dodajComboBox" layoutX="570.0" layoutY="80.0" prefWidth="150.0" />
+                        <ComboBox fx:id="gatunek_dodajComboBox" layoutX="570.0" layoutY="143.0" prefWidth="150.0" />
+                        <Text layoutX="463.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Autor" />
+                        <Text layoutX="455.0" layoutY="160.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Gatunek" />
+                        <Button fx:id="dodajKsiazkeBTN" layoutX="615.0" layoutY="356.0" mnemonicParsing="false" onAction="#dodajKsiazke" text="Dodaj książkę" />
+                        <Text layoutX="426.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Liczba egzemplarzy" />
+                        <TextField fx:id="l_egzemplarzy" layoutX="571.0" layoutY="199.0" />
+                        <Button fx:id="wyczyscDodawanieKsiazkiBTN" layoutX="749.0" layoutY="356.0" mnemonicParsing="false" onAction="#wyczyscDodawanieKsiazki" text="Wyczyść dane" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Zarządzanie gatunkami">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="nazwaDodawanieGatunek" layoutX="135.0" layoutY="74.0" />
+                        <TextArea fx:id="opisDodawanieGatunek" layoutX="135.0" layoutY="115.0" prefHeight="87.0" prefWidth="217.0" />
+                        <Text layoutX="55.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwa" />
+                        <Text layoutX="62.0" layoutY="155.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Opis" />
+                        <Button fx:id="dodajGatunekBTN" layoutX="332.0" layoutY="72.0" mnemonicParsing="false" onAction="#dodajGatunek" text="Dodaj gatunek" />
+                        <Button fx:id="btnWczytajGatunki" layoutX="489.0" layoutY="40.0" mnemonicParsing="false" onAction="#wczytajGatunki" prefHeight="25.0" prefWidth="124.0" text="Wczytaj gatunki" />
+                        
+                        <Button fx:id="wyczyscWyszukiwanieBTN1" layoutX="489.0" layoutY="87.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanieGatunku" text="Wyczyść dane" />
+                        <TableView fx:id="tableDodajGatunek" layoutX="14.0" layoutY="248.0" prefHeight="276.0" prefWidth="948.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="columnNazwaDodawanieGatunku" prefWidth="209.0" style="-fx-alignment: CENTER;" text="Nazwa" />
+                              <TableColumn fx:id="columnOpisDodawanieGatunku" prefWidth="738.0" text="Opis" />
+                          </columns>
+                        </TableView>
+                        <Button fx:id="usun_gBtn" layoutX="489.0" layoutY="138.0" mnemonicParsing="false" onAction="#usunGatunek" text="Usuń gatunek" />
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+            <Tab text="Zarządzanie autorami">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="autorImieDodawanie" layoutX="136.0" layoutY="63.0" />
+                        <TextField fx:id="autorNazwiskoDodawanie" layoutX="136.0" layoutY="113.0" />
+                        <TextField fx:id="autorPseudonimDodawanie" layoutX="136.0" layoutY="163.0" />
+                        <DatePicker fx:id="data_urDodawanie" layoutX="136.0" layoutY="207.0" />
+                        <Text layoutX="62.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" />
+                        <Text layoutX="37.0" layoutY="182.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudonim" />
+                        <Text layoutX="25.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Data urodzenia" />
+                        <Text layoutX="45.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" />
+                        <Button fx:id="dodajAutoraBTN" layoutX="327.0" layoutY="63.0" mnemonicParsing="false" onAction="#dodajAutora" text="Dodaj autora" />
+                        <TableView fx:id="tableWyszukajAutora" layoutY="256.0" prefHeight="268.0" prefWidth="753.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="columnImieWyszukaj1" prefWidth="248.0" style="-fx-alignment: CENTER;" text="Imie" />
+                              <TableColumn fx:id="columnNazwiskoWyszukaj1" prefWidth="188.0" style="-fx-alignment: CENTER;" text="Nazwisko" />
+                              <TableColumn fx:id="columnPseudonimWyszukaj1" prefWidth="207.0" style="-fx-alignment: CENTER;" text="Pseudonim" />
+                              <TableColumn fx:id="columnData_uWyszukaj1" prefWidth="304.0" style="-fx-alignment: CENTER;" text="Data urodzenia" />
+                           </columns>
+                        </TableView>
+                        <Button fx:id="btnWczytajAutora" layoutX="508.0" layoutY="63.0" mnemonicParsing="false" onAction="#wczytajAutora" prefHeight="25.0" prefWidth="113.0" text="Wczytaj autora" />
+                        <Button fx:id="wyczyscWyszukiwanieBTN11" layoutX="508.0" layoutY="115.0" mnemonicParsing="false" onAction="#wyczyscWyszukiwanieAutora" text="Wyczyść dane" />
+                        <Button fx:id="usun_aBtn" layoutX="508.0" layoutY="165.0" mnemonicParsing="false" onAction="#usunAutora" text="Usuń autora" />
+                        
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Wypożyczenia/Zwroty">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="541.0" prefWidth="948.0">
+                     <children>
+                        <Text layoutX="31.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numer indetyfikacji użytkownika" />
+                        <TextField fx:id="nr_identyfikacjiTextField" layoutX="232.0" layoutY="13.0" prefHeight="25.0" prefWidth="143.0" />
+                        <TableView fx:id="tableWypozyczenia" layoutY="36.0" prefHeight="359.0" prefWidth="948.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                           <columns>
+                              <TableColumn fx:id="columnTytulWpozyczenia" prefWidth="141.0" style="-fx-alignment: CENTER;" text="Tytuł" />
+                              <TableColumn fx:id="columnAutorWypozyczenia" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Autor" />
+                              <TableColumn fx:id="columnISBNWypozyczenia" prefWidth="139.0" style="-fx-alignment: CENTER;" text="ISBN" />
+                              <TableColumn fx:id="columnGatunekWypozyczenia" prefWidth="91.0" style="-fx-alignment: CENTER;" text="Gatunek" />
+                              <TableColumn fx:id="columnData_wypWypozyczenia" prefWidth="134.0" style="-fx-alignment: CENTER;" text="Data wypożyczenia" />
+                              <TableColumn fx:id="columnData_zwrWypozyczenia" prefWidth="127.0" style="-fx-alignment: CENTER;" text="Data zwrotu" />
+                              <TableColumn fx:id="columnStatusWypozyczenia" prefWidth="95.0" style="-fx-alignment: CENTER;" text="Status" />
+                              <TableColumn fx:id="columnZniszczenieWypozyczenia" prefWidth="86.0" style="-fx-alignment: CENTER;" text="Zniszczenie" />
+                           </columns>
+                        </TableView>
+                        <Text layoutX="505.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kara do zapłacenia:" />
+                        <Label fx:id="karaPole" layoutX="662.0" layoutY="62.0" prefHeight="17.0" prefWidth="103.0" />
+                        <Text layoutX="505.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość książek:" />
+                        <Label fx:id="ilosc_wypPole" layoutX="659.0" layoutY="99.0" prefHeight="17.0" prefWidth="109.0" />
+                        <Button fx:id="wyszukajUzytkownikaBTN" layoutX="393.0" layoutY="13.0" mnemonicParsing="false" onAction="#wyszukajUzytkownika" text="OK" />
+                        <Text layoutX="31.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Imię" />
+                        <Text layoutX="28.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nazwisko" />
+                        <Text layoutX="28.0" layoutY="152.0" strokeType="OUTSIDE" strokeWidth="0.0" text="E-mail" />
+                        <Text layoutX="31.0" layoutY="191.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Profil" />
+                        <Label fx:id="imiePole" layoutX="156.0" layoutY="62.0" prefHeight="17.0" prefWidth="92.0" />
+                        <Label fx:id="nazwiskoPole" layoutX="157.0" layoutY="99.0" prefHeight="17.0" prefWidth="92.0" />
+                        <Label fx:id="emialPole" layoutX="157.0" layoutY="139.0" prefHeight="17.0" prefWidth="153.0" />
+                        <Button fx:id="wypozyczKsiazkeBTN" layoutX="505.0" layoutY="156.0" mnemonicParsing="false" onAction="#wypozyczKsiazke" text="Wypożycz książkę" />
+                        <Text layoutX="376.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aby wypożyczyć/zarezerwować książkę użytkownikowi, należy ją zaznaczyć i kliknąć w odpowiedni przycisk" />
+                        <Button fx:id="zwrocKsiazkeBTN" layoutX="662.0" layoutY="156.0" mnemonicParsing="false" onAction="#zwrocKsiazke" text="Zwróć" />
+                        <Text layoutX="714.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="zł" />
+                        <Button fx:id="karaZaplaconaBTN" layoutX="765.0" layoutY="58.0" mnemonicParsing="false" onAction="#zaplacKare" text="Kara zapłacona" />
+                        <Button layoutX="448.0" layoutY="13.0" mnemonicParsing="false" onAction="#wyczyscWypozyczeniaZwroty" text="Wyczyść" />
+                        <ComboBox fx:id="statusCombo" layoutX="128.0" layoutY="174.0" prefWidth="150.0" />
+                        <Button fx:id="zatwierdzBTN" layoutX="292.0" layoutY="174.0" mnemonicParsing="false" onAction="#zatwierdzanie" text="Zatwierdź" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <Button fx:id="btnWyloguj" layoutX="14.0" layoutY="652.0" mnemonicParsing="false" onAction="#wyloguj" text="Wyloguj" />
+      <Text layoutX="733.0" layoutY="669.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Admin" />
+   </children>
+</AnchorPane>

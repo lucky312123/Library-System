@@ -28,10 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import library.system.dialogs.DialogsUtils;
 
-/**
- *
- * @author Karol
- */
+
 public class LogowanieOknoController implements Initializable {
 
     LibrarySystem log = new LibrarySystem();
@@ -187,7 +184,7 @@ public class LogowanieOknoController implements Initializable {
                 } else if (rs.getInt("profil") == 1) {
                     //zalogowano jako admin
                     //login 123 pass admin
-                    n=1;
+                    n=3;
                     System.out.println("done admin");
                     log.setNextScene(n);
                 } else if (rs.getInt("profil") == 2) {
@@ -272,7 +269,7 @@ return n;
                 czyszczenie = true;
 
             } else if (radioNie.isSelected() == true && poprawne_dane == true) {
-                st = client.connection.prepareStatement(sql);
+                st = client.connection.prepareStatement(sql2);
                 st.setString(1, imie);
                 st.setString(2, nazwisko);
                 st.setInt(3, nr_identyfikacyjny);

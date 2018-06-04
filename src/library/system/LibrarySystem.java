@@ -1,7 +1,6 @@
 
 package library.system;
 
-import Database.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +17,7 @@ public class LibrarySystem extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("LogowanieOkno.fxml"));
         Parent root2 = FXMLLoader.load(getClass().getResource("BibliotekarzOkno.fxml"));
         Parent root3 = FXMLLoader.load(getClass().getResource("CzytelnikOkno.fxml"));
+        Parent root4 = FXMLLoader.load(getClass().getResource("AdminOkno.fxml"));
          
           
         L_window = stage;
@@ -33,6 +33,15 @@ public class LibrarySystem extends Application {
         else if (nextScene == 2) 
         {
             Scene scene = new Scene(root3);
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.setTitle("KSIAŻKI");
+            stage.show();
+
+        }
+        else if (nextScene == 3) 
+        {
+            Scene scene = new Scene(root4);
             stage.setScene(scene);
             stage.setResizable(false);
             stage.setTitle("KSIAŻKI");

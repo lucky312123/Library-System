@@ -41,7 +41,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 
-public class BibliotekarzOknoController extends User implements Initializable {
+public class AdminOknoController extends User implements Initializable {
 
     ObservableList<Ksiazki> ksiazki_list = FXCollections.observableArrayList();
     ObservableList<Gatunki> gatunki_list = FXCollections.observableArrayList();
@@ -165,7 +165,6 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private Label nazwiskoPole;
     @FXML
     private Label emialPole;
-    @FXML
     private Label statusPole;
     @FXML
     private Button wypozyczKsiazkeBTN;
@@ -203,6 +202,10 @@ public class BibliotekarzOknoController extends User implements Initializable {
     private Button karaZaplaconaBTN;
     @FXML
     private Button wyczyscDodawanieKsiazkiBTN;
+    @FXML
+    private ComboBox<String> statusCombo;
+    @FXML
+    private Button zatwierdzBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -271,6 +274,8 @@ public class BibliotekarzOknoController extends User implements Initializable {
         edycjaAutora();
         getGatunki();
         edycjaZniszczenia();
+        statusCombo.getItems().clear();
+        statusCombo.getItems().addAll("Bibliotekarz");
     }
 
     /**
@@ -543,14 +548,14 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void wyczyscWypozyczeniaZwroty(ActionEvent event) {
+    private void wyczyscWypozyczeniaZwroty() {
         nr_identyfikacjiTextField.clear();
         karaPole.setText("");
         ilosc_wypPole.setText("");
         imiePole.setText("");
         nazwiskoPole.setText("");
         emialPole.setText("");
-        statusPole.setText("");
+        //statusPole.setText("");
         mojeksiazki_list.clear();
     }
 
@@ -751,8 +756,7 @@ public class BibliotekarzOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void wypozyczKsiazke(ActionEvent event
-    ) {
+    private void wypozyczKsiazke(ActionEvent event) {
         MojeKsiazki k = tableWypozyczenia.getSelectionModel().getSelectedItem();
         int idKsiazki = 0;
         String status = "";
@@ -1158,6 +1162,18 @@ public class BibliotekarzOknoController extends User implements Initializable {
     @FXML
     private void wyloguj(ActionEvent event) throws Exception {
         log.setNextScene(0);
+    }
+
+    @FXML
+    private void zatwierdzanie(ActionEvent event) {
+        nr_identyfikacjiTextField.clear();
+        karaPole.setText("");
+        ilosc_wypPole.setText("");
+        imiePole.setText("");
+        nazwiskoPole.setText("");
+        emialPole.setText("");
+        statusCombo.getItems().clear();
+        DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zmieniono status", "Zmieniono status użytkownika");
     }
 
 }
