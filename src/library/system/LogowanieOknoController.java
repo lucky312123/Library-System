@@ -28,7 +28,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import library.system.dialogs.DialogsUtils;
 
-
 public class LogowanieOknoController implements Initializable {
 
     LibrarySystem log = new LibrarySystem();
@@ -90,10 +89,11 @@ public class LogowanieOknoController implements Initializable {
         pobranieNrIdentyfikacji();
 
     }
-/**
- * 
- * pobranie danych do osoby logującej się
- */
+
+    /**
+     *
+     * pobranie danych do osoby logującej się
+     */
     private void pobranieDanych() {
         if (check.isSelected() == false) {
             try {
@@ -117,9 +117,10 @@ public class LogowanieOknoController implements Initializable {
             }
         }
     }
-/**
- * metoda do rozróżniania klientów 
- */
+
+    /**
+     * metoda do rozróżniania klientów
+     */
     private void pobranieNrIdentyfikacji() {
 
         try {
@@ -133,7 +134,7 @@ public class LogowanieOknoController implements Initializable {
             while (rs.next()) {
                 zmienna = rs.getInt("nr_identyfikacji_k");
                 lista.add(zmienna);
-                System.out.println(lista);
+                System.out.println("Lista klientow"+lista);
             }
             rs.close();
             client.connection.close();
@@ -142,15 +143,17 @@ public class LogowanieOknoController implements Initializable {
         }
 
     }
-/**
- * logowanie klienta lub pracownika
+
+    /**
+     * logowanie klienta lub pracownika
+     *
      * @param event
-     * @return 
+     * @return
      * @throws java.lang.Exception
- */
+     */
     @FXML
     public int zaloguj(ActionEvent event) throws Exception {
-        int n =0;
+        int n = 0;
         try {
             pobranieDanych();
             String login = loginField.getText().trim();
@@ -178,19 +181,19 @@ public class LogowanieOknoController implements Initializable {
                 } else if (rs.getInt("profil") == 4) {
                     //zalogowano jako nie uczen
                     //login 997 pass qwer1234
-                    n=2;
+                    n = 2;
                     System.out.println("done nie uczący się");
                     log.setNextScene(n);
                 } else if (rs.getInt("profil") == 1) {
                     //zalogowano jako admin
                     //login 123 pass admin
-                    n=3;
+                    n = 3;
                     System.out.println("done admin");
                     log.setNextScene(n);
                 } else if (rs.getInt("profil") == 2) {
                     //zalogowano jako bibliotekarz
                     //login 111 pass 1234
-                    n=1;
+                    n = 1;
                     System.out.println("done bibliotekarz");
                     log.setNextScene(n);
                 }
@@ -205,7 +208,7 @@ public class LogowanieOknoController implements Initializable {
             //złe sql
             System.out.println("bec2" + sql);
         }
-return n;
+        return n;
     }
 
     @FXML
@@ -217,84 +220,84 @@ return n;
         String nazwisko = rejestracjaNazwisko.getText().trim();
         String email = rejestracjaEmail.getText().trim();
         String haslo = rejestracjaHaslo.getText().trim();
-        int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
 
-        int rozmiar = lista.size();
-        int pomocnicza;
-        for (int i = 0; i < rozmiar; i++) {
-            pomocnicza = lista.get(i);
-            if (nr_identyfikacyjny == pomocnicza) {
-                poprawne_dane1 = false;
-                break;
-            }
-        }
-        if (poprawne_dane1 == false) {
-            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Zły numer identyfikacyjny!", "Numer identyfikacyjny jest zajęty! \n Musisz podać inny numer");
-            poprawne_dane = false;
-        } else if (rejestracjaImie.getText().isEmpty()) {
-            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj swoje imię!");
-            poprawne_dane = false;
+        if (rejestracjaImie.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj imię!");
         } else if (rejestracjaNazwisko.getText().isEmpty()) {
-            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj swoje nazwisko!");
-            poprawne_dane = false;
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj nazwisko!");
         } else if (rejestracjaEmail.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj e-mail!");
-            poprawne_dane = false;
         } else if (rejestracjaHaslo.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj hasło!");
-            poprawne_dane = false;
         } else if (rejestracjaHaslo1.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Powtórz hasło!");
-            poprawne_dane = false;
         } else if (!rejestracjaHaslo.getText().equals(rejestracjaHaslo1.getText())) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Złe hasła!", "Hasła muszą być takie same!");
-            poprawne_dane = false;
-        } else {
-            DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Udana rejestracja!", "Witamy " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
-            poprawne_dane = true;
-        }
-        try {
-            Client client = new Client();
-            client.openConnect();
-            String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, kara, profil) VALUES (?,?,?,?,?,0,3)";
-            String sql2 = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, kara, profil) VALUES (?,?,?,?,?,0,4)";
-            if (radioTak.isSelected() == true && poprawne_dane == true) {
-                st = client.connection.prepareStatement(sql);
-                st.setString(1, imie);
-                st.setString(2, nazwisko);
-                st.setInt(3, nr_identyfikacyjny);
-                st.setString(4, email);
-                st.setString(5, haslo);
-                st.execute();
-                czyszczenie = true;
-
-            } else if (radioNie.isSelected() == true && poprawne_dane == true) {
-                st = client.connection.prepareStatement(sql2);
-                st.setString(1, imie);
-                st.setString(2, nazwisko);
-                st.setInt(3, nr_identyfikacyjny);
-                st.setString(4, email);
-                st.setString(5, haslo);
-                st.execute();
-                czyszczenie = true;
-
+        } else if (rejestracjaNrIdentyfikacyjny.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj numer identyfikacyjny!");
+        } else if (!(rejestracjaNrIdentyfikacyjny.getText().trim().isEmpty())) {
+            int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
+            int rozmiar = lista.size();
+            int pomocnicza;
+            for (int i = 0; i < rozmiar; i++) {
+                pomocnicza = lista.get(i);
+                if (nr_identyfikacyjny == pomocnicza) {
+                    poprawne_dane1 = false;
+                    break;
+                }
             }
-            if (czyszczenie == true) {
-                rejestracjaImie.clear();
-                rejestracjaNazwisko.clear();
-                rejestracjaEmail.clear();
-                rejestracjaHaslo.clear();
-                rejestracjaHaslo1.clear();
-                rejestracjaNrIdentyfikacyjny.clear();
-                radioNie.setSelected(false);
-                radioTak.setSelected(false);
+            if (poprawne_dane1 == false) {
+                DialogsUtils.showAlert(Alert.AlertType.ERROR, "Zły numer identyfikacyjny!", "Numer identyfikacyjny jest zajęty! \n Musisz podać inny numer");
             }
-            rs.close();
-            client.connection.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(LogowanieOknoController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            if (nr_identyfikacyjny < 0) {
+                DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podano zły numer identyfikacyjny!");
+            } else {
+                try {
+                    Client client = new Client();
+                    client.openConnect();
+                    String sql = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, kara, profil) VALUES (?,?,?,?,?,0,3)";
+                    String sql2 = "INSERT INTO klienci (imie_k, nazwisko_k, nr_identyfikacji_k, email_k, haslo_k, kara, profil) VALUES (?,?,?,?,?,0,4)";
+                    if (radioTak.isSelected() == true && poprawne_dane1 == true) {
+                        st = client.connection.prepareStatement(sql);
+                        st.setString(1, imie);
+                        st.setString(2, nazwisko);
+                        st.setInt(3, nr_identyfikacyjny);
+                        st.setString(4, email);
+                        st.setString(5, haslo);
+                        st.execute();
+                        DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Udana rejestracja!", "Witamy " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
+                        czyszczenie = true;
 
+                    } else if (radioNie.isSelected() == true && poprawne_dane1 == true) {
+                        st = client.connection.prepareStatement(sql2);
+                        st.setString(1, imie);
+                        st.setString(2, nazwisko);
+                        st.setInt(3, nr_identyfikacyjny);
+                        st.setString(4, email);
+                        st.setString(5, haslo);
+                        st.execute();
+                        DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Udana rejestracja!", "Witamy " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
+                        czyszczenie = true;
+                    }
+
+                    if (czyszczenie == true) {
+                        rejestracjaImie.clear();
+                        rejestracjaNazwisko.clear();
+                        rejestracjaEmail.clear();
+                        rejestracjaHaslo.clear();
+                        rejestracjaHaslo1.clear();
+                        rejestracjaNrIdentyfikacyjny.clear();
+                        radioNie.setSelected(false);
+                        radioTak.setSelected(false);
+                    }
+
+                    rs.close();
+                    client.connection.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(LogowanieOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     @FXML

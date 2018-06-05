@@ -204,6 +204,37 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab text="Dodaj / Wyszukaj bibliotekarza">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TextField fx:id="rejestracjaImie" layoutX="230.0" layoutY="52.0" />
+                        <TextField fx:id="rejestracjaNazwisko" layoutX="230.0" layoutY="102.0" />
+                        <TextField fx:id="rejestracjaEmail" layoutX="229.0" layoutY="157.0" />
+                        <PasswordField fx:id="rejestracjaHaslo" layoutX="563.0" layoutY="53.0" />
+                        <PasswordField fx:id="rejestracjaHaslo1" layoutX="563.0" layoutY="102.0" />
+                        <TextField fx:id="rejestracjaNrIdentyfikacyjny" layoutX="563.0" layoutY="157.0" />
+                        <Text layoutX="124.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj imie" />
+                        <Text layoutX="114.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwisko" />
+                        <Text layoutX="121.0" layoutY="175.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj e-mail" />
+                        <Text layoutX="456.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj hasło" />
+                        <Text layoutX="449.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Powtórz hasło" />
+                        <Button fx:id="zarejestrujBTN" layoutX="797.0" layoutY="53.0" mnemonicParsing="false" onAction="#zarejestruj" text="Dodaj" />
+                        <Text layoutX="423.0" layoutY="174.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nr identyfikacyjny" />
+                        <TableView fx:id="tableBibliotekarze" layoutX="8.0" layoutY="269.0" prefHeight="307.0" prefWidth="948.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="columnImieBibliotekarza" prefWidth="211.0" style="-fx-alignment: CENTER;" text="Imie" />
+                            <TableColumn fx:id="columnNazwiskoBibliotekarza" prefWidth="231.0" style="-fx-alignment: CENTER;" text="Nazwisko" />
+                              <TableColumn fx:id="columnNrIdentBibliotekarza" prefWidth="258.0" style="-fx-alignment: CENTER;" text="Nr identyfikacji" />
+                              <TableColumn fx:id="columnEmailBibliotekarza" prefWidth="245.0" style="-fx-alignment: CENTER;" text="Email" />
+                          </columns>
+                        </TableView>
+                        <Button fx:id="wyswietlBibliotekarzyBTN" layoutX="795.0" layoutY="111.0" mnemonicParsing="false" onAction="#wczytajBibliotekarzy" text="Wyświetl" />
+                        <Button fx:id="usunbibliotekarzaBTN" layoutX="795.0" layoutY="170.0" mnemonicParsing="false" onAction="#usunBibliotekarza" text="Usuń" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
       <Button fx:id="btnWyloguj" layoutX="14.0" layoutY="652.0" mnemonicParsing="false" onAction="#wyloguj" text="Wyloguj" />

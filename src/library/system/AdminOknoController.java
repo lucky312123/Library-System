@@ -12,8 +12,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javafx.application.Application.STYLESHEET_CASPIAN;
@@ -34,6 +36,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellEditEvent;
 import javafx.scene.control.TableView;
@@ -47,6 +50,7 @@ public class AdminOknoController extends User implements Initializable {
     ObservableList<Gatunki> gatunki_list = FXCollections.observableArrayList();
     ObservableList<Autorzy> autorzy_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
+    ObservableList<Bibliotekarz> bibliotekarz_list = FXCollections.observableArrayList();
     LibrarySystem log = new LibrarySystem();
     ObservableList<String> gatunki = FXCollections.observableArrayList();
     @FXML
@@ -206,6 +210,37 @@ public class AdminOknoController extends User implements Initializable {
     private ComboBox<String> statusCombo;
     @FXML
     private Button zatwierdzBTN;
+    @FXML
+    private TextField rejestracjaImie;
+    @FXML
+    private TextField rejestracjaNazwisko;
+    @FXML
+    private TextField rejestracjaEmail;
+    @FXML
+    private PasswordField rejestracjaHaslo;
+    @FXML
+    private PasswordField rejestracjaHaslo1;
+    @FXML
+    private TextField rejestracjaNrIdentyfikacyjny;
+    @FXML
+    private Button zarejestrujBTN;
+    public static List<Integer> lista = new ArrayList();
+    boolean poprawne_dane;
+    boolean poprawne_dane1;
+    @FXML
+    private TableView<Bibliotekarz> tableBibliotekarze;
+    @FXML
+    private TableColumn<?, ?> columnImieBibliotekarza;
+    @FXML
+    private TableColumn<?, ?> columnNazwiskoBibliotekarza;
+    @FXML
+    private TableColumn<?, ?> columnNrIdentBibliotekarza;
+    @FXML
+    private TableColumn<?, ?> columnEmailBibliotekarza;
+    @FXML
+    private Button wyswietlBibliotekarzyBTN;
+    @FXML
+    private Button usunbibliotekarzaBTN;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -217,6 +252,8 @@ public class AdminOknoController extends User implements Initializable {
         tableDodajGatunek.setItems(gatunki_list);
         tableWyszukajAutora.setItems(null);
         tableWyszukajAutora.setItems(autorzy_list);
+        tableBibliotekarze.setItems(null);
+        tableBibliotekarze.setItems(bibliotekarz_list);
 
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
@@ -243,6 +280,11 @@ public class AdminOknoController extends User implements Initializable {
         columnData_zwrWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("data_zwrotu"));
         columnStatusWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("nazwa_s"));
         columnZniszczenieWypozyczenia.setCellValueFactory(new PropertyValueFactory<>("aktPzniszczenia"));
+
+        columnImieBibliotekarza.setCellValueFactory(new PropertyValueFactory<>("imie_p"));
+        columnNazwiskoBibliotekarza.setCellValueFactory(new PropertyValueFactory<>("nazwisko_p"));
+        columnNrIdentBibliotekarza.setCellValueFactory(new PropertyValueFactory<>("nr_identyfikacji_p"));
+        columnEmailBibliotekarza.setCellValueFactory(new PropertyValueFactory<>("email_p"));
 
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         btnZapisz.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
@@ -276,6 +318,8 @@ public class AdminOknoController extends User implements Initializable {
         edycjaZniszczenia();
         statusCombo.getItems().clear();
         statusCombo.getItems().addAll("Bibliotekarz");
+
+        pobranieNrIdentyfikacjiP();
     }
 
     /**
@@ -1136,8 +1180,102 @@ public class AdminOknoController extends User implements Initializable {
         }
     }
 
+    private void pobranieNrIdentyfikacjiP() {
+
+        try {
+            Client client = new Client();
+            client.openConnect();
+            String sql5 = "select nr_identyfikacji_p from pracownicy";
+            int zmienna;
+            lista.clear();
+            st = client.connection.prepareStatement(sql5);
+            rs = st.executeQuery();
+            while (rs.next()) {
+                zmienna = rs.getInt("nr_identyfikacji_p");
+                lista.add(zmienna);
+                System.out.println(lista);
+            }
+            rs.close();
+            client.connection.close();
+        } catch (SQLException sql) {
+            System.out.println("Błąd z pobranieNrIdentyfikacjiPracownika" + sql);
+        }
+
+    }
+
     @FXML
-    private void zamknijAplikacje(ActionEvent event) {
+    private void zarejestruj(ActionEvent event) {
+
+        poprawne_dane1 = true;
+        String imie = rejestracjaImie.getText().trim();
+        String nazwisko = rejestracjaNazwisko.getText().trim();
+        String email = rejestracjaEmail.getText().trim();
+        String haslo = rejestracjaHaslo.getText().trim();
+
+        if (rejestracjaImie.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj imię!");
+        } else if (rejestracjaNazwisko.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj nazwisko!");
+        } else if (rejestracjaEmail.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj e-mail!");
+        } else if (rejestracjaHaslo.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj hasło!");
+        } else if (rejestracjaHaslo1.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Powtórz hasło!");
+        } else if (!rejestracjaHaslo.getText().equals(rejestracjaHaslo1.getText())) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Złe hasła!", "Hasła muszą być takie same!");
+        } else if (rejestracjaNrIdentyfikacyjny.getText().isEmpty()) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj numer identyfikacyjny!");
+        } else if (!(rejestracjaNrIdentyfikacyjny.getText().trim().isEmpty())) {
+            int nr_identyfikacyjny = Integer.parseInt(rejestracjaNrIdentyfikacyjny.getText().trim());
+            int rozmiar = lista.size();
+            int pomocnicza;
+            for (int i = 0; i < rozmiar; i++) {
+                pomocnicza = lista.get(i);
+                if (nr_identyfikacyjny == pomocnicza) {
+                    poprawne_dane1 = false;
+                    break;
+                }
+            }
+            if (poprawne_dane1 == false) {
+                DialogsUtils.showAlert(Alert.AlertType.ERROR, "Zły numer identyfikacyjny!", "Numer identyfikacyjny jest zajęty! \n Musisz podać inny numer");
+            } else if (nr_identyfikacyjny < 0) {
+                DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podano zły numer identyfikacyjny!");
+            } else {
+
+                try {
+                    Client client = new Client();
+                    client.openConnect();
+                    String sql = "INSERT INTO pracownicy (imie_p, nazwisko_p, nr_identyfikacji_p, email_p, haslo_p, profil) VALUES (?,?,?,?,?,2)";
+                    st = client.connection.prepareStatement(sql);
+                    st.setString(1, imie);
+                    st.setString(2, nazwisko);
+                    st.setInt(3, nr_identyfikacyjny);
+                    st.setString(4, email);
+                    st.setString(5, haslo);
+                    st.execute();
+
+                    rs.close();
+                    client.connection.close();
+                    DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Dodano bibliotekarza!", "Nowy bibliotekarz to " + rejestracjaImie.getText() + " " + rejestracjaNazwisko.getText());
+                    rejestracjaImie.clear();
+                    rejestracjaNazwisko.clear();
+                    rejestracjaEmail.clear();
+                    rejestracjaHaslo.clear();
+                    rejestracjaHaslo1.clear();
+                    rejestracjaNrIdentyfikacyjny.clear();
+                    wczytajBibliotekarzy();
+                } catch (SQLException ex) {
+                    Logger.getLogger(LogowanieOknoController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            }
+        }
+    }
+
+    @FXML
+    private void zamknijAplikacje(ActionEvent event
+    ) {
         Optional<ButtonType> result = DialogsUtils.confirmationDialog();
         if (result.get() == ButtonType.OK) {
             Platform.exit();
@@ -1145,17 +1283,20 @@ public class AdminOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void setCaspian(ActionEvent event) {
+    private void setCaspian(ActionEvent event
+    ) {
         Application.setUserAgentStylesheet(STYLESHEET_CASPIAN);
     }
 
     @FXML
-    private void setModena(ActionEvent event) {
+    private void setModena(ActionEvent event
+    ) {
         Application.setUserAgentStylesheet(STYLESHEET_MODENA);
     }
 
     @FXML
-    private void aboutApplication(ActionEvent event) {
+    private void aboutApplication(ActionEvent event
+    ) {
         DialogsUtils.dialogAboutAplication();
     }
 
@@ -1165,7 +1306,8 @@ public class AdminOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void zatwierdzanie(ActionEvent event) {
+    private void zatwierdzanie(ActionEvent event
+    ) {
         nr_identyfikacjiTextField.clear();
         karaPole.setText("");
         ilosc_wypPole.setText("");
@@ -1174,6 +1316,46 @@ public class AdminOknoController extends User implements Initializable {
         emialPole.setText("");
         statusCombo.getItems().clear();
         DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zmieniono status", "Zmieniono status użytkownika");
+    }
+
+    @FXML
+    private void wczytajBibliotekarzy() {
+        try {
+
+            client.openConnect();
+            String sql = "SELECT imie_p,nazwisko_p,nr_identyfikacji_p, email_p from pracownicy where profil=2";
+
+            st = client.connection.prepareStatement(sql);
+            rs = st.executeQuery();
+
+            bibliotekarz_list.clear();
+            while (rs.next()) {
+                bibliotekarz_list.add(new Bibliotekarz(rs.getString("imie_p"), rs.getString("nazwisko_p"), rs.getInt("nr_identyfikacji_p"), rs.getString("email_p")));
+            }
+            rs.close();
+            client.connection.close();
+
+        } catch (SQLException sql) {
+            System.out.println("Problem z wczytajBibliotekarzy" + sql);
+        }
+    }
+
+    @FXML
+    private void usunBibliotekarza(ActionEvent event) {
+         Bibliotekarz k = tableBibliotekarze.getSelectionModel().getSelectedItem();
+        try {
+            client.openConnect();
+            String sql = "DELETE FROM pracownicy WHERE nr_identyfikacji_p = ?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setInt(1, k.getNr_identyfikacji_p());
+            preparedStmt.execute();
+            tableBibliotekarze.getItems().remove(k);
+            System.out.print("usunieto");
+            client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie bibliotekarza", "Bibliotekarz został usunięty!");
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }
