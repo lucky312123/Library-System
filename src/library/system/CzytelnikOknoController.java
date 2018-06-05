@@ -104,10 +104,10 @@ public class CzytelnikOknoController extends User implements Initializable {
     @FXML
     private void wyszukajKsiazki() {
         try {
-            String tytul = tytulSzukanie.getText().trim();
-            String imie_a = imieASzukanie.getText().trim();
-            String nazwisko_a = nazwiskoASzukanie.getText().trim();
-            String gatunek = gatunekSzukanie.getText().trim();
+            String tytul = tytulSzukanie.getText().trim().toLowerCase();
+            String imie_a = imieASzukanie.getText().trim().toLowerCase();
+            String nazwisko_a = nazwiskoASzukanie.getText().trim().toLowerCase();
+            String gatunek = gatunekSzukanie.getText().trim().toLowerCase();
             wyszukaj(ksiazki_list, tytul, imie_a, nazwisko_a, gatunek);
         } catch (Exception ex) {
             Logger.getLogger(CzytelnikOknoController.class.getName()).log(Level.SEVERE, null, ex);

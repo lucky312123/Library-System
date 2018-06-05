@@ -88,14 +88,14 @@ public class User {
 
             client.openConnect();
 
-            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s,count(k.tytul) as ilosc from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and k.status='1' and (k.tytul=? or a.imie_a=? or a.nazwisko_a=? or g.nazwa_g=?) group by k.tytul";
+            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s,count(k.tytul) as ilosc from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and k.status='1' and ( k.tytul=? or a.imie_a=? or a.nazwisko_a=? or g.nazwa_g like '%"+gatunek+"%') group by k.tytul";
 
             st = client.connection.prepareStatement(sql2);
 
             st.setString(1, tytul);
             st.setString(2, imie_a);
             st.setString(3, nazwisko_a);
-            st.setString(4, gatunek);
+            //st.setString(4, gatunek);
 
             rs = st.executeQuery();
 
