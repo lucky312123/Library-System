@@ -32,14 +32,6 @@ public class Bibliotekarz {
         nazwisko_p.set(value);
     }
 
-//    public String getNr_identyfikacji() {
-//        return nr_identyfikacji.get();
-//    }
-//
-//    public void setNr_identyfikacji(String value) {
-//        nr_identyfikacji.set(value);
-//    }
-    
     public int getNr_identyfikacji_p() {
         return nr_identyfikacji_p;
     }

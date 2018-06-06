@@ -164,7 +164,7 @@
             </Tab>
             <Tab text="Wypożyczenia/Zwroty">
                <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="541.0" prefWidth="948.0">
+                  <AnchorPane fx:id="statusPole" minHeight="0.0" minWidth="0.0" prefHeight="541.0" prefWidth="948.0">
                      <children>
                         <Text layoutX="31.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Numer indetyfikacji użytkownika" />
                         <TextField fx:id="nr_identyfikacjiTextField" layoutX="232.0" layoutY="13.0" prefHeight="25.0" prefWidth="143.0" />
@@ -192,14 +192,13 @@
                         <Label fx:id="imiePole" layoutX="156.0" layoutY="62.0" prefHeight="17.0" prefWidth="92.0" />
                         <Label fx:id="nazwiskoPole" layoutX="157.0" layoutY="99.0" prefHeight="17.0" prefWidth="92.0" />
                         <Label fx:id="emialPole" layoutX="157.0" layoutY="139.0" prefHeight="17.0" prefWidth="153.0" />
+                        <Label fx:id="statusPole1" layoutX="157.0" layoutY="178.0" prefHeight="17.0" prefWidth="146.0" />
                         <Button fx:id="wypozyczKsiazkeBTN" layoutX="505.0" layoutY="156.0" mnemonicParsing="false" onAction="#wypozyczKsiazke" text="Wypożycz książkę" />
                         <Text layoutX="376.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aby wypożyczyć/zarezerwować książkę użytkownikowi, należy ją zaznaczyć i kliknąć w odpowiedni przycisk" />
                         <Button fx:id="zwrocKsiazkeBTN" layoutX="662.0" layoutY="156.0" mnemonicParsing="false" onAction="#zwrocKsiazke" text="Zwróć" />
                         <Text layoutX="714.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="zł" />
                         <Button fx:id="karaZaplaconaBTN" layoutX="765.0" layoutY="58.0" mnemonicParsing="false" onAction="#zaplacKare" text="Kara zapłacona" />
                         <Button layoutX="448.0" layoutY="13.0" mnemonicParsing="false" onAction="#wyczyscWypozyczeniaZwroty" text="Wyczyść" />
-                        <ComboBox fx:id="statusCombo" layoutX="128.0" layoutY="174.0" prefWidth="150.0" />
-                        <Button fx:id="zatwierdzBTN" layoutX="292.0" layoutY="174.0" mnemonicParsing="false" onAction="#zatwierdzanie" text="Zatwierdź" />
                      </children>
                   </AnchorPane>
                </content>
@@ -234,6 +233,24 @@
                      </children>
                   </AnchorPane>
                </content>
+            </Tab>
+            <Tab text="Użytkownicy">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="usunUzytkownikaBTN" layoutX="37.0" layoutY="91.0" mnemonicParsing="false" onAction="#zatwierdzanie" prefHeight="25.0" prefWidth="124.0" text="Usuń użytkownika" />
+                        <Button layoutX="37.0" layoutY="33.0" mnemonicParsing="false" onAction="#wczytajUzytkownikow" text="Wczytaj użytkowników" />
+                        <TableView fx:id="tableUzytkownicy" layoutX="5.0" layoutY="156.0" prefHeight="423.0" prefWidth="948.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                          <columns>
+                            <TableColumn fx:id="columnImieUzytkownika" prefWidth="255.0" style="-fx-alignment: CENTER;" text="Imię" />
+                            <TableColumn fx:id="columnNazwiskoUzytkownika" prefWidth="305.0" style="-fx-alignment: CENTER;" text="Nazwisko" />
+                              <TableColumn fx:id="columnNrIdentUzytkownika" prefWidth="184.0" style="-fx-alignment: CENTER;" text="Numer identyfikacji" />
+                              <TableColumn fx:id="columnEmailUzytkownika" prefWidth="203.0" style="-fx-alignment: CENTER;" text="Email" />
+                          </columns>
+                        </TableView>
+                     </children>
+                  </AnchorPane>
+              </content>
             </Tab>
         </tabs>
       </TabPane>

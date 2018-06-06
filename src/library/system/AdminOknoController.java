@@ -43,6 +43,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.AnchorPane;
 
 public class AdminOknoController extends User implements Initializable {
 
@@ -51,6 +52,7 @@ public class AdminOknoController extends User implements Initializable {
     ObservableList<Autorzy> autorzy_list = FXCollections.observableArrayList();
     ObservableList<MojeKsiazki> mojeksiazki_list = FXCollections.observableArrayList();
     ObservableList<Bibliotekarz> bibliotekarz_list = FXCollections.observableArrayList();
+    ObservableList<Uzytkownicy> uzytkownicy_list = FXCollections.observableArrayList();
     LibrarySystem log = new LibrarySystem();
     ObservableList<String> gatunki = FXCollections.observableArrayList();
     @FXML
@@ -169,7 +171,6 @@ public class AdminOknoController extends User implements Initializable {
     private Label nazwiskoPole;
     @FXML
     private Label emialPole;
-    private Label statusPole;
     @FXML
     private Button wypozyczKsiazkeBTN;
     String nr_identyfikacji;
@@ -207,10 +208,6 @@ public class AdminOknoController extends User implements Initializable {
     @FXML
     private Button wyczyscDodawanieKsiazkiBTN;
     @FXML
-    private ComboBox<String> statusCombo;
-    @FXML
-    private Button zatwierdzBTN;
-    @FXML
     private TextField rejestracjaImie;
     @FXML
     private TextField rejestracjaNazwisko;
@@ -241,6 +238,22 @@ public class AdminOknoController extends User implements Initializable {
     private Button wyswietlBibliotekarzyBTN;
     @FXML
     private Button usunbibliotekarzaBTN;
+    @FXML
+    private Button usunUzytkownikaBTN;
+    @FXML
+    private Label statusPole1;
+    @FXML
+    private AnchorPane statusPole;
+    @FXML
+    private TableView<Uzytkownicy> tableUzytkownicy;
+    @FXML
+    private TableColumn<?, ?> columnImieUzytkownika;
+    @FXML
+    private TableColumn<?, ?> columnNazwiskoUzytkownika;
+    @FXML
+    private TableColumn<?, ?> columnNrIdentUzytkownika;
+    @FXML
+    private TableColumn<?, ?> columnEmailUzytkownika;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -254,6 +267,8 @@ public class AdminOknoController extends User implements Initializable {
         tableWyszukajAutora.setItems(autorzy_list);
         tableBibliotekarze.setItems(null);
         tableBibliotekarze.setItems(bibliotekarz_list);
+        tableUzytkownicy.setItems(null);
+        tableUzytkownicy.setItems(uzytkownicy_list);
 
         columnTytulWyszukaj.setCellValueFactory(new PropertyValueFactory<>("tytul"));
         columnISBNWyszukaj.setCellValueFactory(new PropertyValueFactory<>("ISBN"));
@@ -286,6 +301,11 @@ public class AdminOknoController extends User implements Initializable {
         columnNrIdentBibliotekarza.setCellValueFactory(new PropertyValueFactory<>("nr_identyfikacji_p"));
         columnEmailBibliotekarza.setCellValueFactory(new PropertyValueFactory<>("email_p"));
 
+        columnImieUzytkownika.setCellValueFactory(new PropertyValueFactory<>("imie_k"));
+        columnNazwiskoUzytkownika.setCellValueFactory(new PropertyValueFactory<>("nazwisko_k"));
+        columnNrIdentUzytkownika.setCellValueFactory(new PropertyValueFactory<>("nr_identyfikacji_k"));
+        columnEmailUzytkownika.setCellValueFactory(new PropertyValueFactory<>("email_k"));
+
         usunBtn.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         btnZapisz.disableProperty().bind(tableWyszukajKsiazki.getSelectionModel().selectedItemProperty().isNull());
         wypozyczKsiazkeBTN.disableProperty().bind(tableWypozyczenia.getSelectionModel().selectedItemProperty().isNull());
@@ -316,9 +336,6 @@ public class AdminOknoController extends User implements Initializable {
         edycjaAutora();
         getGatunki();
         edycjaZniszczenia();
-        statusCombo.getItems().clear();
-        statusCombo.getItems().addAll("Bibliotekarz");
-
         pobranieNrIdentyfikacjiP();
     }
 
@@ -775,7 +792,7 @@ public class AdminOknoController extends User implements Initializable {
                         imiePole.setText(rs.getString("imie_k"));
                         nazwiskoPole.setText(rs.getString("nazwisko_k"));
                         emialPole.setText(rs.getString("email_k"));
-                        statusPole.setText(rs.getString("nazwa_p"));
+                        statusPole1.setText(rs.getString("nazwa_p"));
                         karaPole.setText(rs.getString("kara"));
                         ilosc_wypPole.setText(rs.getString("ilosc_wyp"));
                     }
@@ -1306,16 +1323,20 @@ public class AdminOknoController extends User implements Initializable {
     }
 
     @FXML
-    private void zatwierdzanie(ActionEvent event
-    ) {
-        nr_identyfikacjiTextField.clear();
-        karaPole.setText("");
-        ilosc_wypPole.setText("");
-        imiePole.setText("");
-        nazwiskoPole.setText("");
-        emialPole.setText("");
-        statusCombo.getItems().clear();
-        DialogsUtils.showAlert(Alert.AlertType.CONFIRMATION, "Zmieniono status", "Zmieniono status użytkownika");
+    private void zatwierdzanie(ActionEvent event) {
+        Uzytkownicy k = tableUzytkownicy.getSelectionModel().getSelectedItem();
+        try {
+            client.openConnect();
+            String sql = "DELETE FROM klienci WHERE nr_identyfikacji_k = ?";
+            PreparedStatement preparedStmt = client.connection.prepareStatement(sql);
+            preparedStmt.setString(1, k.getNr_identyfikacji_k());
+            preparedStmt.execute();
+            tableUzytkownicy.getItems().remove(k);
+            client.connection.close();
+            DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie uzytkownika", "Uzytkownik "+k.getImie_k()+" "+k.getNazwisko_k()+" został usunięty!");
+        } catch (SQLException ex) {
+            Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML
@@ -1342,7 +1363,7 @@ public class AdminOknoController extends User implements Initializable {
 
     @FXML
     private void usunBibliotekarza(ActionEvent event) {
-         Bibliotekarz k = tableBibliotekarze.getSelectionModel().getSelectedItem();
+        Bibliotekarz k = tableBibliotekarze.getSelectionModel().getSelectedItem();
         try {
             client.openConnect();
             String sql = "DELETE FROM pracownicy WHERE nr_identyfikacji_p = ?";
@@ -1355,6 +1376,26 @@ public class AdminOknoController extends User implements Initializable {
             DialogsUtils.showAlert(Alert.AlertType.INFORMATION, "Usuwanie bibliotekarza", "Bibliotekarz został usunięty!");
         } catch (SQLException ex) {
             Logger.getLogger(BibliotekarzOknoController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void wczytajUzytkownikow(ActionEvent event) {
+        try {
+
+            client.openConnect();
+            String sql = "SELECT imie_k,nazwisko_k,nr_identyfikacji_k, email_k from klienci";
+            st = client.connection.prepareStatement(sql);
+            rs = st.executeQuery();
+            uzytkownicy_list.clear();
+            while (rs.next()) {
+                uzytkownicy_list.add(new Uzytkownicy(rs.getString("imie_k"), rs.getString("nazwisko_k"), rs.getString("nr_identyfikacji_k"), rs.getString("email_k")));
+            }
+            rs.close();
+            client.connection.close();
+
+        } catch (SQLException sql) {
+            System.out.println("Problem z wczytajUzytkownikow" + sql);
         }
     }
 
