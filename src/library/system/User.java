@@ -39,9 +39,9 @@ public class User {
         }
     }
 
-     public void wczytajGatunki(ObservableList<Gatunki> gatunki_list) throws Exception {
+    public void wczytajGatunki(ObservableList<Gatunki> gatunki_list) throws Exception {
 
-       try {
+        try {
 
             client.openConnect();
             String sql = "SELECT nazwa_g,opis from gatunki";
@@ -60,8 +60,8 @@ public class User {
             System.out.println("Problem z wczytajGatunki" + sql);
         }
     }
-     
-     public void wczytajAutora(ObservableList<Autorzy> autorzy_list) throws Exception {
+
+    public void wczytajAutora(ObservableList<Autorzy> autorzy_list) throws Exception {
 
         try {
 
@@ -82,21 +82,38 @@ public class User {
             System.out.println("Problem z wczytajAutora" + sql);
         }
     }
-    
+
     public void wyszukaj(ObservableList<Ksiazki> ksiazki_list, String tytul, String imie_a, String nazwisko_a, String gatunek) throws Exception {
         try {
 
             client.openConnect();
-
-            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s,count(k.tytul) as ilosc from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and k.status='1' and ( k.tytul like '%"+tytul+"%' or a.imie_a like '%"+imie_a+"%' or a.nazwisko_a like '%"+nazwisko_a+"%' or g.nazwa_g like '%"+gatunek+"%') group by k.tytul";
+            String tytulSql = "k.tytul=null";
+          
+            
+            if(tytul.equals("")==false){
+                System.out.print("tutaj jest tytul:"+tytul+" -<");
+                tytulSql="k.tytul like '%" + tytul + "%'";
+            }
+            String imieSql = "a.imie_a=null";
+            if(imie_a.equals("")==false){
+                imieSql = "a.imie_a like '%" + imie_a + "%'";
+            }
+            String nazwiskoSql =  "a.nazwisko_a=null";
+            if(nazwisko_a.equals("")==false){
+                nazwiskoSql = "a.nazwisko_a like '%" + nazwisko_a + "%'";
+            }
+            String gatunekSql =  "g.nazwa_g=null";
+            if(gatunek.equals("")==false){
+                gatunekSql = "g.nazwa_g like '%" + gatunek + "%'";
+            }
+            String sql2 = "SELECT k.tytul,k.ISBN,a.imie_a,a.nazwisko_a,k.data_wyd,g.nazwa_g,s.nazwa_s,count(k.tytul) as ilosc from ksiazka k, gatunki g, autorzy a, autorzy_ksiazki ak, statusy s where k.id_gatunku=g.id_gatunku and k.id_ksiazki=ak.id_aut_ks and a.id_autora=ak.id_autora and k.status=s.status and k.status='1' and ("+tytulSql+" or "+imieSql+" or "+nazwiskoSql+" or "+gatunekSql+") group by k.tytul";
 
             st = client.connection.prepareStatement(sql2);
 
             //st.setString(1, tytul);
-            //st.setString(2, imie_a);
-            //st.setString(3, nazwisko_a);
-            //st.setString(4, gatunek);
-
+//            st.setString(1, imie_a);
+//            st.setString(1, nazwisko_a);
+//            st.setString(2, gatunek);
             rs = st.executeQuery();
 
             ksiazki_list.clear();
