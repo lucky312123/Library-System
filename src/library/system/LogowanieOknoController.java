@@ -134,7 +134,7 @@ public class LogowanieOknoController implements Initializable {
             while (rs.next()) {
                 zmienna = rs.getInt("nr_identyfikacji_k");
                 lista.add(zmienna);
-                System.out.println("Lista klientow"+lista);
+                System.out.println("Lista klientow" + lista);
             }
             rs.close();
             client.connection.close();
@@ -233,6 +233,8 @@ public class LogowanieOknoController implements Initializable {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Powtórz hasło!");
         } else if (!rejestracjaHaslo.getText().equals(rejestracjaHaslo1.getText())) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Złe hasła!", "Hasła muszą być takie same!");
+        } else if ((radioNie.isSelected() == false) && (radioTak.isSelected() == false)) {
+            DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wybrano osoby!", "Musisz wybrać czy się uczysz czy nie!");
         } else if (rejestracjaNrIdentyfikacyjny.getText().isEmpty()) {
             DialogsUtils.showAlert(Alert.AlertType.ERROR, "Nie wpisano danych!", "Podaj numer identyfikacyjny!");
         } else if (!(rejestracjaNrIdentyfikacyjny.getText().trim().isEmpty())) {
